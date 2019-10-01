@@ -7,6 +7,8 @@ abstract class RAExpr {
 	
 	private Type type;
 	private String name;
+	private String attribute;
+	private String condition;
 	private String expr = "";
 	
 	public void setType(Type type) {
@@ -17,12 +19,28 @@ abstract class RAExpr {
 		this.name = name;
 	}
 	
+	public void setAttr(String attr) {
+		this.attribute = attr;
+	}
+	
+	public void setCondition(String condition) {
+		this.condition = condition;
+	}
+	
 	public Type getType() {
 		return type;
 	}
 	
 	public String getName() {
 		return name;
+	}
+	
+	public String getAttr() {
+		return attribute;
+	}
+	
+	public String getCondition() {
+		return condition;
 	}
 	
 	public void setBaseExpr() {
@@ -43,16 +61,24 @@ abstract class RAExpr {
 			int eIndex = subExpr.indexOf(e);
 			
 			// Puts the operation in the correct place in the expression
-			if (startOp.contains(type)) {
-				if (eIndex == 0) {
-					expr += type.name();
+			if (startOp.contains(type) && eIndex == 0) {
+				switch (type) {
+					case PROJECT:
+						expr += type.name() + " (" + attribute + ")";
+						break;
+					case SELECT:
+						expr += type.name() + " (" + condition + ")";
+						break;
+					case RENAME:
+						expr += type.name() + " (" + attribute + ")";
+						break;
+					default:
+						expr += type.name();
 				}
 			}
 			
-			if (midOp.contains(type)) {
-				if (eIndex == 1) {
-					expr += type.name();
-				}
+			if (midOp.contains(type) && eIndex == 1) {
+				expr += type.name();
 			}
 			
 			// Brackets not included if e has type BASE, otherwise brackets are included
@@ -64,7 +90,6 @@ abstract class RAExpr {
 						expr += " " + e.expr;
 					}
 					break;
-				
 				default:
 					if (eIndex < subExpr.size()-1) {
 						expr += "(" + e.expr + ") ";
