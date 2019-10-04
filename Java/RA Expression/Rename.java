@@ -7,10 +7,9 @@ public class Rename extends RAExpr {
 	ArrayList<RAExpr> subExpr = new ArrayList<>();
 	
 	public Rename(String attributes, RAExpr relation) {
+		super(Type.RENAME);
 		this.attributes = attributes;
 		this.relation = relation;
-		setType(Type.RENAME);
-		setAttr(this.attributes);
 		storeExpr();
 	}
 	
