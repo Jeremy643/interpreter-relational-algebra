@@ -1,29 +1,24 @@
-import java.util.ArrayList;
+package jas.rai.exprs;
+
+import jas.rai.conditions.Condition;
 
 public class Select extends RAExpr {
 	
 	private Condition condition;
 	private RAExpr expr;
 	
-	ArrayList<RAExpr> subExpr = new ArrayList<>();
-	
 	public Select(Condition condition, RAExpr expr) {
 		super(Type.SELECT);
 		this.condition = condition;
 		this.expr = expr;
-		storeExpr();
 	}
 
 	public Condition getCondition() {
 		return condition;
 	}
-
-//	public void setCondition(String condition) {
-//		this.condition = condition;
-//	}
-
-	private void storeExpr() {
-		subExpr.add(expr);
-		formExpr(subExpr);
+	
+	@Override
+	public String toString() {
+		return String.format("%s%s(%s)", SELECT, condition, expr);
 	}
 }
