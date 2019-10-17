@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Project extends RAExpr {
+	
 	private List<String> attributes;
 	private RAExpr expr;
 	
@@ -15,6 +16,7 @@ public class Project extends RAExpr {
 	
 	@Override
 	public String toString() {
-		return String.format("%s%s(%s)", Type.PROJECT.getConnective(), attributes.toString(), expr.toString());
+		String attrList = String.join(",", attributes);
+		return String.format("%s[%s](%s)", Type.PROJECT.getConnective(), attrList, expr.toString());
 	}
 }

@@ -2,12 +2,6 @@ package jas.rai.conditions;
 
 public abstract class BinaryCondition extends Condition {
 	
-	public static final String EQUALITY = "=";
-	public static final String INEQUALITY = "!=";
-	public static final String LESS = "<";
-	public static final String LESS_EQUAL = "<=";
-	public static final String GREATER = ">";
-	public static final String GREATER_EQUAL = ">=";
 	public static final String AND = "AND";
 	public static final String OR = "OR";
 
@@ -24,6 +18,6 @@ public abstract class BinaryCondition extends Condition {
 
 	@Override
 	public String toString() {
-		return String.format("[%s %s %s]", left.toString(), getConnective(), right.toString());
+		return String.format("(%s) %s (%s)", left.toString(), getConnective(), right.toString());
 	}
 }

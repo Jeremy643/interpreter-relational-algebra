@@ -19,6 +19,6 @@ public class Select extends RAExpr {
 	
 	@Override
 	public String toString() {
-		return String.format("%s%s(%s)", Type.SELECT.getConnective(), condition, expr);
+		return String.format("%s[%s](%s)", Type.SELECT.getConnective(), condition, expr);
 	}
 }

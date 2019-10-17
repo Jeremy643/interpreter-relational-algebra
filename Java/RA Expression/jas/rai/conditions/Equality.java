@@ -1,12 +1,13 @@
 package jas.rai.conditions;
-public class Equality extends BinaryCondition {
-	
-	public Equality(Condition left, Condition right) {
-		super(left, right, Type.EQUALITY);
+
+public class Equality extends Comparison {
+
+	public Equality(Term left, Term right) {
+		super(Type.EQUALITY, left, right);
 	}
-	
+
 	@Override
-	public String getConnective() {
-		return EQUALITY;
+	public String getComparisonOperator() {
+		return Condition.EQUALITY;
 	}
 }
