@@ -15,6 +15,6 @@ public class Project extends RAExpr {
 	
 	@Override
 	public String toString() {
-		return String.format("%s%s(%s)", PROJECT, attributes.toString(), expr.toString());
+		return String.format("%s%s(%s)", Type.PROJECT.getConnective(), attributes.toString(), expr.toString());
 	}
 }

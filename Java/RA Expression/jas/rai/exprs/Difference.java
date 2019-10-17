@@ -8,6 +8,6 @@ public class Difference extends BinaryExpr {
 
 	@Override
 	public String getConnective() {
-		return DIFFERENCE;
+		return Type.DIFFERENCE.getConnective();
 	}
 }

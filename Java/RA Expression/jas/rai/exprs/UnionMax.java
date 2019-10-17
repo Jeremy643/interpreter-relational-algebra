@@ -8,6 +8,6 @@ public class UnionMax extends BinaryExpr {
 
 	@Override
 	public String getConnective() {
-		return UNION_MAX;
+		return Type.UNION_MAX.getConnective();
 	}
 }

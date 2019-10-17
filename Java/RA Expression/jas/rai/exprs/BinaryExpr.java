@@ -2,12 +2,6 @@ package jas.rai.exprs;
 
 public abstract class BinaryExpr extends RAExpr {
 	
-	public static final String DIFFERENCE = "DIFFERENCE";
-	public static final String UNION = "UNION";
-	public static final String INTERSECT = "INTERSECT";
-	public static final String PRODUCT = "CROSS";
-	public static final String UNION_MAX = "UMAX";
-	
 	private RAExpr left;
 	private RAExpr right;
 

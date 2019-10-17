@@ -24,7 +24,7 @@ public class Rename extends RAExpr {
 			attribute.add(key + "/" + attributes.get(key));
 		}
 		
-		return String.format("%s%s(%s)", RENAME, attribute.toString(), relation);
+		return String.format("%s%s(%s)", Type.RENAME.getConnective(), attribute.toString(), relation);
 	}
 	
 }

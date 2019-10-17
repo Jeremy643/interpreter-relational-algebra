@@ -8,6 +8,6 @@ public class Union extends BinaryExpr {
 
 	@Override
 	public String getConnective() {
-		return UNION;
+		return Type.UNION.getConnective();
 	}
 }

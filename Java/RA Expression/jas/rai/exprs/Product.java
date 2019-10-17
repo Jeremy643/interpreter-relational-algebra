@@ -8,6 +8,6 @@ public class Product extends BinaryExpr {
 
 	@Override
 	public String getConnective() {
-		return PRODUCT;
+		return Type.PRODUCT.getConnective();
 	}
 }

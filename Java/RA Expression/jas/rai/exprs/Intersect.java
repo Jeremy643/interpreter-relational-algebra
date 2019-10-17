@@ -8,6 +8,6 @@ public class Intersect extends BinaryExpr {
 
 	@Override
 	public String getConnective() {
-		return INTERSECT;
+		return Type.INTERSECT.getConnective();
 	}
 }

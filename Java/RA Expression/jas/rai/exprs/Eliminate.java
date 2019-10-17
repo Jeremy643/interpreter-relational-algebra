@@ -11,6 +11,6 @@ public class Eliminate extends RAExpr {
 	
 	@Override
 	public String toString() {
-		return String.format("%s(%s)", ELIMINATE, expr);
+		return String.format("%s(%s)", Type.ELIMINATE.getConnective(), expr);
 	}
 }
