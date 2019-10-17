@@ -3,20 +3,20 @@ package jas.rai.exprs;
 public abstract class RAExpr {
 
 	enum Type {
-		BASE (""),
-		PROJECT ("PROJ"),
-		SELECT ("SEL"),
-		PRODUCT ("PROD"),
-		UNION ("UPLUS"),
-		UNION_MAX ("UMAX"),
-		INTERSECT ("INTERSECT"),
-		DIFFERENCE ("DIFF"),
-		ELIMINATE ("ELIM"),
-		RENAME ("REN");
+		BASE(""),
+		PROJECT("PROJ"),
+		SELECT("SEL"),
+		PRODUCT("PROD"),
+		UNION("UPLUS"),
+		UNION_MAX("UMAX"),
+		INTERSECT("INTERSECT"),
+		DIFFERENCE("DIFF"),
+		ELIMINATE("ELIM"),
+		RENAME("REN");
 
 		private final String connective;
 
-		Type (String connective) {
+		Type(String connective) {
 			this.connective = connective;
 		}
 

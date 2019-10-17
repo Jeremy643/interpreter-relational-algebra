@@ -1,14 +1,14 @@
 package jas.rai.conditions;
 
-public class LessEqual extends BinaryCondition {
+public class LessEqual extends Comparison {
 
-	public LessEqual(Condition left, Condition right) {
-		super(left, right, Type.LESS_EQUAL);
+	public LessEqual(Term left, Term right) {
+		super(Type.LESS_EQUAL, left, right);
 	}
 	
 	@Override
-	public String getConnective() {
-		return LESS_EQUAL;
+	public String getComparisonOperator() {
+		return Type.LESS_EQUAL.getConnective();
 	}
 	
 }

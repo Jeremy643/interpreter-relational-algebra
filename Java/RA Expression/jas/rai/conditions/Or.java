@@ -8,7 +8,7 @@ public class Or extends BinaryCondition {
 	
 	@Override
 	public String getConnective() {
-		return OR;
+		return Type.OR.getConnective();
 	}
 	
 }

@@ -1,9 +1,6 @@
 package jas.rai.conditions;
 
 public abstract class BinaryCondition extends Condition {
-	
-	public static final String AND = "AND";
-	public static final String OR = "OR";
 
 	private Condition left;
 	private Condition right;

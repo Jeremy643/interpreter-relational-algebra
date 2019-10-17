@@ -1,14 +1,14 @@
 package jas.rai.conditions;
 
-public class GreaterEqual extends BinaryCondition {
+public class GreaterEqual extends Comparison {
 
-	public GreaterEqual(Condition left, Condition right) {
-		super(left, right, Type.GREATER_EQUAL);
+	public GreaterEqual(Term left, Term right) {
+		super(Type.GREATER_EQUAL, left, right);
 	}
 	
 	@Override
-	public String getConnective() {
-		return GREATER_EQUAL;
+	public String getComparisonOperator() {
+		return Type.GREATER_EQUAL.getConnective();
 	}
 	
 }

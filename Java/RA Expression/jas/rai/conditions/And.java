@@ -1,4 +1,5 @@
 package jas.rai.conditions;
+
 public class And extends BinaryCondition {
 	
 	public And(Condition left, Condition right) {
@@ -7,7 +8,7 @@ public class And extends BinaryCondition {
 	
 	@Override
 	public String getConnective() {
-		return AND;
+		return Type.AND.getConnective();
 	}
 	
 }

@@ -8,6 +8,6 @@ public class Equality extends Comparison {
 
 	@Override
 	public String getComparisonOperator() {
-		return Condition.EQUALITY;
+		return Type.EQUALITY.getConnective();
 	}
 }

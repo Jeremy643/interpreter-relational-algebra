@@ -8,6 +8,6 @@ public class Greater extends Comparison {
 
 	@Override
 	public String getComparisonOperator() {
-		return Condition.GREATER;
+		return Type.GREATER.getConnective();
 	}
 }
