@@ -1,0 +1,13 @@
+Operations;
+
+Each operation is represented by a given name and each name must have a colon immediately before and after it.
+
+Projection (:PROJECT:)
+Union (:UPLUS:)
+
+Structure;
+
+The following descirbes how each operation would be used.
+
+Projection - :PROJECT:[<attributes>](<raExpr>)
+Union - (<raExpr> :UPLUS: <raExpr>)
