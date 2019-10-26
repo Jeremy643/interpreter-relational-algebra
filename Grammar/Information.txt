@@ -2,8 +2,24 @@ Operations;
 
 Each operation is represented by a given name and each name must have a colon immediately before and after it.
 
-Projection (:PROJECT:)
-Union (:UPLUS:)
+Projection              (:PROJECT:)
+Union                   (:UPLUS:)
+Renaming:             	(:RENAME:)
+Product:                (':PRODUCT:')
+Union Max:              (':UMAX:')
+Intersection:           (':INTERSECT:')
+Difference:             (':DIFF:')
+Eliminate:              (':ELIM:')
+Select:                 (':SELECT:')
+And:                    (':AND:')
+Or:                     (':OR:')
+Equality:               (':=:')
+Inequality:             (':!=:')
+Less:                   (':<:')
+Less Equal:             (':<=:')
+Greater:                (':>:')
+Greater Equal:          (':>=:')
+Not:                    (':NOT:')
 
 Structure;
 
@@ -11,3 +27,10 @@ The following descirbes how each operation would be used.
 
 Projection - :PROJECT:[<attributes>](<raExpr>)
 Union - (<raExpr> :UPLUS: <raExpr>)
+Renaming - :RENAME:[<subst>](<raExpr>)
+Product - (<raExpr> :PRODUCT: <raExpr>)
+Union Max - (<raExpr> :UMAX: <raExpr>)
+Intersection - (<raExpr> :INTERSECT: <raExpr>)
+Difference - (<raExpr> :DIFF: <raExpr>)
+Eliminate - :ELIM:(<raExpr>)
+Select - :SELECT:[<conditions>](<raExpr>)
