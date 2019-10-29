@@ -30,18 +30,20 @@ NOT:                    ':NOT:';
 
 start:  raExpr;
 
-raExpr: base #BaseRelation
-      | LEFT_BRACKET raExpr RIGHT_BRACKET #ParenthesisedExpr
-      | raExpr UNION raExpr #Union
-      | raExpr UNION_MAX raExpr #UnionMax
-      | raExpr PRODUCT raExpr #Product
-      | raExpr INTERSECTION raExpr #Intersection
-      | raExpr DIFFERENCE raExpr #Difference
-      | PROJECTION LEFT_SQUARE_BRACKET attributes RIGHT_SQUARE_BRACKET LEFT_BRACKET raExpr RIGHT_BRACKET #Projection
-      | RENAMING LEFT_SQUARE_BRACKET subst (',' subst)* RIGHT_SQUARE_BRACKET LEFT_BRACKET raExpr RIGHT_BRACKET #Renaming
-      | ELIMINATE LEFT_BRACKET raExpr RIGHT_BRACKET #Eliminate
-      | SELECT LEFT_SQUARE_BRACKET condition RIGHT_SQUARE_BRACKET LEFT_BRACKET raExpr RIGHT_BRACKET #Selection
+raExpr: LEFT_BRACKET raExprBase UNION raExprBase RIGHT_BRACKET #Union
+      | LEFT_BRACKET raExprBase UNION_MAX raExprBase RIGHT_BRACKET #UnionMax
+      | LEFT_BRACKET raExprBase PRODUCT raExprBase RIGHT_BRACKET #Product
+      | LEFT_BRACKET raExprBase INTERSECTION raExprBase RIGHT_BRACKET #Intersection
+      | LEFT_BRACKET raExprBase DIFFERENCE raExprBase RIGHT_BRACKET #Difference
+      | PROJECTION LEFT_SQUARE_BRACKET attributes RIGHT_SQUARE_BRACKET LEFT_BRACKET raExprBase RIGHT_BRACKET #Projection
+      | RENAMING LEFT_SQUARE_BRACKET subst (',' subst)* RIGHT_SQUARE_BRACKET LEFT_BRACKET raExprBase RIGHT_BRACKET #Renaming
+      | ELIMINATE LEFT_BRACKET raExprBase RIGHT_BRACKET #Eliminate
+      | SELECT LEFT_SQUARE_BRACKET condition RIGHT_SQUARE_BRACKET LEFT_BRACKET raExprBase RIGHT_BRACKET #Selection
       ;
+      
+raExprBase: base #BaseRelation
+          | raExpr #RelationalAlgebraExpr
+          ;
 
 base:   NAME;
 
