@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class Rename extends RAExpr {
 	
-	public static final String MAP_SYMBOL = "/";
+	public static final String MAP_SYMBOL = "->";
 	
 	private Map<String,String> attributes;
 	private RAExpr relation;
