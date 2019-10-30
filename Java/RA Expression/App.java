@@ -1,13 +1,43 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
+import java.util.stream.Stream;
 
 import jas.rai.exprs.*;
 import jas.rai.conditions.*;
 
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+
 public class App {
 
 	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		String input = sc.nextLine();
+		sc.close();
+		
+		CharStream charStream = CharStreams.fromString(input);
+		
+		RelationalAlgebraLexer tl = new RelationalAlgebraLexer(charStream);
+		CommonTokenStream commonTokenStream = new CommonTokenStream(tl);
+		RelationalAlgebraParser tp = new RelationalAlgebraParser(commonTokenStream);
+		
+		ParseTree parseTree = tp.start();
+		BuildExpr buildExpr = new BuildExpr();
+		
+		ParseTreeWalker walker = new ParseTreeWalker();
+		walker.walk(buildExpr, parseTree);
+		
+		RAExpr e = buildExpr.getExpr();
+		
+		System.out.println(e);
+		
+		
+		/*
 		Base r = new Base("R");
 		Base s = new Base("S");
 		Base t = new Base("T");
@@ -37,6 +67,7 @@ public class App {
 		Condition c2 = new And(c1, new Greater(new Term("Height", false), new Term("160", true)));
 		RAExpr e6 = new Select(c2, s);
 		System.out.println(e6);
+		*/
 	}
 
 }
