@@ -18,24 +18,24 @@ INTERSECTION:           ':INTERSECT:';
 DIFFERENCE:             ':DIFF:';
 ELIMINATE:              ':ELIM:';
 SELECT:                 ':SELECT:';
-AND:                    ':AND:';
-OR:                     ':OR:';
-EQUALITY:               ':=:';
-INEQUALITY:             ':!=:';
-LESS:                   ':<:';
-LESS_EQUAL:             ':<=:';
-GREATER:                ':>:';
-GREATER_EQUAL:          ':>=:';
-NOT:                    ':NOT:';
+AND:                    '&';
+OR:                     '|';
+EQUALITY:               '=';
+INEQUALITY:             '!=';
+LESS:                   '<';
+LESS_EQUAL:             '<=';
+GREATER:                '>';
+GREATER_EQUAL:          '>=';
+NOT:                    '~';
 
 start:  raExpr;
 
 raExpr: base #baseRelation
-      | LEFT_BRACKET raExpr RIGHT_BRACKET #ParenthisisedExpr
-      | raExpr UNION raExpr #Union
-      | raExpr UNION_MAX raExpr  #UnionMax
+      | LEFT_BRACKET raExpr RIGHT_BRACKET #ParenthesizedExpr
       | raExpr PRODUCT raExpr  #Product
       | raExpr INTERSECTION raExpr #Intersection
+      | raExpr UNION raExpr #Union
+      | raExpr UNION_MAX raExpr  #UnionMax
       | raExpr DIFFERENCE raExpr  #Difference
       | PROJECTION LEFT_SQUARE_BRACKET attributes RIGHT_SQUARE_BRACKET LEFT_BRACKET raExpr RIGHT_BRACKET #Projection
       | RENAMING LEFT_SQUARE_BRACKET subst (',' subst)* RIGHT_SQUARE_BRACKET LEFT_BRACKET raExpr RIGHT_BRACKET #Renaming
@@ -49,14 +49,15 @@ attributes: NAME (',' NAME)*;
 
 subst: NAME '->' NAME;
 
-condition:  term EQUALITY term #Equality
+condition:  LEFT_BRACKET condition RIGHT_BRACKET #ParenthesizedCond
+         |  term EQUALITY term #Equality
          |  term INEQUALITY term #Inequality
          |  term LESS term #Less
          |  term LESS_EQUAL term #LessEqual
          |  term GREATER term #Greater
          |  term GREATER_EQUAL term #GreaterEqual
-         |  LEFT_BRACKET condition RIGHT_BRACKET AND LEFT_BRACKET condition RIGHT_BRACKET #And
-         |  LEFT_BRACKET condition RIGHT_BRACKET OR LEFT_BRACKET condition RIGHT_BRACKET #Or
+         |  condition AND condition #And
+         |  condition OR condition #Or
          |  NOT LEFT_BRACKET condition RIGHT_BRACKET #Not
          ;
          
