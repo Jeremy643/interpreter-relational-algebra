@@ -1,4 +1,4 @@
-package uk.ac.ed.inf.s1654170.mrai;
+package uk.ac.ed.inf.s1654170.mrai.parser;
 
 import java.util.List;
 import java.util.Map;
