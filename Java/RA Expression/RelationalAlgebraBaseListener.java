@@ -27,42 +27,6 @@ public class RelationalAlgebraBaseListener implements RelationalAlgebraListener 
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterUnion(RelationalAlgebraParser.UnionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitUnion(RelationalAlgebraParser.UnionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterUnionMax(RelationalAlgebraParser.UnionMaxContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitUnionMax(RelationalAlgebraParser.UnionMaxContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterProduct(RelationalAlgebraParser.ProductContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitProduct(RelationalAlgebraParser.ProductContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterIntersection(RelationalAlgebraParser.IntersectionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -75,49 +39,13 @@ public class RelationalAlgebraBaseListener implements RelationalAlgebraListener 
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDifference(RelationalAlgebraParser.DifferenceContext ctx) { }
+	@Override public void enterParenthisisedExpr(RelationalAlgebraParser.ParenthisisedExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDifference(RelationalAlgebraParser.DifferenceContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterProjection(RelationalAlgebraParser.ProjectionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitProjection(RelationalAlgebraParser.ProjectionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterRenaming(RelationalAlgebraParser.RenamingContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitRenaming(RelationalAlgebraParser.RenamingContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterEliminate(RelationalAlgebraParser.EliminateContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitEliminate(RelationalAlgebraParser.EliminateContext ctx) { }
+	@Override public void exitParenthisisedExpr(RelationalAlgebraParser.ParenthisisedExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -147,13 +75,85 @@ public class RelationalAlgebraBaseListener implements RelationalAlgebraListener 
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterRelationalAlgebraExpr(RelationalAlgebraParser.RelationalAlgebraExprContext ctx) { }
+	@Override public void enterEliminate(RelationalAlgebraParser.EliminateContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitRelationalAlgebraExpr(RelationalAlgebraParser.RelationalAlgebraExprContext ctx) { }
+	@Override public void exitEliminate(RelationalAlgebraParser.EliminateContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterUnionMax(RelationalAlgebraParser.UnionMaxContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitUnionMax(RelationalAlgebraParser.UnionMaxContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterProjection(RelationalAlgebraParser.ProjectionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitProjection(RelationalAlgebraParser.ProjectionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterProduct(RelationalAlgebraParser.ProductContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitProduct(RelationalAlgebraParser.ProductContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterDifference(RelationalAlgebraParser.DifferenceContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitDifference(RelationalAlgebraParser.DifferenceContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterUnion(RelationalAlgebraParser.UnionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitUnion(RelationalAlgebraParser.UnionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterRenaming(RelationalAlgebraParser.RenamingContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRenaming(RelationalAlgebraParser.RenamingContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

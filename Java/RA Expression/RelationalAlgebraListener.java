@@ -17,42 +17,6 @@ public interface RelationalAlgebraListener extends ParseTreeListener {
 	 */
 	void exitStart(RelationalAlgebraParser.StartContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code Union}
-	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
-	 * @param ctx the parse tree
-	 */
-	void enterUnion(RelationalAlgebraParser.UnionContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code Union}
-	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
-	 * @param ctx the parse tree
-	 */
-	void exitUnion(RelationalAlgebraParser.UnionContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code UnionMax}
-	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
-	 * @param ctx the parse tree
-	 */
-	void enterUnionMax(RelationalAlgebraParser.UnionMaxContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code UnionMax}
-	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
-	 * @param ctx the parse tree
-	 */
-	void exitUnionMax(RelationalAlgebraParser.UnionMaxContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code Product}
-	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
-	 * @param ctx the parse tree
-	 */
-	void enterProduct(RelationalAlgebraParser.ProductContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code Product}
-	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
-	 * @param ctx the parse tree
-	 */
-	void exitProduct(RelationalAlgebraParser.ProductContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code Intersection}
 	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
 	 * @param ctx the parse tree
@@ -65,53 +29,17 @@ public interface RelationalAlgebraListener extends ParseTreeListener {
 	 */
 	void exitIntersection(RelationalAlgebraParser.IntersectionContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code Difference}
+	 * Enter a parse tree produced by the {@code ParenthisisedExpr}
 	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
 	 * @param ctx the parse tree
 	 */
-	void enterDifference(RelationalAlgebraParser.DifferenceContext ctx);
+	void enterParenthisisedExpr(RelationalAlgebraParser.ParenthisisedExprContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code Difference}
+	 * Exit a parse tree produced by the {@code ParenthisisedExpr}
 	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
 	 * @param ctx the parse tree
 	 */
-	void exitDifference(RelationalAlgebraParser.DifferenceContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code Projection}
-	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
-	 * @param ctx the parse tree
-	 */
-	void enterProjection(RelationalAlgebraParser.ProjectionContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code Projection}
-	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
-	 * @param ctx the parse tree
-	 */
-	void exitProjection(RelationalAlgebraParser.ProjectionContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code Renaming}
-	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
-	 * @param ctx the parse tree
-	 */
-	void enterRenaming(RelationalAlgebraParser.RenamingContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code Renaming}
-	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
-	 * @param ctx the parse tree
-	 */
-	void exitRenaming(RelationalAlgebraParser.RenamingContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code Eliminate}
-	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
-	 * @param ctx the parse tree
-	 */
-	void enterEliminate(RelationalAlgebraParser.EliminateContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code Eliminate}
-	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
-	 * @param ctx the parse tree
-	 */
-	void exitEliminate(RelationalAlgebraParser.EliminateContext ctx);
+	void exitParenthisisedExpr(RelationalAlgebraParser.ParenthisisedExprContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code Selection}
 	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
@@ -125,29 +53,101 @@ public interface RelationalAlgebraListener extends ParseTreeListener {
 	 */
 	void exitSelection(RelationalAlgebraParser.SelectionContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code BaseRelation}
-	 * labeled alternative in {@link RelationalAlgebraParser#raExprBase}.
+	 * Enter a parse tree produced by the {@code baseRelation}
+	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
 	 * @param ctx the parse tree
 	 */
 	void enterBaseRelation(RelationalAlgebraParser.BaseRelationContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code BaseRelation}
-	 * labeled alternative in {@link RelationalAlgebraParser#raExprBase}.
+	 * Exit a parse tree produced by the {@code baseRelation}
+	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
 	 * @param ctx the parse tree
 	 */
 	void exitBaseRelation(RelationalAlgebraParser.BaseRelationContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code RelationalAlgebraExpr}
-	 * labeled alternative in {@link RelationalAlgebraParser#raExprBase}.
+	 * Enter a parse tree produced by the {@code Eliminate}
+	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
 	 * @param ctx the parse tree
 	 */
-	void enterRelationalAlgebraExpr(RelationalAlgebraParser.RelationalAlgebraExprContext ctx);
+	void enterEliminate(RelationalAlgebraParser.EliminateContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code RelationalAlgebraExpr}
-	 * labeled alternative in {@link RelationalAlgebraParser#raExprBase}.
+	 * Exit a parse tree produced by the {@code Eliminate}
+	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
 	 * @param ctx the parse tree
 	 */
-	void exitRelationalAlgebraExpr(RelationalAlgebraParser.RelationalAlgebraExprContext ctx);
+	void exitEliminate(RelationalAlgebraParser.EliminateContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code UnionMax}
+	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterUnionMax(RelationalAlgebraParser.UnionMaxContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code UnionMax}
+	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitUnionMax(RelationalAlgebraParser.UnionMaxContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code Projection}
+	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterProjection(RelationalAlgebraParser.ProjectionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code Projection}
+	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitProjection(RelationalAlgebraParser.ProjectionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code Product}
+	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterProduct(RelationalAlgebraParser.ProductContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code Product}
+	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitProduct(RelationalAlgebraParser.ProductContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code Difference}
+	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterDifference(RelationalAlgebraParser.DifferenceContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code Difference}
+	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitDifference(RelationalAlgebraParser.DifferenceContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code Union}
+	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterUnion(RelationalAlgebraParser.UnionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code Union}
+	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitUnion(RelationalAlgebraParser.UnionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code Renaming}
+	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterRenaming(RelationalAlgebraParser.RenamingContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code Renaming}
+	 * labeled alternative in {@link RelationalAlgebraParser#raExpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitRenaming(RelationalAlgebraParser.RenamingContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link RelationalAlgebraParser#base}.
 	 * @param ctx the parse tree
