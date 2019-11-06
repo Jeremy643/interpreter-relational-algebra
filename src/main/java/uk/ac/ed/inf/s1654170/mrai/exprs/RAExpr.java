@@ -1,5 +1,7 @@
 package uk.ac.ed.inf.s1654170.mrai.exprs;
 
+import uk.ac.ed.inf.s1654170.mrai.Schema;
+
 public abstract class RAExpr {
 
 	enum Type {
@@ -33,5 +35,9 @@ public abstract class RAExpr {
 
 	public Type getType() {
 		return type;
+	}
+	
+	public boolean validate(Schema schema) {
+		return true;
 	}
 }
