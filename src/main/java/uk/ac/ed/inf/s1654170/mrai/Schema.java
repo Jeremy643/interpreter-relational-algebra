@@ -7,23 +7,23 @@ import java.util.Map;
 public class Schema {
 	
 	private Map<String,HashSet<String>> relations;
-	private Map<String,Type> attributeTypes;
+	private Map<String,HashMap<String,Type>> attributeTypes;
 	
 	enum Type {
 		STR,
 		NUM;
 	}
 
-	public Schema(Map<String,HashSet<String>> relations, Map<String,Type> types) {
+	public Schema(Map<String,HashSet<String>> relations, Map<String,HashMap<String,Type>> attributeTypes) {
 		this.relations = new HashMap<>(relations);
-		attributeTypes = new HashMap<>(types);
+		this.attributeTypes = new HashMap<>(attributeTypes);
 	}
 	
 	public Map<String,HashSet<String>> getRelations() {
 		return relations;
 	}
 	
-	public Map<String,Type> getAttributeTypes() {
+	public Map<String,HashMap<String,Type>> getAttributeTypes() {
 		return attributeTypes;
 	}
 	
