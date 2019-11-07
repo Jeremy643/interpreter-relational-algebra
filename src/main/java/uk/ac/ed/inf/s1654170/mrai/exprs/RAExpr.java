@@ -1,6 +1,6 @@
 package uk.ac.ed.inf.s1654170.mrai.exprs;
 
-import uk.ac.ed.inf.s1654170.mrai.Schema;
+import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
 
 public abstract class RAExpr {
 

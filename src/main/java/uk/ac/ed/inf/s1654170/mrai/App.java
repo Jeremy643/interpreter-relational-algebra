@@ -2,23 +2,23 @@ package uk.ac.ed.inf.s1654170.mrai;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.Set;
-import java.util.stream.Stream;
-
-import uk.ac.ed.inf.s1654170.mrai.Schema.Type;
-import uk.ac.ed.inf.s1654170.mrai.conditions.*;
-import uk.ac.ed.inf.s1654170.mrai.exprs.*;
-import uk.ac.ed.inf.s1654170.mrai.parser.*;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+
+import uk.ac.ed.inf.s1654170.mrai.exprs.RAExpr;
+import uk.ac.ed.inf.s1654170.mrai.parser.BuildExpr;
+import uk.ac.ed.inf.s1654170.mrai.parser.RelationalAlgebraLexer;
+import uk.ac.ed.inf.s1654170.mrai.parser.RelationalAlgebraParser;
+import uk.ac.ed.inf.s1654170.mrai.schema.BaseSignature;
+import uk.ac.ed.inf.s1654170.mrai.schema.Column.Type;
+import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
 
 public class App {
 
@@ -43,34 +43,16 @@ public class App {
 		
 		System.out.println(e);
 		
-		Map<String,HashSet<String>> relations = new HashMap<>();
-		HashSet<String> attributesA = new HashSet<>();
-		HashSet<String> attributesB = new HashSet<>();
+		List<String> attr = new ArrayList<>();
+		attr.add("Name");
+		attr.add("Age");
 		
-		attributesA.add("Name");
-		attributesA.add("Age");
-		attributesB.add("Name");
-		attributesB.add("Age");
+		List<Type> types = new ArrayList<>();
+		attr.add("Name");
+		attr.add("Age");
 		
-		relations.put("A", attributesA);
-		relations.put("B", attributesB);
-		
-		Map<String,HashMap<String,Type>> allTypes = new HashMap<>();
-		HashMap<String,Type> attributeTypeA = new HashMap<>();
-		HashMap<String,Type> attributeTypeB = new HashMap<>();
-		
-		attributeTypeA.put("Name", Type.STR);
-		attributeTypeA.put("Age", Type.NUM);
-		attributeTypeB.put("Name", Type.STR);
-		attributeTypeB.put("Age", Type.NUM);
-		
-		allTypes.put("A", attributeTypeA);
-		allTypes.put("B", attributeTypeB);
-		
-		Schema sch = new Schema(relations, allTypes);
-		
-		System.out.println(e.validate(sch));
-		
+		BaseSignature s1 = new BaseSignature(attr, types);
+				
 		
 		/*
 		Base r = new Base("R");
