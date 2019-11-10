@@ -1,6 +1,6 @@
 package uk.ac.ed.inf.s1654170.mrai.exprs;
 
-import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
+import uk.ac.ed.inf.s1654170.mrai.schema.*;
 
 public abstract class RAExpr {
 
@@ -37,7 +37,7 @@ public abstract class RAExpr {
 		return type;
 	}
 	
-	public boolean validate(Schema schema) {
-		return true;
-	}
+	public abstract Signature getSignature();
+	
+	public abstract boolean validate(Schema schema);
 }
