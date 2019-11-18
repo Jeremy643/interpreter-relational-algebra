@@ -21,14 +21,14 @@ public class Base extends RAExpr {
 		return name;
 	}
 
-//	@Override
-//	public Signature getSignature() {
-//		return null;
-//	}
+	@Override
+	public Signature signature(Schema s) {
+		return s.getSignature(name);
+	}
 
 	@Override
 	public boolean validate(Schema schema) {
-		Signature sig = schema.getSignature(name);
+		Signature sig = signature(schema);
 		if (sig == null) {
 			return false;
 		} else {
