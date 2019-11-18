@@ -37,7 +37,7 @@ public abstract class RAExpr {
 		return type;
 	}
 	
-	//public abstract Signature getSignature();
+	public abstract Signature signature(Schema s);
 	
 	public abstract boolean validate(Schema schema);
 }
