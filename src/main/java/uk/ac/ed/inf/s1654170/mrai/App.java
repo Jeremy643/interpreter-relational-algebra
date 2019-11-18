@@ -17,6 +17,7 @@ import uk.ac.ed.inf.s1654170.mrai.parser.BuildExpr;
 import uk.ac.ed.inf.s1654170.mrai.parser.RelationalAlgebraLexer;
 import uk.ac.ed.inf.s1654170.mrai.parser.RelationalAlgebraParser;
 import uk.ac.ed.inf.s1654170.mrai.schema.BaseSignature;
+import uk.ac.ed.inf.s1654170.mrai.schema.Column;
 import uk.ac.ed.inf.s1654170.mrai.schema.Column.Type;
 import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
 
@@ -43,15 +44,12 @@ public class App {
 		
 		System.out.println(e);
 		
-		List<String> attr = new ArrayList<>();
-		attr.add("Name");
-		attr.add("Age");
-		
-		List<Type> types = new ArrayList<>();
-		attr.add("Name");
-		attr.add("Age");
-		
-		BaseSignature s1 = new BaseSignature(attr, types);
+		Schema schema = new Schema("R:Name/STRING,Age/NUMBER;S:Name/STRING,Age/NUMBER;P:Name/STRING");
+		if (e.validate(schema)) {
+			System.out.println("Valid!");
+		} else {
+			System.out.println("Not valid!");
+		}
 				
 		
 		/*
