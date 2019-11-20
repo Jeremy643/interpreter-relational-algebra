@@ -1,5 +1,7 @@
 package uk.ac.ed.inf.s1654170.mrai.conditions;
 
+import uk.ac.ed.inf.s1654170.mrai.schema.Signature;
+
 public abstract class Condition {
 	
 	enum Type {
@@ -33,4 +35,6 @@ public abstract class Condition {
 	public Type getType() {
 		return type;
 	}
+	
+	public abstract boolean validate(Signature sig);
 }
