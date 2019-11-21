@@ -2,19 +2,23 @@ package uk.ac.ed.inf.s1654170.mrai.exprs;
 
 import uk.ac.ed.inf.s1654170.mrai.schema.*;
 
+import org.antlr.v4.runtime.Vocabulary;
+
+import uk.ac.ed.inf.s1654170.mrai.parser.RelationalAlgebraLexer;
+
 public abstract class RAExpr {
 
 	enum Type {
 		BASE(""),
-		PROJECT("PROJ"),
-		SELECT("SEL"),
-		PRODUCT("PROD"),
-		UNION("UPLUS"),
-		UNION_MAX("UMAX"),
-		INTERSECT("INTERSECT"),
-		DIFFERENCE("DIFF"),
-		ELIMINATE("ELIM"),
-		RENAME("REN");
+		PROJECT(VOCAB.getLiteralName(RelationalAlgebraLexer.PROJECTION).replace("'", "")),
+		SELECT(VOCAB.getLiteralName(RelationalAlgebraLexer.SELECT).replace("'", "")),
+		PRODUCT(VOCAB.getLiteralName(RelationalAlgebraLexer.PRODUCT).replace("'", "")),
+		UNION(VOCAB.getLiteralName(RelationalAlgebraLexer.UNION).replace("'", "")),
+		UNION_MAX(VOCAB.getLiteralName(RelationalAlgebraLexer.UNION_MAX).replace("'", "")),
+		INTERSECT(VOCAB.getLiteralName(RelationalAlgebraLexer.INTERSECTION).replace("'", "")),
+		DIFFERENCE(VOCAB.getLiteralName(RelationalAlgebraLexer.DIFFERENCE).replace("'", "")),
+		ELIMINATE(VOCAB.getLiteralName(RelationalAlgebraLexer.ELIMINATE).replace("'", "")),
+		RENAME(VOCAB.getLiteralName(RelationalAlgebraLexer.RENAMING).replace("'", ""));
 
 		private final String connective;
 
@@ -28,6 +32,7 @@ public abstract class RAExpr {
 	}
 
 	private Type type;
+	private static final Vocabulary VOCAB = RelationalAlgebraLexer.VOCABULARY;
 
 	protected RAExpr(Type type) {
 		this.type = type;
