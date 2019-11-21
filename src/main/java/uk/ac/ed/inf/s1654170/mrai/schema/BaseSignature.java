@@ -32,4 +32,13 @@ public class BaseSignature implements Signature {
 	public Column get(int i) {
 		return new Column(names.get(i), types.get(i));
 	}
+	
+	@Override
+	public String toString() {
+		String[] s = new String[names.size()];
+		for (int i=0; i < s.length; i++) {
+			s[i] = String.format("%s/%s", names.get(i), types.get(i));
+		}
+		return String.join(",", s);
+	}
 }

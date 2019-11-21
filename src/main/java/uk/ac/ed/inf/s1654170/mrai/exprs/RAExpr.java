@@ -37,7 +37,18 @@ public abstract class RAExpr {
 		return type;
 	}
 	
-	public abstract Signature signature(Schema s);
+	public abstract Signature signature(Schema s) throws SchemaException;
 	
-	public abstract boolean validate(Schema schema);
+	public boolean validate(Schema schema) {
+		try {
+			Signature sign = signature(schema);
+			if (sign != null) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (SchemaException e) {
+			return false;
+		}
+	}
 }

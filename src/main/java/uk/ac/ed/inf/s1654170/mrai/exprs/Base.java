@@ -25,14 +25,4 @@ public class Base extends RAExpr {
 	public Signature signature(Schema s) {
 		return s.getSignature(name);
 	}
-
-	@Override
-	public boolean validate(Schema schema) {
-		Signature sig = signature(schema);
-		if (sig == null) {
-			return false;
-		} else {
-			return true;
-		}
-	}
 }

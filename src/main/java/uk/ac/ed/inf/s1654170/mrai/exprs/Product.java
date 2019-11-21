@@ -31,7 +31,7 @@ public class Product extends BinaryExpr {
 		
 		List<Column.Type> types = new ArrayList<>();
 		
-		if (l.getAttributes() == null || r.getAttributes() == null) {
+		if (l == null || r == null) {
 			return null;
 		} else {
 			types.addAll(l.getTypes());

@@ -1,9 +1,5 @@
 package uk.ac.ed.inf.s1654170.mrai;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 import org.antlr.v4.runtime.CharStream;
@@ -16,17 +12,15 @@ import uk.ac.ed.inf.s1654170.mrai.exprs.RAExpr;
 import uk.ac.ed.inf.s1654170.mrai.parser.BuildExpr;
 import uk.ac.ed.inf.s1654170.mrai.parser.RelationalAlgebraLexer;
 import uk.ac.ed.inf.s1654170.mrai.parser.RelationalAlgebraParser;
-import uk.ac.ed.inf.s1654170.mrai.schema.BaseSignature;
-import uk.ac.ed.inf.s1654170.mrai.schema.Column;
-import uk.ac.ed.inf.s1654170.mrai.schema.Column.Type;
 import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
+import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
 
 public class App {
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
+		System.out.print("RA expression: ");
 		String input = sc.nextLine();
-		sc.close();
 		
 		CharStream charStream = CharStreams.fromString(input);
 		
@@ -44,14 +38,24 @@ public class App {
 		
 		System.out.println(e);
 		
-		Schema schema = new Schema("R:Name/STRING,Age/NUMBER;S:Name/STRING,Age/NUMBER;P:Name/STRING");
+		System.out.println();
+		
+		System.out.print("Schema: ");
+		//String schemaTest = "R:Name/STRING,Age/NUMBER;S:Name/STRING,Age/NUMBER;P:Name/STRING";
+		Schema schema = new Schema(sc.nextLine());
+		try {
+			System.out.println(e.signature(schema));
+		} catch (SchemaException se) {
+			System.out.println(se.getMessage());
+			se.printStackTrace();
+		}
 		if (e.validate(schema)) {
 			System.out.println("Valid!");
 		} else {
 			System.out.println("Not valid!");
 		}
-				
 		
+		sc.close();
 		/*
 		Base r = new Base("R");
 		Base s = new Base("S");
