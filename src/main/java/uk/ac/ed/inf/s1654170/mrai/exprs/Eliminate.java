@@ -1,6 +1,7 @@
 package uk.ac.ed.inf.s1654170.mrai.exprs;
 
 import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
+import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
 import uk.ac.ed.inf.s1654170.mrai.schema.Signature;
 
 public class Eliminate extends RAExpr {
@@ -18,18 +19,7 @@ public class Eliminate extends RAExpr {
 	}
 
 	@Override
-	public Signature signature(Schema s) {
+	public Signature signature(Schema s) throws SchemaException {
 		return expr.signature(s);
-	}
-
-	@Override
-	public boolean validate(Schema schema) {
-		Signature sig = expr.signature(schema);
-		
-		if (sig == null) {
-			return false;
-		} else {
-			return true;
-		}
 	}
 }

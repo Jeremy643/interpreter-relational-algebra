@@ -5,6 +5,7 @@ import java.util.List;
 
 import uk.ac.ed.inf.s1654170.mrai.schema.Column;
 import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
+import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
 import uk.ac.ed.inf.s1654170.mrai.schema.Signature;
 
 public class UnionMax extends BinaryExpr {
@@ -24,33 +25,24 @@ public class UnionMax extends BinaryExpr {
 	}
 
 	@Override
-	public Signature signature(Schema s) {
-		return left.signature(s);
-	}
-
-	@Override
-	public boolean validate(Schema schema) {
-		Signature l = left.signature(schema);
-		Signature r = right.signature(schema);
+	public Signature signature(Schema s) throws SchemaException {
+		Signature l = left.signature(s);
+		Signature r = right.signature(s);
 		
 		List<String> lAttr;
 		List<Column.Type> lType;
 		List<String> rAttr;
 		List<Column.Type> rType;
 		
-		if (l == null || r == null) {
-			return false;
-		} else {
-			lAttr = new ArrayList<>(l.getAttributes());
-			lType = new ArrayList<>(l.getTypes());
-			rAttr = new ArrayList<>(r.getAttributes());
-			rType = new ArrayList<>(r.getTypes());
-		}
+		lAttr = new ArrayList<>(l.getAttributes());
+		lType = new ArrayList<>(l.getTypes());
+		rAttr = new ArrayList<>(r.getAttributes());
+		rType = new ArrayList<>(r.getTypes());
 		
 		if (!lAttr.equals(rAttr) || !lType.equals(rType)) {
-			return false;
+			throw new SchemaException(SchemaException.UNION_MAX_ERROR);
 		} else {
-			return true;
+			return left.signature(s);
 		}
 	}
 }

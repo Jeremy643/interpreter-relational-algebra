@@ -2,6 +2,7 @@ package uk.ac.ed.inf.s1654170.mrai.exprs;
 
 import uk.ac.ed.inf.s1654170.mrai.conditions.Condition;
 import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
+import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
 import uk.ac.ed.inf.s1654170.mrai.schema.Signature;
 
 public class Select extends RAExpr {
@@ -25,18 +26,13 @@ public class Select extends RAExpr {
 	}
 
 	@Override
-	public Signature signature(Schema s) {
-		return expr.signature(s);
-	}
-
-	@Override
-	public boolean validate(Schema schema) {
-		Signature sig = expr.signature(schema);
+	public Signature signature(Schema s) throws SchemaException {
+		Signature sig = expr.signature(s);
 		
-		if (sig == null || !condition.validate(sig)) {
-			return false;
+		if (!condition.validate(sig)) {
+			throw new SchemaException(SchemaException.SELECT_ERROR);
 		} else {
-			return true;
+			return sig;
 		}
 	}
 }

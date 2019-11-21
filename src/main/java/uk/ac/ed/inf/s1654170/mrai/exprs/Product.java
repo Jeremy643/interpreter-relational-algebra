@@ -5,6 +5,7 @@ import java.util.List;
 
 import uk.ac.ed.inf.s1654170.mrai.schema.Column;
 import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
+import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
 import uk.ac.ed.inf.s1654170.mrai.schema.Signature;
 import uk.ac.ed.inf.s1654170.mrai.schema.UnnamedSignature;
 
@@ -25,31 +26,15 @@ public class Product extends BinaryExpr {
 	}
 
 	@Override
-	public Signature signature(Schema s) {
+	public Signature signature(Schema s) throws SchemaException {
 		Signature l = left.signature(s);
 		Signature r = right.signature(s);
 		
 		List<Column.Type> types = new ArrayList<>();
 		
-		if (l == null || r == null) {
-			return null;
-		} else {
-			types.addAll(l.getTypes());
-			types.addAll(r.getTypes());
-			
-			return new UnnamedSignature(types);
-		}
-	}
+		types.addAll(l.getTypes());
+		types.addAll(r.getTypes());
 
-	@Override
-	public boolean validate(Schema schema) {
-		Signature l = left.signature(schema);
-		Signature r = right.signature(schema);
-		
-		if (l == null || r == null) {
-			return false;
-		} else {
-			return true;
-		}
+		return new UnnamedSignature(types);
 	}
 }

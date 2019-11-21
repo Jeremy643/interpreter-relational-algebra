@@ -6,6 +6,7 @@ import java.util.List;
 import uk.ac.ed.inf.s1654170.mrai.schema.BaseSignature;
 import uk.ac.ed.inf.s1654170.mrai.schema.Column;
 import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
+import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
 import uk.ac.ed.inf.s1654170.mrai.schema.Signature;
 
 public class Project extends RAExpr {
@@ -26,45 +27,26 @@ public class Project extends RAExpr {
 	}
 
 	@Override
-	public Signature signature(Schema s) {
+	public Signature signature(Schema s) throws SchemaException {
 		Signature sigExpr = expr.signature(s);
 		
 		List<String> attr;
 		List<Column.Type> type;
-		
-		if (sigExpr == null) {
-			return null;
-		} else {
-			attr = new ArrayList<>(sigExpr.getAttributes());
-			type = new ArrayList<>(sigExpr.getTypes());
-		}
-		
-		for (int i = 0; i < attr.size(); i++) {
-			if (!attributes.contains(attr.get(i))) {
-				attr.remove(i);
-				type.remove(i);
-			}
-		}
-		
-		return new BaseSignature(attr,type);
-	}
 
-	@Override
-	public boolean validate(Schema schema) {
-		Signature sig = expr.signature(schema);
+		attr = new ArrayList<>(sigExpr.getAttributes());
+		type = new ArrayList<>(sigExpr.getTypes());
 		
-		List<String> attr;
-		
-		if (sig == null) {
-			return false;
+		if (!attr.containsAll(attributes)) {
+			throw new SchemaException(SchemaException.PROJECT_ERROR);
 		} else {
-			attr = new ArrayList<>(sig.getAttributes());
-		}
-		
-		if (attr.containsAll(attributes)) {
-			return true;
-		} else {
-			return false;
+			for (int i = 0; i < attr.size(); i++) {
+				if (!attributes.contains(attr.get(i))) {
+					attr.remove(i);
+					type.remove(i);
+				}
+			}
+			
+			return new BaseSignature(attr,type);
 		}
 	}
 }

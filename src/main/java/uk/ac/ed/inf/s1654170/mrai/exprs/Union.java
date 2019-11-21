@@ -40,7 +40,7 @@ public class Union extends BinaryExpr {
 		rType = new ArrayList<>(r.getTypes());
 		
 		if (!lAttr.equals(rAttr) || !lType.equals(rType)) {
-			throw new SchemaException("The arguments do not have the same set of attributes");
+			throw new SchemaException(SchemaException.UNION_ERROR);
 		} else {
 			return left.signature(s);
 		}
