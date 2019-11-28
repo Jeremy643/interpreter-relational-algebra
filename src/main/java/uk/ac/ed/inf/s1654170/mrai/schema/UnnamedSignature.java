@@ -25,7 +25,7 @@ public class UnnamedSignature implements Signature {
 
 	@Override
 	public Column get(int i) {
-		return new Column(String.valueOf(i), types.get(i));
+		return new Column(null, types.get(i));
 	}
 
 }
