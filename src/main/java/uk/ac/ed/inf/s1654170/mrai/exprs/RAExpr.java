@@ -1,24 +1,27 @@
 package uk.ac.ed.inf.s1654170.mrai.exprs;
 
-import uk.ac.ed.inf.s1654170.mrai.schema.*;
-
-import org.antlr.v4.runtime.Vocabulary;
-
 import uk.ac.ed.inf.s1654170.mrai.parser.RelationalAlgebraLexer;
+import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
+import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
+import uk.ac.ed.inf.s1654170.mrai.schema.Signature;
 
 public abstract class RAExpr {
+	
+	private static final String getName(int i) {
+		return RelationalAlgebraLexer.VOCABULARY.getLiteralName(i).replace("'", "");
+	}
 
 	enum Type {
-		BASE(""),
-		PROJECT(VOCAB.getLiteralName(RelationalAlgebraLexer.PROJECTION).replace("'", "")),
-		SELECT(VOCAB.getLiteralName(RelationalAlgebraLexer.SELECT).replace("'", "")),
-		PRODUCT(VOCAB.getLiteralName(RelationalAlgebraLexer.PRODUCT).replace("'", "")),
-		UNION(VOCAB.getLiteralName(RelationalAlgebraLexer.UNION).replace("'", "")),
-		UNION_MAX(VOCAB.getLiteralName(RelationalAlgebraLexer.UNION_MAX).replace("'", "")),
-		INTERSECT(VOCAB.getLiteralName(RelationalAlgebraLexer.INTERSECTION).replace("'", "")),
-		DIFFERENCE(VOCAB.getLiteralName(RelationalAlgebraLexer.DIFFERENCE).replace("'", "")),
-		ELIMINATE(VOCAB.getLiteralName(RelationalAlgebraLexer.ELIMINATE).replace("'", "")),
-		RENAME(VOCAB.getLiteralName(RelationalAlgebraLexer.RENAMING).replace("'", ""));
+		BASE		(""),
+		PROJECT		(getName(RelationalAlgebraLexer.PROJECTION)),
+		SELECT		(getName(RelationalAlgebraLexer.SELECT)),
+		PRODUCT		(getName(RelationalAlgebraLexer.PRODUCT)),
+		UNION		(getName(RelationalAlgebraLexer.UNION)),
+		UNION_MAX	(getName(RelationalAlgebraLexer.UNION_MAX)),
+		INTERSECT	(getName(RelationalAlgebraLexer.INTERSECTION)),
+		DIFFERENCE	(getName(RelationalAlgebraLexer.DIFFERENCE)),
+		ELIMINATE	(getName(RelationalAlgebraLexer.ELIMINATE)),
+		RENAME		(getName(RelationalAlgebraLexer.RENAMING));
 
 		private final String connective;
 
@@ -32,7 +35,6 @@ public abstract class RAExpr {
 	}
 
 	private Type type;
-	private static final Vocabulary VOCAB = RelationalAlgebraLexer.VOCABULARY;
 
 	protected RAExpr(Type type) {
 		this.type = type;
