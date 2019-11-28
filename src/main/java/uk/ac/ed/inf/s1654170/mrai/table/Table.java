@@ -1,10 +1,12 @@
 package uk.ac.ed.inf.s1654170.mrai.table;
 
+import java.util.ArrayList;
+
 import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
 import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
 import uk.ac.ed.inf.s1654170.mrai.schema.Signature;
 
-public class Table {
+public class Table extends ArrayList<Record> {
 	
 	private String name;
 	private Schema schema;
