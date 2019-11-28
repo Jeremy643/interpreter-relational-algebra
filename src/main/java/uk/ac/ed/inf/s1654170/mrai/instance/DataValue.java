@@ -1,6 +1,5 @@
-package uk.ac.ed.inf.s1654170.mrai.table;
+package uk.ac.ed.inf.s1654170.mrai.instance;
 
-import javafx.print.Collation;
 import uk.ac.ed.inf.s1654170.mrai.schema.Column;
 
 public class DataValue {
