@@ -1,5 +1,7 @@
 package uk.ac.ed.inf.s1654170.mrai.conditions;
 
+import uk.ac.ed.inf.s1654170.mrai.schema.Signature;
+
 public abstract class BinaryCondition extends Condition {
 
 	private Condition left;
@@ -16,5 +18,14 @@ public abstract class BinaryCondition extends Condition {
 	@Override
 	public String toString() {
 		return String.format("(%s) %s (%s)", left.toString(), getConnective(), right.toString());
+	}
+	
+	@Override
+	public boolean validate(Signature sig) {
+		if (left.validate(sig) && right.validate(sig)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
