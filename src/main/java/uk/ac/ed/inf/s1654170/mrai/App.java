@@ -9,6 +9,9 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import uk.ac.ed.inf.s1654170.mrai.exprs.RAExpr;
+import uk.ac.ed.inf.s1654170.mrai.instance.DataValue;
+import uk.ac.ed.inf.s1654170.mrai.instance.Record;
+import uk.ac.ed.inf.s1654170.mrai.instance.Table;
 import uk.ac.ed.inf.s1654170.mrai.parser.BuildExpr;
 import uk.ac.ed.inf.s1654170.mrai.parser.RelationalAlgebraLexer;
 import uk.ac.ed.inf.s1654170.mrai.parser.RelationalAlgebraParser;
@@ -56,6 +59,16 @@ public class App {
 		}
 		
 		sc.close();
+		
+		Table t = new Table("t");
+		Record r = new Record();
+		DataValue d1 = new DataValue("John");
+		r.add(d1);
+		Float f = new Float(18);
+		DataValue d2 = new DataValue(f);
+		r.add(d2);
+		t.add(r);
+		System.out.println(t.get(0));
 		/*
 		Base r = new Base("R");
 		Base s = new Base("S");

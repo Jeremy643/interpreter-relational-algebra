@@ -20,6 +20,10 @@ public class DataValue {
 		this.numberValue = f;
 	}
 	
+	public Column.Type getType() {
+		return type;
+	}
+	
 	public String toString() {
 		if (stringValue == null) {
 			return String.valueOf(numberValue);
