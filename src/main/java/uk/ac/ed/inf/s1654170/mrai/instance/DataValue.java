@@ -19,4 +19,12 @@ public class DataValue {
 		this.stringValue = null;
 		this.numberValue = f;
 	}
+	
+	public String toString() {
+		if (stringValue == null) {
+			return String.valueOf(numberValue);
+		} else {
+			return stringValue;
+		}
+	}
 }
