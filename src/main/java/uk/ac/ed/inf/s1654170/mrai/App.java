@@ -28,10 +28,14 @@ public class App {
 		Table tbl = new Table();
 		List<Column.Type> types = sch.getSignature("R").getTypes();
 		//Column.Type[] types = new Column.Type[] {Column.Type.STRING, Column.Type.NUMBER};
-		tbl.add(Record.valueOf( types, "John", "20"));
+		Record r1 = Record.valueOf( types, "John", "20");
+		Record r2 = Record.valueOf( types, "John", "20");
+		tbl.add(r1);
+		tbl.add(r2);
+		System.out.println(r1.equals(r2));
+		
 		tbl.add(Record.valueOf( types, "Mary", "20"));
 		tbl.add(Record.valueOf( types, "Mary", "20"));
-		tbl.add(Record.valueOf( types, "John", "20"));
 		for (Record r : tbl) {
 			System.out.println(r);
 		}
