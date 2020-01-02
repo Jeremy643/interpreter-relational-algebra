@@ -1,4 +1,5 @@
 ID,Name,Age
+STRING,STRING,NUMBEr
 s001,Jane,15
 s002,Bill,15
 s003,Tom,18
