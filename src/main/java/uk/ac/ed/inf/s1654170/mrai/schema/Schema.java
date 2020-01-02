@@ -1,6 +1,7 @@
 package uk.ac.ed.inf.s1654170.mrai.schema;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,14 +11,33 @@ import uk.ac.ed.inf.s1654170.mrai.schema.Column.Type;
 
 public class Schema {
 	
-	private Map<String,Signature> relations;
+	private Map<String,Signature> relations = new HashMap<>();
 	
-	public Schema(String relations) { //Map<String,Signature> relations
-		//this.relations = new HashMap<>(relations);
-		this.relations = new HashMap<>(formatInput(relations));
+	public Schema(ArrayList<String> fileName, ArrayList<String> attributes, ArrayList<String> attributeTypes) { //String relations
+		//this.relations = new HashMap<>(formatInput(relations));
+		for (int i = 0; i < fileName.size(); i++) {
+			String file = fileName.get(i);
+			String attr = attributes.get(i);
+			String attrType = attributeTypes.get(i);
+			
+			List<String> attribute = new ArrayList<>(Arrays.asList(attr.split(",")));
+			List<String> tempType = new ArrayList<>(Arrays.asList(attrType.split(",")));
+			List<Type> type = new ArrayList<>();
+			
+			for (String t : tempType) {
+				try {
+					type.add(Type.valueOf(t));
+				} catch(Exception e) {
+					throw e;
+				}
+			}
+			
+			Signature sig = new BaseSignature(attribute, type);
+			relations.put(file, sig);
+		}
 	}
 	
-	private HashMap<String,Signature> formatInput(String rel) {
+	/*private HashMap<String,Signature> formatInput(String rel) {
 		HashMap<String,Signature> returnRelations = new HashMap<>();
 		
 		//remove any whitespace that might be in the input
@@ -43,7 +63,7 @@ public class Schema {
 		}
 		
 		return returnRelations;
-	}
+	}*/
 	
 	public Set<String> getRelations() {
 		return relations.keySet();

@@ -1,5 +1,13 @@
 package uk.ac.ed.inf.s1654170.mrai;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -8,6 +16,9 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 
 import uk.ac.ed.inf.s1654170.mrai.exprs.RAExpr;
 import uk.ac.ed.inf.s1654170.mrai.instance.Record;
@@ -22,9 +33,53 @@ import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
 
 public class App {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
+		
+		Scanner sc = new Scanner(System.in);
 
-		Schema sch = new Schema("R:Name/STRING,Age/STRING;S:Name/STRING,Age/NUMBER;P:Name/STRING");
+		String dirPath = System.getProperty("user.dir");
+		dirPath += "\\src\\main\\java\\uk\\ac\\ed\\inf\\s1654170\\mrai\\data";
+		File folder = new File(dirPath);
+		File[] listOfFiles = folder.listFiles();
+		
+		ArrayList<String> fileName = new ArrayList<>();
+		ArrayList<String> attributes = new ArrayList<>();
+		ArrayList<String> attributeTypes = new ArrayList<>();
+		
+		for (File file : listOfFiles) {
+			fileName.add(file.getName().replace(".csv", ""));
+			String path = dirPath + "\\" + file.getName();
+			BufferedReader csvReader = new BufferedReader(new FileReader(path));
+			String row;
+//			while((row = csvReader.readLine()) != null) {
+//				System.out.println(row);
+//			}
+			for (int i = 0; i < 2; i++) {
+				if (i == 0) {
+					//String names = csvReader.readLine();
+					attributes.add(csvReader.readLine());
+				} else {
+					//String types = csvReader.readLine();
+					attributeTypes.add(csvReader.readLine());
+				}
+			}
+			csvReader.close();
+		}
+		
+		Schema sch = new Schema(fileName, attributes, attributeTypes);
+		//System.out.println(fileName);
+		//System.out.println(attributes);
+		//System.out.println(attributeTypes);
+		
+		
+		
+		
+		
+		
+		
+
+		
+		//Schema sch = new Schema("R:Name/STRING,Age/STRING;S:Name/STRING,Age/NUMBER;P:Name/STRING");
 		Table tbl = new Table();
 		List<Column.Type> types = sch.getSignature("R").getTypes();
 		//Column.Type[] types = new Column.Type[] {Column.Type.STRING, Column.Type.NUMBER};
@@ -50,7 +105,7 @@ public class App {
 
 		System.exit(0);
 
-		Scanner sc = new Scanner(System.in);
+		//Scanner sc = new Scanner(System.in);
 		System.out.print("RA expression: ");
 		String input = sc.nextLine();
 
@@ -74,7 +129,7 @@ public class App {
 
 		System.out.print("Schema: ");
 		//String schemaTest = "R:Name/STRING,Age/NUMBER;S:Name/STRING,Age/NUMBER;P:Name/STRING";
-		Schema schema = new Schema(sc.nextLine());
+		/*Schema schema = new Schema(sc.nextLine());
 		try {
 			System.out.println(e.signature(schema));
 		} catch (SchemaException se) {
@@ -85,7 +140,7 @@ public class App {
 			System.out.println("Valid!");
 		} else {
 			System.out.println("Not valid!");
-		}
+		}*/
 
 		sc.close();
 
