@@ -31,4 +31,22 @@ public class DataValue {
 			return stringValue;
 		}
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof DataValue) {
+			DataValue dv = (DataValue) o;
+			if (this.type == dv.type && this.type == Column.Type.STRING) {
+				return this.stringValue.equals(dv.stringValue);
+			} else {
+				if (this.type == dv.type && this.type == Column.Type.NUMBER) {
+					return this.numberValue == dv.numberValue;
+				} else {
+					return false;
+				}
+			}
+		} else {
+			return false;
+		}
+	}
 }
