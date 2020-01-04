@@ -23,6 +23,7 @@ import uk.ac.ed.inf.s1654170.mrai.parser.RelationalAlgebraParser;
 import uk.ac.ed.inf.s1654170.mrai.schema.Column;
 import uk.ac.ed.inf.s1654170.mrai.schema.Database;
 import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
+import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
 
 
 public class App {
@@ -94,7 +95,7 @@ public class App {
 
 		
 		//Schema sch = new Schema("R:Name/STRING,Age/STRING;S:Name/STRING,Age/NUMBER;P:Name/STRING");
-		Table tbl = new Table();
+		//Table tbl = new Table();
 		//List<Column.Type> types = sch.getSignature("R").getTypes();
 		//Column.Type[] types = new Column.Type[] {Column.Type.STRING, Column.Type.NUMBER};
 		//Record r1 = Record.valueOf( types, "John", "20");
@@ -105,9 +106,9 @@ public class App {
 		
 		//tbl.add(Record.valueOf( types, "Mary", "20"));
 		//tbl.add(Record.valueOf( types, "Mary", "20"));
-		for (Record r : tbl) {
-			System.out.println(r);
-		}
+		//for (Record r : tbl) {
+			//System.out.println(r);
+		//}
 		
 		//Database db = new Database(sch);
 //		try {
@@ -117,7 +118,7 @@ public class App {
 //			e1.printStackTrace();
 //		}
 
-		System.exit(0);
+		//System.exit(0);
 
 		//Scanner sc = new Scanner(System.in);
 		System.out.print("RA expression: ");
@@ -141,20 +142,20 @@ public class App {
 
 		System.out.println();
 
-		System.out.print("Schema: ");
+		//System.out.print("Schema: ");
 		//String schemaTest = "R:Name/STRING,Age/NUMBER;S:Name/STRING,Age/NUMBER;P:Name/STRING";
-		/*Schema schema = new Schema(sc.nextLine());
+		//Schema schema = new Schema(sc.nextLine());
 		try {
-			System.out.println(e.signature(schema));
+			System.out.println(e.signature(sch));
 		} catch (SchemaException se) {
 			System.out.println(se.getMessage());
 			se.printStackTrace();
 		}
-		if (e.validate(schema)) {
+		if (e.validate(sch)) {
 			System.out.println("Valid!");
 		} else {
 			System.out.println("Not valid!");
-		}*/
+		}
 
 		sc.close();
 
