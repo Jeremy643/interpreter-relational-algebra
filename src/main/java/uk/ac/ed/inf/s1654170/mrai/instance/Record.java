@@ -7,6 +7,11 @@ import uk.ac.ed.inf.s1654170.mrai.schema.Column;
 
 public class Record extends ArrayList<DataValue> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public static Record valueOf(Column.Type[] types, String... values) {
 		if (types.length != values.length) {
 			throw new RuntimeException();
@@ -39,5 +44,20 @@ public class Record extends ArrayList<DataValue> {
 		}
 
 		return types;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Record && this.size() == ((Record) o).size()) {
+			Record r = (Record) o;
+			for (int i = 0; i < this.size(); i++) {
+				if (!this.get(i).equals(r.get(i))) {
+					return false;
+				}
+			}
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
