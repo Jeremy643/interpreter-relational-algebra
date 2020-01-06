@@ -40,7 +40,7 @@ public class DataValue {
 				return this.stringValue.equals(dv.stringValue);
 			} else {
 				if (this.type == dv.type && this.type == Column.Type.NUMBER) {
-					return this.numberValue == dv.numberValue;
+					return this.numberValue.equals(dv.numberValue);
 				} else {
 					return false;
 				}
