@@ -15,6 +15,10 @@ public class Database {
 		this.schema = schema;
 		this.instance = new HashMap<>();
 	}
+	
+	public Table get(String name) {
+		return instance.get(name);
+	}
 
 	public void add(String n, Table t) throws Exception {
 		add(n,t,false);
