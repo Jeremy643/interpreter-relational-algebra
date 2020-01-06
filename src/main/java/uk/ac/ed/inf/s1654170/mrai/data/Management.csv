@@ -1,0 +1,5 @@
+ID,Name,Age,Group
+STRING,STRING,NUMBER,NUMBER
+m001,John,44,3
+m002,Mary,22,1
+m003,Lucy,63,3
