@@ -97,6 +97,7 @@ public class App {
 
 		
 		System.out.println(TableOperations.Union(db.get("Students"), db.get("SportStudents")));
+		System.out.println(TableOperations.Intersect(db.get("Students"), db.get("SportStudents")));
 		
 		
 		//Schema sch = new Schema("R:Name/STRING,Age/STRING;S:Name/STRING,Age/NUMBER;P:Name/STRING");

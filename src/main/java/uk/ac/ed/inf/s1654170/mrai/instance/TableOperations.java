@@ -172,4 +172,16 @@ public class TableOperations {
 
         return table;
     }
+    
+    public static Table Eliminate(Table A) {
+    	Table table = new Table();
+    	
+    	for (Record r : A) {
+    		if (!table.contains(r)) {
+    			table.add(r);
+    		}
+    	}
+    	
+    	return table;
+    }
 }
