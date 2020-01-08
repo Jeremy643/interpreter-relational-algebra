@@ -42,15 +42,8 @@ public class TableOperations {
 		
 		Table table = new Table();
 		
-		for (Record rA : A) {
-			for (Record rB : B) {
-				if (rA.equals(rB)) {
-					table.add(rA);
-					B.remove(rB);
-					break;
-				}
-			}
-		}
+		table.addAll(A);
+		table.addAll(B);
 		
 		return table;
 	}
@@ -70,5 +63,24 @@ public class TableOperations {
 		}
 		
 		return table;
+	}
+	
+	public static Table Intersect(Table A, Table B) {
+	    //Table sortedA = sortRecords(A);
+	    //Table sortedB = sortRecords(B);
+	    
+	    Table table = new Table();
+	    
+	    for (Record rA : A) {
+            for (Record rB : B) {
+                if (rA.equals(rB)) {
+                    table.add(rA);
+                    B.remove(rB);
+                    break;
+                }
+            }
+        }
+	    
+	    return table;
 	}
 }
