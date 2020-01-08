@@ -30,23 +30,23 @@ public class TableOperations {
 		
 	}
 	
-	private static Table sortRecords(Table t) {
+	public static Table sortRecords(Table t) {
 		Table sortedTable = t;
 		Collections.sort(sortedTable, new RecordSortingComparator());
 		return sortedTable;
 	}
 
 	public static Table Union(Table A, Table B) {
-		Table sortedA = sortRecords(A);
-		Table sortedB = sortRecords(B);
+		//Table sortedA = sortRecords(A);
+		//Table sortedB = sortRecords(B);
 		
 		Table table = new Table();
 		
-		for (Record rA : sortedA) {
-			for (Record rB : sortedB) {
+		for (Record rA : A) {
+			for (Record rB : B) {
 				if (rA.equals(rB)) {
 					table.add(rA);
-					sortedB.remove(rB);
+					B.remove(rB);
 					break;
 				}
 			}
@@ -56,16 +56,16 @@ public class TableOperations {
 	}
 	
 	public static Table Difference(Table A, Table B) {
-		Table sortedA = sortRecords(A);
-		Table sortedB = sortRecords(B);
+		//Table sortedA = sortRecords(A);
+		//Table sortedB = sortRecords(B);
 		
 		Table table = new Table();
 		
-		for (Record rA : sortedA) {
-			if (!sortedB.contains(rA)) {
+		for (Record rA : A) {
+			if (!B.contains(rA)) {
 				table.add(rA);
 			} else {
-				sortedB.remove(rA);
+				B.remove(rA);
 			}
 		}
 		

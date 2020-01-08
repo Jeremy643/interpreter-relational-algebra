@@ -83,6 +83,9 @@ public class App {
 				}
 			}
 			
+			// sort each table before we add it to the database
+			TableOperations.sortRecords(table);
+			
 			try {
 				db.add(name, table);
 			} catch (Exception e1) {
