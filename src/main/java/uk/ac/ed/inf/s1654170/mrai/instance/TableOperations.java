@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import uk.ac.ed.inf.s1654170.mrai.schema.Column;
+
 public class TableOperations {
 	
 	static class RecordSortingComparator implements Comparator<Record> {
@@ -37,9 +39,6 @@ public class TableOperations {
 	}
 
 	public static Table Union(Table A, Table B) {
-		//Table sortedA = sortRecords(A);
-		//Table sortedB = sortRecords(B);
-		
 		Table table = new Table();
 		
 		table.addAll(A);
@@ -49,9 +48,6 @@ public class TableOperations {
 	}
 	
 	public static Table Difference(Table A, Table B) {
-		//Table sortedA = sortRecords(A);
-		//Table sortedB = sortRecords(B);
-		
 		Table table = new Table();
 		
 		for (Record rA : A) {
@@ -66,9 +62,6 @@ public class TableOperations {
 	}
 	
 	public static Table Intersect(Table A, Table B) {
-	    //Table sortedA = sortRecords(A);
-	    //Table sortedB = sortRecords(B);
-	    
 	    Table table = new Table();
 	    
 	    for (Record rA : A) {
@@ -80,6 +73,36 @@ public class TableOperations {
                 }
             }
         }
+	    
+	    return table;
+	}
+	
+	public static Table Product(Table A, Table B) {
+	    Table table = new Table();
+	    
+	    List<Column.Type> types = new ArrayList<>();
+        types.addAll(A.get(0).getTypes());
+        types.addAll(B.get(0).getTypes());
+	    
+	    for (Record rA : A) {
+	        for (Record rB : B) {
+	            String[] values = new String[rA.size() + rB.size()];
+	            int index = 0;
+	            
+	            for (int i = 0; i < rA.size(); i++) {
+	                values[index] = rA.get(i).toString();
+	                index++;
+	            }
+	            
+	            for (int i = 0; i < rB.size(); i++) {
+	                values[index] = rB.get(i).toString();
+                    index++;
+                }
+	            
+	            Record rNew = Record.valueOf(types, values);
+	            table.add(rNew);
+	        }
+	    }
 	    
 	    return table;
 	}
