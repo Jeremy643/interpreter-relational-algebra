@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import uk.ac.ed.inf.s1654170.mrai.conditions.Condition;
 import uk.ac.ed.inf.s1654170.mrai.schema.Column;
 
 public class TableOperations {
@@ -181,6 +182,28 @@ public class TableOperations {
     			table.add(r);
     		}
     	}
+    	
+    	return table;
+    }
+    
+    public static Table Rename(Map<String,String> attributes, Table A) {
+    	Table table = new Table();
+    	
+    	// Update the schema with the new names
+    	
+    	table = A;
+    	
+    	return table;
+    }
+    
+    public static Table Project(List<Column> columns, Table A) {
+    	Table table = new Table();
+    	
+    	return table;
+    }
+    
+    public static Table Select(Condition condition, Table A) {
+    	Table table = new Table();
     	
     	return table;
     }
