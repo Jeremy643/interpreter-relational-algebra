@@ -196,7 +196,7 @@ public class TableOperations {
     	return table;
     }
     
-    public static Table Project(List<Column> columns, Table A) {
+    public static Table Project(List<String> columns, Table A) {
     	Table table = new Table();
     	
     	return table;
