@@ -96,21 +96,9 @@ public class App {
 		}
 
 		
-		System.out.println(db.get("Students"));
-		System.out.println(db.get("SportStudents"));
-		//PROBLEM: Calling methods in TableOperations is changing the tables in db...
 		System.out.println(TableOperations.Union(db.get("Students"), db.get("SportStudents")));
-		System.out.println(db.get("Students"));
-		System.out.println(db.get("SportStudents"));
 		System.out.println(TableOperations.Difference(db.get("Students"), db.get("SportStudents")));
-		System.out.println(db.get("Students"));
-		System.out.println(db.get("SportStudents"));
-		System.out.println(TableOperations.Union(db.get("Students"), db.get("SportStudents")));
-		System.out.println(db.get("Students"));
-		System.out.println(db.get("SportStudents"));
 		System.out.println(TableOperations.Intersect(db.get("Students"), db.get("SportStudents")));
-		System.out.println(db.get("Students"));
-		System.out.println(db.get("SportStudents"));
 		
 		
 		//Schema sch = new Schema("R:Name/STRING,Age/STRING;S:Name/STRING,Age/NUMBER;P:Name/STRING");
