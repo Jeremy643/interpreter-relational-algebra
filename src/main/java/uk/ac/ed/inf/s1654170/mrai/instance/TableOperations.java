@@ -36,9 +36,8 @@ public class TableOperations {
     }
 
     public static Table sortRecords(Table t) {
-        Table sortedTable = t;
-        Collections.sort(sortedTable, new RecordSortingComparator());
-        return sortedTable;
+        Collections.sort(t, new RecordSortingComparator());
+        return t;
     }
 
     public static Table Union(Table A, Table B) {
@@ -116,12 +115,15 @@ public class TableOperations {
 
     public static Table Difference(Table A, Table B) {
         Table table = new Table();
+        
+        Table tempB = new Table();
+        tempB.addAll(B);
 
         for (Record rA : A) {
             if (!B.contains(rA)) {
                 table.add(rA);
             } else {
-                B.remove(rA);
+                tempB.remove(rA);
             }
         }
 
@@ -130,12 +132,15 @@ public class TableOperations {
 
     public static Table Intersect(Table A, Table B) {
         Table table = new Table();
+        
+        Table tempB = new Table();
+        tempB.addAll(B);
 
         for (Record rA : A) {
-            for (Record rB : B) {
+            for (Record rB : tempB) {
                 if (rA.equals(rB)) {
                     table.add(rA);
-                    B.remove(rB);
+                    tempB.remove(rB);
                     break;
                 }
             }
@@ -191,7 +196,7 @@ public class TableOperations {
     	
     	// Update the schema with the new names
     	
-    	table = A;
+    	//table = A;
     	
     	return table;
     }
