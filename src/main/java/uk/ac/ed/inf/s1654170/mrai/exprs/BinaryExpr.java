@@ -1,5 +1,8 @@
 package uk.ac.ed.inf.s1654170.mrai.exprs;
 
+import uk.ac.ed.inf.s1654170.mrai.instance.Table;
+import uk.ac.ed.inf.s1654170.mrai.instance.TableOperations;
+import uk.ac.ed.inf.s1654170.mrai.schema.Database;
 import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
 import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
 import uk.ac.ed.inf.s1654170.mrai.schema.Signature;
@@ -9,11 +12,13 @@ public abstract class BinaryExpr extends RAExpr {
 
 	private RAExpr left;
 	private RAExpr right;
+	private Type type;
 
 	public BinaryExpr(RAExpr left, RAExpr right, Type type) {
 		super(type);
 		this.left = left;
 		this.right = right;
+		this.type = type;
 	}
 
 	public abstract String getConnective();
@@ -31,11 +36,27 @@ public abstract class BinaryExpr extends RAExpr {
 		if (this.getType() == RAExpr.Type.PRODUCT) {
 			return Utils.concat(l, r);
 		}
-		
+
 		if (!l.getAttributes().equals(r.getAttributes()) || !l.getTypes().equals(r.getTypes())) {
 			throw new SchemaException(SchemaException.NO_SAME_ATTR);
 		} else {
 			return left.signature(s);
+		}
+	}
+
+	@Override
+	public Table execute(Database db) {
+		switch (type) {
+		case UNION:
+			return TableOperations.Union(left.execute(db), right.execute(db));
+		case UNION_MAX:
+			return TableOperations.UnionMax(left.execute(db), right.execute(db));
+		case PRODUCT:
+			return TableOperations.Product(left.execute(db), right.execute(db));
+		case INTERSECT:
+			return TableOperations.Intersect(left.execute(db), right.execute(db));
+		default:
+			return TableOperations.Difference(left.execute(db), right.execute(db));
 		}
 	}
 }

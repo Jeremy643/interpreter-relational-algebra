@@ -1,6 +1,8 @@
 package uk.ac.ed.inf.s1654170.mrai.exprs;
 
+import uk.ac.ed.inf.s1654170.mrai.instance.Table;
 import uk.ac.ed.inf.s1654170.mrai.parser.RelationalAlgebraLexer;
+import uk.ac.ed.inf.s1654170.mrai.schema.Database;
 import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
 import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
 import uk.ac.ed.inf.s1654170.mrai.schema.Signature;
@@ -58,4 +60,6 @@ public abstract class RAExpr {
 			return false;
 		}
 	}
+	
+	public abstract Table execute(Database db);
 }

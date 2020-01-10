@@ -3,8 +3,11 @@ package uk.ac.ed.inf.s1654170.mrai.exprs;
 import java.util.ArrayList;
 import java.util.List;
 
+import uk.ac.ed.inf.s1654170.mrai.instance.Table;
+import uk.ac.ed.inf.s1654170.mrai.instance.TableOperations;
 import uk.ac.ed.inf.s1654170.mrai.schema.BaseSignature;
 import uk.ac.ed.inf.s1654170.mrai.schema.Column;
+import uk.ac.ed.inf.s1654170.mrai.schema.Database;
 import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
 import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
 import uk.ac.ed.inf.s1654170.mrai.schema.Signature;
@@ -48,5 +51,10 @@ public class Project extends RAExpr {
 			
 			return new BaseSignature(attr,type);
 		}
+	}
+
+	@Override
+	public Table execute(Database db) {
+		return TableOperations.Project(attributes, expr.execute(db));
 	}
 }
