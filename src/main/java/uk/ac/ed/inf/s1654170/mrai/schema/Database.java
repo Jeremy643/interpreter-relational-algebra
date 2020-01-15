@@ -16,8 +16,12 @@ public class Database {
 		this.instance = new HashMap<>();
 	}
 	
-	public Table get(String name) {
+	public Table getTable(String name) {
 		return instance.get(name);
+	}
+	
+	public Schema getSchema() {
+		return schema;
 	}
 
 	public void add(String n, Table t) throws Exception {

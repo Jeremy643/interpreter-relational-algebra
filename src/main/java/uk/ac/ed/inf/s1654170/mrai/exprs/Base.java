@@ -30,6 +30,6 @@ public class Base extends RAExpr {
 
 	@Override
 	public Table execute(Database db) {
-		return db.get(name);
+		return db.getTable(name);
 	}
 }

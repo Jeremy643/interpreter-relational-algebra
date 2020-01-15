@@ -96,9 +96,9 @@ public class App {
 		}
 
 		
-		System.out.println(TableOperations.Union(db.get("Students"), db.get("SportStudents")));
-		System.out.println(TableOperations.Difference(db.get("Students"), db.get("SportStudents")));
-		System.out.println(TableOperations.Intersect(db.get("Students"), db.get("SportStudents")));
+		System.out.println(TableOperations.Union(db.getTable("Students"), db.getTable("SportStudents")));
+		System.out.println(TableOperations.Difference(db.getTable("Students"), db.getTable("SportStudents")));
+		System.out.println(TableOperations.Intersect(db.getTable("Students"), db.getTable("SportStudents")));
 		
 		
 		//Schema sch = new Schema("R:Name/STRING,Age/STRING;S:Name/STRING,Age/NUMBER;P:Name/STRING");
