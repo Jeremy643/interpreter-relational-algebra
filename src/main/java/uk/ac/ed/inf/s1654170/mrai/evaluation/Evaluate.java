@@ -21,7 +21,6 @@ import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
 public class Evaluate {
 	
 	private static Database db;
-	private static Schema sch;
 	private static ArrayList<String> fileName = new ArrayList<>();
 	
 	private static void readData() throws IOException {
@@ -52,7 +51,7 @@ public class Evaluate {
 			}
 		}
 		
-		sch = new Schema(fileName, attributes, attributeTypes);
+		Schema sch = new Schema(fileName, attributes, attributeTypes);
 		
 		
 		db = new Database(sch);
@@ -81,8 +80,9 @@ public class Evaluate {
 					}
 				}
 				
-				// sort each table before we add it to the database
-				TableOperations.sortRecords(table);
+				if (!name.substring(0, 1).equals("_")) {
+					TableOperations.sortRecords(table);
+				}
 				
 				try {
 					db.add(name, table);
@@ -149,8 +149,10 @@ public class Evaluate {
 		System.out.println("Evaluating the validation method.");
 		System.out.println();
 		
-		for (String name : fileName) {
-			System.out.println(String.format("%s: %s", name, sch.getSignature(name)));
+		for (String name : fileName) {	
+			if (!name.substring(0, 1).equals("_")) {
+				System.out.println(String.format("%s: %s", name, db.getSchema().getSignature(name)));
+			}
 		}
 		
 		System.out.println();
@@ -158,18 +160,33 @@ public class Evaluate {
 		RAExpr correctUnion = new Union(new Base("Students"), new Base("SportStudents"));
 		System.out.println(correctUnion.toString());
 		System.out.println("Expected: true");
-		System.out.println("Actual: " + correctUnion.validate(sch));
+		System.out.println("Actual: " + correctUnion.validate(db.getSchema()));
 		
 		System.out.println();
 		
 		RAExpr incorrectUnion = new Union(new Base("Students"), new Base("Teachers"));
 		System.out.println(incorrectUnion.toString());
 		System.out.println("Expected: false");
-		System.out.println("Actual: " + incorrectUnion.validate(sch));
+		System.out.println("Actual: " + incorrectUnion.validate(db.getSchema()));
 	}
 	
 	private static void evaluateTableOperations() {
-		System.out.println("TableOperations");
+		System.out.println();
+		System.out.println("Evaluating the different table operations.");
+		System.out.println();
+		
+		for (String name : fileName) {
+			if (!name.substring(0, 1).equals("_")) {
+				System.out.println(String.format("%s: %s", name, db.getTable(name)));
+			}
+		}
+		
+		System.out.println();
+		
+		RAExpr correctUnion = new Union(new Base("Students"), new Base("SportStudents"));
+		System.out.println(correctUnion.toString());
+		System.out.println("Expected: " + db.getTable("_StudentsUnionSportStudents"));
+		System.out.println("Actual: " + correctUnion.execute(db));
 	}
 	
 	public static void main(String[] args) throws IOException {
