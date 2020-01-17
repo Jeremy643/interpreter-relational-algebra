@@ -209,29 +209,50 @@ public class TableOperations {
     	return table;
     }
     
-    /*public static Table Rename(Map<String,String> attributes, Table A) {
-    	Table table = new Table();
+    public static Table Rename(Map<String,String> attributes, Table A) {
+    	/*Table table = new Table();
     	
     	// Update the schema with the new names
     	
     	//table = A;
     	
-    	return table;
-    }*/
+    	return table;*/
+    	return null;
+    }
     
-    /*public static Table Project(List<String> columns, Table A) {
-    	Table table = new Table();
+    public static Table Project(List<String> columns, Table A) {
+    	List<String> attributesA = new ArrayList<>(A.getSignature().getAttributes());
+    	List<Type> typesA = new ArrayList<>(A.getSignature().getTypes());
+    	
+    	List<Type> types = new ArrayList<>();
+    	List<Integer> indexColumns = new ArrayList<>();
+    	for (String col : columns) {
+    		int index = attributesA.indexOf(col);
+    		indexColumns.add(index);
+    		types.add(typesA.get(index));
+    	}
+    	Signature signature = new BaseSignature(columns, types);
+    	
+    	Table table = new Table(signature);
     	
     	for (Record r : A) {
-    		
+    		int counter = 0;
+    		String[] values = new String[columns.size()];
+    		for (int i : indexColumns) {
+    			values[counter] = r.get(i).toString();
+    			counter++;
+    		}
+    		Record rNew = Record.valueOf(types, values);
+    		table.add(rNew);
     	}
     	
     	return table;
-    }*/
+    }
     
-    /*public static Table Select(Condition condition, Table A) {
-    	Table table = new Table();
+    public static Table Select(Condition condition, Table A) {
+    	/*Table table = new Table();
     	
-    	return table;
-    }*/
+    	return table;*/
+    	return null;
+    }
 }

@@ -97,6 +97,10 @@ public class App {
 		System.out.println(TableOperations.Difference(db.getTable("Students"), db.getTable("SportStudents")));
 		System.out.println(TableOperations.Intersect(db.getTable("Students"), db.getTable("SportStudents")));
 		
+		List<String> columns = new ArrayList<>();
+		columns.add("Name");
+		System.out.println(TableOperations.Project(columns, db.getTable("Students")));
+		
 		
 		//Schema sch = new Schema("R:Name/STRING,Age/STRING;S:Name/STRING,Age/NUMBER;P:Name/STRING");
 		//Table tbl = new Table();
