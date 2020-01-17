@@ -35,21 +35,27 @@ public class TableOperations {
 
     }
 
-    public static Table sortRecords(Table t) {
+    private static Table sortRecords(Table t) {
         Collections.sort(t, new RecordSortingComparator());
         return t;
     }
 
     public static Table Union(Table A, Table B) {
+    	Table sortedA = sortRecords(A);
+    	Table sortedB = sortRecords(B);
         Table table = new Table();
 
-        table.addAll(A);
-        table.addAll(B);
+        table.addAll(sortedA);
+        table.addAll(sortedB);
 
         return table;
     }
 
     public static Table UnionMax(Table A, Table B) {
+    	Table sortedA = sortRecords(A);
+    	Table sortedB = sortRecords(B);
+    	
+    	
         Table table = new Table();
 
         Map<Record, Integer> recordOccurrencesA = new HashMap<>();
@@ -109,13 +115,15 @@ public class TableOperations {
     }
 
     public static Table Difference(Table A, Table B) {
+    	Table sortedA = sortRecords(A);
+    	Table sortedB = sortRecords(B);
         Table table = new Table();
         
         Table tempB = new Table();
-        tempB.addAll(B);
+        tempB.addAll(sortedB);
 
-        for (Record rA : A) {
-            if (!B.contains(rA)) {
+        for (Record rA : sortedA) {
+            if (!sortedB.contains(rA)) {
                 table.add(rA);
             } else {
                 tempB.remove(rA);
@@ -126,12 +134,14 @@ public class TableOperations {
     }
 
     public static Table Intersect(Table A, Table B) {
+    	Table sortedA = sortRecords(A);
+    	Table sortedB = sortRecords(B);
         Table table = new Table();
         
         Table tempB = new Table();
-        tempB.addAll(B);
+        tempB.addAll(sortedB);
 
-        for (Record rA : A) {
+        for (Record rA : sortedA) {
             for (Record rB : tempB) {
                 if (rA.equals(rB)) {
                     table.add(rA);
@@ -145,14 +155,16 @@ public class TableOperations {
     }
 
     public static Table Product(Table A, Table B) {
+    	Table sortedA = sortRecords(A);
+    	Table sortedB = sortRecords(B);
         Table table = new Table();
 
         List<Column.Type> types = new ArrayList<>();
-        types.addAll(A.get(0).getTypes());
-        types.addAll(B.get(0).getTypes());
+        types.addAll(sortedA.get(0).getTypes());
+        types.addAll(sortedB.get(0).getTypes());
 
-        for (Record rA : A) {
-            for (Record rB : B) {
+        for (Record rA : sortedA) {
+            for (Record rB : sortedB) {
                 String[] values = new String[rA.size() + rB.size()];
                 int index = 0;
 
@@ -175,9 +187,10 @@ public class TableOperations {
     }
     
     public static Table Eliminate(Table A) {
+    	Table sortedA = sortRecords(A);
     	Table table = new Table();
     	
-    	for (Record r : A) {
+    	for (Record r : sortedA) {
     		if (!table.contains(r)) {
     			table.add(r);
     		}

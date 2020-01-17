@@ -15,7 +15,6 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import uk.ac.ed.inf.s1654170.mrai.exprs.RAExpr;
-import uk.ac.ed.inf.s1654170.mrai.instance.DataValue;
 import uk.ac.ed.inf.s1654170.mrai.instance.Record;
 import uk.ac.ed.inf.s1654170.mrai.instance.Table;
 import uk.ac.ed.inf.s1654170.mrai.instance.TableOperations;
@@ -83,9 +82,6 @@ public class App {
 					table.add(r);
 				}
 			}
-			
-			// sort each table before we add it to the database
-			TableOperations.sortRecords(table);
 			
 			try {
 				db.add(name, table);

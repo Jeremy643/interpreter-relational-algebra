@@ -13,7 +13,6 @@ import uk.ac.ed.inf.s1654170.mrai.exprs.RAExpr;
 import uk.ac.ed.inf.s1654170.mrai.exprs.Union;
 import uk.ac.ed.inf.s1654170.mrai.instance.Record;
 import uk.ac.ed.inf.s1654170.mrai.instance.Table;
-import uk.ac.ed.inf.s1654170.mrai.instance.TableOperations;
 import uk.ac.ed.inf.s1654170.mrai.schema.Column;
 import uk.ac.ed.inf.s1654170.mrai.schema.Database;
 import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
@@ -78,10 +77,6 @@ public class Evaluate {
 						Record r = Record.valueOf(types, val);
 						table.add(r);
 					}
-				}
-				
-				if (!name.substring(0, 1).equals("_")) {
-					TableOperations.sortRecords(table);
 				}
 				
 				try {
