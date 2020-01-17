@@ -86,14 +86,9 @@ public class TableOperations {
                 occurrencesB = 0;
             }
 
-            if (occurrencesA >= occurrencesB) {
-                for (int i = 0; i < occurrencesA; i++) {
-                    table.add(r);
-                }
-            } else {
-                for (int i = 0; i < occurrencesB; i++) {
-                    table.add(r);
-                }
+            int occ = occurrencesA >= occurrencesB ? occurrencesA : occurrencesB;
+            for (int i = 0; i < occ; i++) {
+            	table.add(r);
             }
         }
 

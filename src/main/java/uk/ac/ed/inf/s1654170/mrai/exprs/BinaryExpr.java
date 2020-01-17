@@ -55,8 +55,10 @@ public abstract class BinaryExpr extends RAExpr {
 			return TableOperations.Product(left.execute(db), right.execute(db));
 		case INTERSECT:
 			return TableOperations.Intersect(left.execute(db), right.execute(db));
-		default:
+		case DIFFERENCE:
 			return TableOperations.Difference(left.execute(db), right.execute(db));
+		default:
+			throw new RuntimeException("Unknown binary operation");
 		}
 	}
 }

@@ -15,6 +15,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import uk.ac.ed.inf.s1654170.mrai.exprs.RAExpr;
+import uk.ac.ed.inf.s1654170.mrai.instance.DataValue;
 import uk.ac.ed.inf.s1654170.mrai.instance.Record;
 import uk.ac.ed.inf.s1654170.mrai.instance.Table;
 import uk.ac.ed.inf.s1654170.mrai.instance.TableOperations;
@@ -30,12 +31,12 @@ import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
 public class App {
 
 	public static void main(String[] args) throws IOException {
-		
+				
 		Scanner sc = new Scanner(System.in);
 
-		String dirPath = System.getProperty("user.dir");
-		dirPath += "\\src\\main\\java\\uk\\ac\\ed\\inf\\s1654170\\mrai\\data";
-		File folder = new File(dirPath);
+		File dirPath = new File(System.getProperty("user.dir"));
+		File folder = new File(dirPath, "src/main/java/uk/ac/ed/inf/s1654170/mrai/data");
+		System.out.println(folder);
 		File[] listOfFiles = folder.listFiles();
 		
 		ArrayList<String> fileName = new ArrayList<>();
@@ -44,7 +45,7 @@ public class App {
 		
 		for (File file : listOfFiles) {
 			fileName.add(file.getName().replace(".csv", ""));
-			String path = dirPath + "\\" + file.getName();
+			String path = folder + File.separator + file.getName();
 			BufferedReader csvReader = new BufferedReader(new FileReader(path));
 			for (int i = 0; i < 2; i++) {
 				if (i == 0) {
@@ -67,7 +68,7 @@ public class App {
 			Table table = new Table();
 			List<Column.Type> types = sch.getSignature(name).getTypes();
 			
-			String path = dirPath + "\\" + file.getName();
+			String path = folder + File.separator + file.getName();
 			BufferedReader csvReader = new BufferedReader(new FileReader(path));
 			
 			int x = 0;
