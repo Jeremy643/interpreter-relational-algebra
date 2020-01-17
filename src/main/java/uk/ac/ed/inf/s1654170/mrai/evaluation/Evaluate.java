@@ -61,7 +61,7 @@ public class Evaluate {
 			if (name.equals("Evaluate.java")) {
 				continue;
 			} else {
-				Table table = new Table();
+				Table table = new Table(db.getSchema().getSignature(name));
 				List<Column.Type> types = sch.getSignature(name).getTypes();
 				
 				String path = dirPath + "\\" + file.getName();

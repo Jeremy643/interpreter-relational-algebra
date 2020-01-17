@@ -64,7 +64,7 @@ public class App {
 		for (File file : listOfFiles) {
 			String name = file.getName().replace(".csv", "");
 			
-			Table table = new Table();
+			Table table = new Table(db.getSchema().getSignature(name));
 			List<Column.Type> types = sch.getSignature(name).getTypes();
 			
 			String path = folder + File.separator + file.getName();

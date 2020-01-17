@@ -8,7 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 import uk.ac.ed.inf.s1654170.mrai.conditions.Condition;
+import uk.ac.ed.inf.s1654170.mrai.schema.BaseSignature;
 import uk.ac.ed.inf.s1654170.mrai.schema.Column;
+import uk.ac.ed.inf.s1654170.mrai.schema.Column.Type;
+import uk.ac.ed.inf.s1654170.mrai.schema.Signature;
 
 public class TableOperations {
 
@@ -43,7 +46,7 @@ public class TableOperations {
     public static Table Union(Table A, Table B) {
     	Table sortedA = sortRecords(A);
     	Table sortedB = sortRecords(B);
-        Table table = new Table();
+        Table table = new Table(A.getSignature());
 
         table.addAll(sortedA);
         table.addAll(sortedB);
@@ -56,7 +59,7 @@ public class TableOperations {
     	Table sortedB = sortRecords(B);
     	
     	
-        Table table = new Table();
+        Table table = new Table(A.getSignature());
 
         Map<Record, Integer> recordOccurrencesA = new HashMap<>();
         Map<Record, Integer> recordOccurrencesB = new HashMap<>();
@@ -117,9 +120,9 @@ public class TableOperations {
     public static Table Difference(Table A, Table B) {
     	Table sortedA = sortRecords(A);
     	Table sortedB = sortRecords(B);
-        Table table = new Table();
+        Table table = new Table(A.getSignature());
         
-        Table tempB = new Table();
+        Table tempB = new Table(B.getSignature());
         tempB.addAll(sortedB);
 
         for (Record rA : sortedA) {
@@ -136,9 +139,9 @@ public class TableOperations {
     public static Table Intersect(Table A, Table B) {
     	Table sortedA = sortRecords(A);
     	Table sortedB = sortRecords(B);
-        Table table = new Table();
+        Table table = new Table(A.getSignature());
         
-        Table tempB = new Table();
+        Table tempB = new Table(B.getSignature());
         tempB.addAll(sortedB);
 
         for (Record rA : sortedA) {
@@ -157,7 +160,14 @@ public class TableOperations {
     public static Table Product(Table A, Table B) {
     	Table sortedA = sortRecords(A);
     	Table sortedB = sortRecords(B);
-        Table table = new Table();
+    	
+    	List<String> attributes = new ArrayList<>(A.getSignature().getAttributes());
+    	attributes.addAll(B.getSignature().getAttributes());
+    	List<Type> attributeTypes = new ArrayList<>(A.getSignature().getTypes());
+    	attributeTypes.addAll(B.getSignature().getTypes());
+    	
+    	Signature sig = new BaseSignature(attributes, attributeTypes);
+        Table table = new Table(sig);
 
         List<Column.Type> types = new ArrayList<>();
         types.addAll(sortedA.get(0).getTypes());
@@ -188,7 +198,7 @@ public class TableOperations {
     
     public static Table Eliminate(Table A) {
     	Table sortedA = sortRecords(A);
-    	Table table = new Table();
+    	Table table = new Table(A.getSignature());
     	
     	for (Record r : sortedA) {
     		if (!table.contains(r)) {
@@ -199,7 +209,7 @@ public class TableOperations {
     	return table;
     }
     
-    public static Table Rename(Map<String,String> attributes, Table A) {
+    /*public static Table Rename(Map<String,String> attributes, Table A) {
     	Table table = new Table();
     	
     	// Update the schema with the new names
@@ -207,17 +217,21 @@ public class TableOperations {
     	//table = A;
     	
     	return table;
-    }
+    }*/
     
-    public static Table Project(List<String> columns, Table A) {
+    /*public static Table Project(List<String> columns, Table A) {
+    	Table table = new Table();
+    	
+    	for (Record r : A) {
+    		
+    	}
+    	
+    	return table;
+    }*/
+    
+    /*public static Table Select(Condition condition, Table A) {
     	Table table = new Table();
     	
     	return table;
-    }
-    
-    public static Table Select(Condition condition, Table A) {
-    	Table table = new Table();
-    	
-    	return table;
-    }
+    }*/
 }
