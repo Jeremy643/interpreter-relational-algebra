@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import org.antlr.v4.runtime.CharStream;
@@ -100,6 +102,11 @@ public class App {
 		List<String> columns = new ArrayList<>();
 		columns.add("Name");
 		System.out.println(TableOperations.Project(columns, db.getTable("Students")));
+		
+		/*Map<String,String> attrRename = new HashMap<>();
+		attrRename.put("Name", "FullName");
+		System.out.println(TableOperations.Rename(attrRename, db.getTable("Students")).getSignature().getAttributes());
+		System.out.println(db.getTable("Students"));*/
 		
 		
 		//Schema sch = new Schema("R:Name/STRING,Age/STRING;S:Name/STRING,Age/NUMBER;P:Name/STRING");

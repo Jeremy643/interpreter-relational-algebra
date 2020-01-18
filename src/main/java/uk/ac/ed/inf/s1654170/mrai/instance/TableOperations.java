@@ -210,14 +210,25 @@ public class TableOperations {
     }
     
     public static Table Rename(Map<String,String> attributes, Table A) {
-    	/*Table table = new Table();
+    	List<String> attributesA = new ArrayList<>(A.getSignature().getAttributes());
+    	List<Type> typesA = new ArrayList<>(A.getSignature().getTypes());
     	
-    	// Update the schema with the new names
+    	List<String> attributesTable = new ArrayList<>();
+    	for (String attr : attributesA) {
+    		if (attributes.containsKey(attr)) {
+    			attributesTable.add(attributes.get(attr));
+    		} else {
+    			attributesTable.add(attr);
+    		}
+    	}
     	
-    	//table = A;
+    	Signature signature = new BaseSignature(attributesTable, typesA);
+    	Table table = new Table(signature);
     	
-    	return table;*/
-    	return null;
+    	table.addAll(A);
+    	A = table;
+    	
+    	return A;
     }
     
     public static Table Project(List<String> columns, Table A) {
