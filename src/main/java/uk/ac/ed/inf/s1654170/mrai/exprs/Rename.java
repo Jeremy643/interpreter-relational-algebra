@@ -53,8 +53,8 @@ public class Rename extends RAExpr {
 		} else {
 			for (int i = 0; i < attr.size(); i++) {
 				if (oldName.contains(attr.get(i))) {
-					attr.remove(i);
-					attr.add(i, attributes.get(attr.get(i)));
+					String tempVal = attr.remove(i);
+					attr.add(i, attributes.get(tempVal));
 				}
 			}
 			return new BaseSignature(attr,type);
