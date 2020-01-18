@@ -43,7 +43,9 @@ public class Table extends ArrayList<Record> {
 			}
 		}
 		
-		
+		for (Record r : this) {
+			table += r;
+		}
 		
 		return table;
 	}
