@@ -1,6 +1,7 @@
 package uk.ac.ed.inf.s1654170.mrai.instance;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import uk.ac.ed.inf.s1654170.mrai.schema.Signature;
 
@@ -23,5 +24,27 @@ public class Table extends ArrayList<Record> {
 	
 	public int getAttributePosition(String attribute) {
 		return signature.getAttributes().indexOf(attribute);
+	}
+	
+	@Override
+	public String toString() {
+		List<String> attributes = new ArrayList<>(signature.getAttributes());
+		String table = "";
+		
+		for (int i = 0; i < attributes.size(); i++) {
+			if (i == 0) {
+				table += String.format("| %s |", attributes.get(i));
+			} else {
+				if (i == attributes.size()-1) {
+					table += String.format(" %s |\n", attributes.get(i));
+				} else {
+					table += String.format(" %s |", attributes.get(i));
+				}
+			}
+		}
+		
+		
+		
+		return table;
 	}
 }

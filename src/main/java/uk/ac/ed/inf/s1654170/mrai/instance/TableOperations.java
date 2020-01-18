@@ -59,7 +59,69 @@ public class TableOperations {
     	Table sortedB = sortRecords(B);
     	
     	
-        Table table = new Table(A.getSignature());
+    	Table table = new Table(A.getSignature());
+
+        Bags recordOccurrencesA = new Bags();
+        Bags recordOccurrencesB = new Bags();
+
+        // Find the number of occurrences of each record in A
+        for (Record rA : sortedA) {
+            if (!recordOccurrencesA.containsKey(rA)) {
+                recordOccurrencesA.put(rA, 1);
+            } else {
+            	//System.out.println(rA);
+            	//System.out.println(recordOccurrencesA.get(rA));
+                int oldVal = recordOccurrencesA.get(rA);
+                //recordOccurrencesA.put(rA, oldVal+1);
+                recordOccurrencesA.replace(rA, oldVal + 1);
+                System.out.println(recordOccurrencesA);
+            }
+        }
+
+        // Find the number of occurrences of each record in B
+        for (Record rB : sortedB) {
+            if (!recordOccurrencesB.containsKey(rB)) {
+                recordOccurrencesB.put(rB, 1);
+            } else {
+                int oldVal = recordOccurrencesB.get(rB);
+                recordOccurrencesB.replace(rB, oldVal + 1);
+            }
+        }
+
+        for (Record r : recordOccurrencesA.keySet()) {
+            int occurrencesA = recordOccurrencesA.get(r);
+            int occurrencesB;
+
+            if (recordOccurrencesB.containsKey(r)) {
+                occurrencesB = recordOccurrencesB.get(r);
+                recordOccurrencesB.remove(r);
+            } else {
+                occurrencesB = 0;
+            }
+
+            int occ = occurrencesA >= occurrencesB ? occurrencesA : occurrencesB;
+            for (int i = 0; i < occ; i++) {
+            	table.add(r);
+            }
+        }
+
+        if (recordOccurrencesB.isEmpty()) {
+            // B contained records that all appeared in A
+            return table;
+        } else {
+            // add the remaining records in B to the table
+            for (Record r : recordOccurrencesB.keySet()) {
+                int occurrences = recordOccurrencesB.get(r);
+                for (int i = 0; i < occurrences; i++) {
+                    table.add(r);
+                }
+            }
+
+            return table;
+        }
+    	
+    	
+        /*Table table = new Table(A.getSignature());
 
         Map<Record, Integer> recordOccurrencesA = new HashMap<>();
         Map<Record, Integer> recordOccurrencesB = new HashMap<>();
@@ -114,7 +176,7 @@ public class TableOperations {
             }
 
             return table;
-        }
+        }*/
     }
 
     public static Table Difference(Table A, Table B) {
