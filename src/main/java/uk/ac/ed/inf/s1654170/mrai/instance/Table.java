@@ -22,10 +22,6 @@ public class Table extends ArrayList<Record> {
 		return signature;
 	}
 	
-	public int getAttributePosition(String attribute) {
-		return signature.getAttributes().indexOf(attribute);
-	}
-	
 	@Override
 	public String toString() {
 		List<String> attributes = new ArrayList<>(signature.getAttributes());
