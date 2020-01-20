@@ -22,7 +22,7 @@ public class Table extends ArrayList<Record> {
 		return signature;
 	}
 	
-	@Override
+	/*@Override
 	public String toString() {
 		List<String> attributes = new ArrayList<>(signature.getAttributes());
 		String table = "";
@@ -44,5 +44,5 @@ public class Table extends ArrayList<Record> {
 		}
 		
 		return table;
-	}
+	}*/
 }

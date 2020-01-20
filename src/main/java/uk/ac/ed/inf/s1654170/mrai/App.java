@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,8 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
 
 import uk.ac.ed.inf.s1654170.mrai.exprs.RAExpr;
 import uk.ac.ed.inf.s1654170.mrai.instance.Record;
@@ -23,10 +26,13 @@ import uk.ac.ed.inf.s1654170.mrai.instance.TableOperations;
 import uk.ac.ed.inf.s1654170.mrai.parser.BuildExpr;
 import uk.ac.ed.inf.s1654170.mrai.parser.RelationalAlgebraLexer;
 import uk.ac.ed.inf.s1654170.mrai.parser.RelationalAlgebraParser;
+import uk.ac.ed.inf.s1654170.mrai.schema.BaseSignature;
 import uk.ac.ed.inf.s1654170.mrai.schema.Column;
+import uk.ac.ed.inf.s1654170.mrai.schema.Column.Type;
 import uk.ac.ed.inf.s1654170.mrai.schema.Database;
 import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
 import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
+import uk.ac.ed.inf.s1654170.mrai.schema.Signature;
 
 
 public class App {
@@ -37,14 +43,13 @@ public class App {
 
 		File dirPath = new File(System.getProperty("user.dir"));
 		File folder = new File(dirPath, "src/main/java/uk/ac/ed/inf/s1654170/mrai/data");
-		System.out.println(folder);
 		File[] listOfFiles = folder.listFiles();
 		
-		ArrayList<String> fileName = new ArrayList<>();
-		ArrayList<String> attributes = new ArrayList<>();
-		ArrayList<String> attributeTypes = new ArrayList<>();
+		List<String> fileName = new ArrayList<>();
+		List<String> attributes = new ArrayList<>();
+		List<String> attributeTypes = new ArrayList<>();
 		
-		for (File file : listOfFiles) {
+		/*for (File file : listOfFiles) {
 			fileName.add(file.getName().replace(".csv", ""));
 			String path = folder + File.separator + file.getName();
 			BufferedReader csvReader = new BufferedReader(new FileReader(path));
@@ -56,14 +61,74 @@ public class App {
 				}
 			}
 			csvReader.close();
+		}*/
+		
+		Map<String,List<Record>> tables = new HashMap<>();
+		for (File file : listOfFiles) {
+			String name = file.getName().replace(".csv", "");
+			fileName.add(name);
+			
+			Reader in = new FileReader(file);
+			Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
+			
+			int index = 0;
+			List<Record> tableRecords = new ArrayList<>();
+			List<Type> types = new ArrayList<>();
+			for (CSVRecord record : records) {
+				int size = record.size();
+				switch (index) {
+					case 0:
+						String attr = "";
+						for (int i = 0; i < size; i++) {
+							if (i == size-1) {
+								attr += record.get(i);
+							} else {
+								attr += record.get(i) + ",";
+							}
+						}
+						attributes.add(attr);
+						break;
+					case 1:
+						String type = "";
+						for (int i = 0; i < size; i++) {
+							if (i == size-1) {
+								type += record.get(i);
+							} else {
+								type += record.get(i) + ",";
+							}
+							types.add(Type.valueOf(record.get(i)));
+						}
+						attributeTypes.add(type);
+						break;
+					default:
+						String[] values = new String[size];
+						for (int i = 0; i < size; i++) {
+							values[i] = record.get(i);
+						}
+						Record r = Record.valueOf(types, values);
+						tableRecords.add(r);
+						break;
+				}
+				tables.put(name, tableRecords);
+				index++;
+			}
 		}
 		
 		Schema sch = new Schema(fileName, attributes, attributeTypes);
 		
-		
 		Database db = new Database(sch);
+		for (String name : fileName) {
+			Table table = new Table(sch.getSignature(name));
+			table.addAll(tables.get(name));
+			System.out.println(table);
+			try {
+				db.add(name, table);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		}
 		
-		for (File file : listOfFiles) {
+		/*for (File file : listOfFiles) {
 			String name = file.getName().replace(".csv", "");
 			
 			Table table = new Table(db.getSchema().getSignature(name));
@@ -92,7 +157,7 @@ public class App {
 			}
 			
 			csvReader.close();
-		}
+		}*/
 
 		
 		System.out.println(TableOperations.Union(db.getTable("Students"), db.getTable("SportStudents")));
@@ -101,6 +166,7 @@ public class App {
 		
 		List<String> columns = new ArrayList<>();
 		columns.add("Name");
+		System.out.println(db.getTable("Students").getSignature().getAttributes());
 		System.out.println(TableOperations.Project(columns, db.getTable("Students")));
 		
 		/*Map<String,String> attrRename = new HashMap<>();

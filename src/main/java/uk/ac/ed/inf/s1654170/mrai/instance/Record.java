@@ -61,7 +61,7 @@ public class Record extends ArrayList<DataValue> {
 		}
 	}
 	
-	@Override
+	/*@Override
 	public String toString() {
 		String record = "";
 		
@@ -78,5 +78,5 @@ public class Record extends ArrayList<DataValue> {
 		}
 		
 		return record;
-	}
+	}*/
 }

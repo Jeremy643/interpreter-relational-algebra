@@ -13,7 +13,7 @@ public class Schema {
 	
 	private Map<String,Signature> relations = new HashMap<>();
 	
-	public Schema(ArrayList<String> fileName, ArrayList<String> attributes, ArrayList<String> attributeTypes) { //String relations
+	public Schema(List<String> fileName, List<String> attributes, List<String> attributeTypes) { //String relations
 		//this.relations = new HashMap<>(formatInput(relations));
 		for (int i = 0; i < fileName.size(); i++) {
 			String file = fileName.get(i);
