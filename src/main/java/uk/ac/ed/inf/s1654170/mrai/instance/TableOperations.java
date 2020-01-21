@@ -37,22 +37,161 @@ public class TableOperations {
     	ListIterator<Record> itA = sortedA.listIterator();
     	ListIterator<Record> itB = sortedB.listIterator();
     	
-    	while (itA.hasNext() && itB.hasNext()) {
+    	Table table = new Table(A.getSignature());
+    	
+    	// TODO: implement algorithm with pointers
+		/* WHILE one > other DO output other & increment both
+		 * IF equal SET i=0; j=0; curr = record
+		 *     WHILE = DO j++ & output right & increment right
+		 *     left++
+		 *     WHILE left = curr DO i++; if (i>j) output left; j++
+		 */
+    	
+    	if (!(itA.hasNext() && itB.hasNext())) {
+    		throw new RuntimeException("Either one or both tables are empty");
+    	}
+    	
+    	boolean cont = true;
+    	Record a = itA.next();
+    	Record b = itB.next();
+    	do {
+    		// contA = false, when itA has no more values
+    		boolean contA = true;
+    		// contB = false, when itB has no more values
+    		boolean contB = true;
+    		
+    		int comp = a.compareTo(b);
+    		System.out.println(String.format("OUTER: comp = %s", comp));
+    		while (comp < 0) {
+    			// left < right
+    			table.add(a);
+    			if (itA.hasNext()) {
+    				// increment left
+    				a = itA.next();
+    			} else {
+    				contA = false;
+    				break;
+    			}
+    			comp = a.compareTo(b);
+    			
+    			System.out.println(String.format("INNER: a = %s, b = %s, comp = %s", a, b, comp));
+    		}
+    		while (comp > 0) {
+    			// left > right
+    			table.add(b);
+    			if (itB.hasNext()) {
+    				// increment right
+    				b = itB.next();
+    			} else {
+    				contB = false;
+    				break;
+    			}
+    			comp = a.compareTo(b);
+    			
+    			System.out.println(String.format("INNER: a = %s, b = %s, comp = %s", a, b, comp));
+    		}
+    		while (comp == 0) {
+    			// left = right
+    			// does adding b instead of a make a difference?
+    			table.add(a);
+    			if (itA.hasNext()) {
+    				a = itA.next();
+    			} else {
+    				contA = false;
+    			}
+    			if (itB.hasNext()) {
+    				b = itB.next();
+    			} else {
+    				contB = false;
+    			}
+    			if (!contA && !contB) {
+    				break;
+    			} else {
+    				comp = a.compareTo(b);
+    			}
+    		}
+    		
+    		if (!contA && contB) {
+    			// add remainder of itB
+    			table.add(b);
+    			while (itB.hasNext()) {
+    				b = itB.next();
+    				table.add(b);
+    			}
+    			contB = false;
+    		}
+    		
+    		if (!contB && contA) {
+    			// add remainder of itA
+    			table.add(a);
+    			while (itA.hasNext()) {
+    				a = itA.next();
+    				table.add(a);
+    			}
+    			contA = false;
+    		}
+    		
+    		// if itA and itB are empty then finish
+    		if (!(contA || contB)) {
+    			cont = false;
+    		}
+    	} while (cont);
+    	
+    	/*while (itA.hasNext() && itB.hasNext()) {
     		Record a = itA.next();
     		Record b = itB.next();
     		
-    		// TODO: implement algorithm with pointers
-    		/* WHILE one > other DO output other & increment both
-    		 * IF equal SET i=0; j=0; curr = record
-    		 *     WHILE = DO j++ & output right & increment right
-    		 *     left++
-    		 *     WHILE left = curr DO i++; if (i>j) output left; j++
-    		 */
-    	}
+    		System.out.println(String.format("OUTER: a = %s, b = %s", a, b));
+    		
+    		int comp = a.compareTo(b);
+    		System.out.println(String.format("OUTER: comp = %s", comp));
+    		while (comp < 0) {
+    			// left < right
+    			table.add(a);
+    			if (itA.hasNext()) {
+    				// increment right
+    				a = itA.next();
+    			} else {
+    				break;
+    			}
+    			comp = a.compareTo(b);
+    			
+    			System.out.println(String.format("INNER: a = %s, b = %s, comp = %s", a, b, comp));
+    		}
+    		if (comp == 0) {
+    			// left = right
+    			int i=0,j=0;
+    			Record curr = a;
+    			while (comp == 0) {
+    				j++;
+    				table.add(b);
+    				if (itB.hasNext()) {
+    					// increment right
+        				b = itB.next();
+        			} else {
+        				break;
+        			}
+    			}
+    			// increment left
+    			if (itA.hasNext()) {
+    				a = itA.next();
+    			} else {
+    				// break?
+    				break;
+    			}
+    			int compCurr = a.compareTo(curr);
+    			while (compCurr == 0) {
+    				i++;
+    				if (i > j) {
+    					table.add(a);
+    				}
+    			}
+    		}
+    	}*/
     	
-    	Table table = new Table(A.getSignature());
+    	
 
-        Bags recordOccurrencesA = new Bags();
+        /*Bags recordOccurrencesA = new Bags();
         Bags recordOccurrencesB = new Bags();
 
         // Find the number of occurrences of each record in A
@@ -106,7 +245,7 @@ public class TableOperations {
                 for (int i = 0; i < occurrences; i++) {
                     table.add(r);
                 }
-            }
+            }*/
 
             return table;
         }
@@ -167,8 +306,8 @@ public class TableOperations {
             }
 
             return table;
-        }*/
-    }
+        }
+    }*/
 
     public static Table Difference(Table A, Table B) {
     	Table sortedA = sortRecords(A);

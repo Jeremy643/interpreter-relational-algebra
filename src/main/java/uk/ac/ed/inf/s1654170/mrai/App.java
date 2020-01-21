@@ -185,6 +185,7 @@ public class App {
 		columns.add("Name");
 		System.out.println(db.getTable("Students").getSignature().getAttributes());
 		System.out.println(TableOperations.Project(columns, db.getTable("Students")));
+		System.out.println(TableOperations.UnionMax(db.getTable("R"), db.getTable("S")));
 		
 		/*Map<String,String> attrRename = new HashMap<>();
 		attrRename.put("Name", "FullName");
