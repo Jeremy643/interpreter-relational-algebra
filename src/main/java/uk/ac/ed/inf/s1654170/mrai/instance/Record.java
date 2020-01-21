@@ -5,7 +5,7 @@ import java.util.List;
 
 import uk.ac.ed.inf.s1654170.mrai.schema.Column;
 
-public class Record extends ArrayList<DataValue> {
+public class Record extends ArrayList<DataValue> implements Comparable<Record> {
 
 	/**
 	 * 
@@ -59,6 +59,23 @@ public class Record extends ArrayList<DataValue> {
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public int compareTo(Record o) {
+		int size = this.size() < o.size() ? this.size() : o.size();
+		for (int i = 0; i < size; i++) {
+			DataValue r = this.get(i);
+			DataValue s = o.get(i);
+			// if different types, DataValue.compareTo would throw exception
+			int comp = r.compareTo(s);
+			if (comp != 0) {
+				return comp;
+			} else {
+				continue;
+			}
+		}
+		return 0;
 	}
 	
 	/*@Override

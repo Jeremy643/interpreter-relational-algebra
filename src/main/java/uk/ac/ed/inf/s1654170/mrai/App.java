@@ -159,6 +159,23 @@ public class App {
 			csvReader.close();
 		}*/
 
+		Table tableA = db.getTable("R");
+		Table tableB = db.getTable("S");
+		
+		for (Record r : tableA) {
+			for (Record s : tableB) {
+				int comp = r.compareTo(s);
+				String op;
+				if (comp == 0) {
+					op = "=";
+				} else if (comp > 0) {
+					op = ">";
+				} else {
+					op = "<";
+				}
+				System.out.println(String.format("%s %s %s", r, op, s));
+			}
+		}
 		
 		System.out.println(TableOperations.Union(db.getTable("Students"), db.getTable("SportStudents")));
 		System.out.println(TableOperations.Difference(db.getTable("Students"), db.getTable("SportStudents")));

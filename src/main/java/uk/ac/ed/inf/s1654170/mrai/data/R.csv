@@ -1,7 +1,5 @@
 val,str
 NUMBER,STRING
-1,aaa
-2,bbb
-1,aaa
-1,aaa
-3,ccc
+1,a
+2,a
+1,b

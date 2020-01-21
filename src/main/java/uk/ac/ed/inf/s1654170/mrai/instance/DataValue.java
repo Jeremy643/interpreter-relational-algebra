@@ -1,8 +1,9 @@
 package uk.ac.ed.inf.s1654170.mrai.instance;
 
 import uk.ac.ed.inf.s1654170.mrai.schema.Column;
+import uk.ac.ed.inf.s1654170.mrai.schema.Column.Type;
 
-public class DataValue {
+public class DataValue implements Comparable<DataValue> {
 	
 	private Column.Type type;
 	private final String stringValue;
@@ -48,5 +49,19 @@ public class DataValue {
 		} else {
 			return false;
 		}
+	}
+	
+	@Override
+	public int compareTo(DataValue o) {
+		if (this.type != o.getType()) {
+			throw new RuntimeException("Cannot compare values of different type");
+		}
+		if (this.type == Type.NUMBER) {
+			return this.numberValue.compareTo(o.numberValue);
+		}
+		if (this.type == Type.STRING) {
+			return this.stringValue.compareTo(o.stringValue);
+		}
+		throw new RuntimeException("This should not be happening");
 	}
 }

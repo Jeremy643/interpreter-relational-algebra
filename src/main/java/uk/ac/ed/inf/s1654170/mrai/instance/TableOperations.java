@@ -2,9 +2,8 @@ package uk.ac.ed.inf.s1654170.mrai.instance;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import uk.ac.ed.inf.s1654170.mrai.conditions.Condition;
@@ -15,31 +14,8 @@ import uk.ac.ed.inf.s1654170.mrai.schema.Signature;
 
 public class TableOperations {
 
-    static class RecordSortingComparator implements Comparator<Record> {
-
-        @Override
-        public int compare(Record A, Record B) {
-            List<Integer> comp = new ArrayList<>();
-            for (int i = 0; i < A.size(); i++) {
-                comp.add(A.get(i).toString().compareTo(B.get(i).toString()));
-            }
-
-            for (int i = 0; i < comp.size(); i++) {
-                if (comp.get(i) == 0) {
-                    continue;
-                } else {
-                    return comp.get(i);
-                }
-            }
-
-            // we return here if A and B are exactly the same
-            return 0;
-        }
-
-    }
-
     private static Table sortRecords(Table t) {
-        Collections.sort(t, new RecordSortingComparator());
+        Collections.sort(t);
         return t;
     }
 
@@ -58,6 +34,21 @@ public class TableOperations {
     	Table sortedA = sortRecords(A);
     	Table sortedB = sortRecords(B);
     	
+    	ListIterator<Record> itA = sortedA.listIterator();
+    	ListIterator<Record> itB = sortedB.listIterator();
+    	
+    	while (itA.hasNext() && itB.hasNext()) {
+    		Record a = itA.next();
+    		Record b = itB.next();
+    		
+    		// TODO: implement algorithm with pointers
+    		/* WHILE one > other DO output other & increment both
+    		 * IF equal SET i=0; j=0; curr = record
+    		 *     WHILE = DO j++ & output right & increment right
+    		 *     left++
+    		 *     WHILE left = curr DO i++; if (i>j) output left; j++
+    		 */
+    	}
     	
     	Table table = new Table(A.getSignature());
 
