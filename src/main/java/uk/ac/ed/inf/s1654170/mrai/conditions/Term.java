@@ -14,6 +14,10 @@ public class Term  {
 		return constant;
 	}
 	
+	public String getValue() {
+		return value;
+	}
+	
 	@Override
 	public String toString() {
 		if (constant) {
