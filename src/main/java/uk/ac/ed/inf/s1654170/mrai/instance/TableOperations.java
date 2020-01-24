@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import uk.ac.ed.inf.s1654170.mrai.conditions.Condition;
+import uk.ac.ed.inf.s1654170.mrai.conditions.*;
 import uk.ac.ed.inf.s1654170.mrai.schema.BaseSignature;
 import uk.ac.ed.inf.s1654170.mrai.schema.Column;
 import uk.ac.ed.inf.s1654170.mrai.schema.Column.Type;
@@ -136,178 +136,9 @@ public class TableOperations {
     			cont = false;
     		}
     	} while (cont);
-    	
-    	/*while (itA.hasNext() && itB.hasNext()) {
-    		Record a = itA.next();
-    		Record b = itB.next();
-    		
-    		System.out.println(String.format("OUTER: a = %s, b = %s", a, b));
-    		
-    		int comp = a.compareTo(b);
-    		System.out.println(String.format("OUTER: comp = %s", comp));
-    		while (comp < 0) {
-    			// left < right
-    			table.add(a);
-    			if (itA.hasNext()) {
-    				// increment right
-    				a = itA.next();
-    			} else {
-    				break;
-    			}
-    			comp = a.compareTo(b);
-    			
-    			System.out.println(String.format("INNER: a = %s, b = %s, comp = %s", a, b, comp));
-    		}
-    		if (comp == 0) {
-    			// left = right
-    			int i=0,j=0;
-    			Record curr = a;
-    			while (comp == 0) {
-    				j++;
-    				table.add(b);
-    				if (itB.hasNext()) {
-    					// increment right
-        				b = itB.next();
-        			} else {
-        				break;
-        			}
-    			}
-    			// increment left
-    			if (itA.hasNext()) {
-    				a = itA.next();
-    			} else {
-    				// break?
-    				break;
-    			}
-    			int compCurr = a.compareTo(curr);
-    			while (compCurr == 0) {
-    				i++;
-    				if (i > j) {
-    					table.add(a);
-    				}
-    			}
-    		}
-    	}*/
-    	
-    	
-
-        /*Bags recordOccurrencesA = new Bags();
-        Bags recordOccurrencesB = new Bags();
-
-        // Find the number of occurrences of each record in A
-        for (Record rA : sortedA) {
-            if (!recordOccurrencesA.containsKey(rA)) {
-                recordOccurrencesA.put(rA, 1);
-            } else {
-            	//System.out.println(rA);
-            	//System.out.println(recordOccurrencesA.get(rA));
-                int oldVal = recordOccurrencesA.get(rA);
-                //recordOccurrencesA.put(rA, oldVal+1);
-                recordOccurrencesA.replace(rA, oldVal + 1);
-                System.out.println(recordOccurrencesA);
-            }
-        }
-
-        // Find the number of occurrences of each record in B
-        for (Record rB : sortedB) {
-            if (!recordOccurrencesB.containsKey(rB)) {
-                recordOccurrencesB.put(rB, 1);
-            } else {
-                int oldVal = recordOccurrencesB.get(rB);
-                recordOccurrencesB.replace(rB, oldVal + 1);
-            }
-        }
-
-        for (Record r : recordOccurrencesA.keySet()) {
-            int occurrencesA = recordOccurrencesA.get(r);
-            int occurrencesB;
-
-            if (recordOccurrencesB.containsKey(r)) {
-                occurrencesB = recordOccurrencesB.get(r);
-                recordOccurrencesB.remove(r);
-            } else {
-                occurrencesB = 0;
-            }
-
-            int occ = occurrencesA >= occurrencesB ? occurrencesA : occurrencesB;
-            for (int i = 0; i < occ; i++) {
-            	table.add(r);
-            }
-        }
-
-        if (recordOccurrencesB.isEmpty()) {
-            // B contained records that all appeared in A
-            return table;
-        } else {
-            // add the remaining records in B to the table
-            for (Record r : recordOccurrencesB.keySet()) {
-                int occurrences = recordOccurrencesB.get(r);
-                for (int i = 0; i < occurrences; i++) {
-                    table.add(r);
-                }
-            }*/
 
             return table;
         }
-    	
-    	
-        /*Table table = new Table(A.getSignature());
-
-        Map<Record, Integer> recordOccurrencesA = new HashMap<>();
-        Map<Record, Integer> recordOccurrencesB = new HashMap<>();
-
-        // Find the number of occurrences of each record in A
-        for (Record rA : A) {
-            if (!recordOccurrencesA.containsKey(rA)) {
-                recordOccurrencesA.put(rA, 1);
-            } else {
-                int oldVal = recordOccurrencesA.get(rA);
-                recordOccurrencesA.replace(rA, oldVal + 1);
-            }
-        }
-
-        // Find the number of occurrences of each record in B
-        for (Record rB : B) {
-            if (!recordOccurrencesB.containsKey(rB)) {
-                recordOccurrencesB.put(rB, 1);
-            } else {
-                int oldVal = recordOccurrencesB.get(rB);
-                recordOccurrencesB.replace(rB, oldVal + 1);
-            }
-        }
-
-        for (Record r : recordOccurrencesA.keySet()) {
-            int occurrencesA = recordOccurrencesA.get(r);
-            int occurrencesB;
-
-            if (recordOccurrencesB.containsKey(r)) {
-                occurrencesB = recordOccurrencesB.get(r);
-                recordOccurrencesB.remove(r);
-            } else {
-                occurrencesB = 0;
-            }
-
-            int occ = occurrencesA >= occurrencesB ? occurrencesA : occurrencesB;
-            for (int i = 0; i < occ; i++) {
-            	table.add(r);
-            }
-        }
-
-        if (recordOccurrencesB.isEmpty()) {
-            // B contained records that all appeared in A
-            return table;
-        } else {
-            // add the remaining records in B to the table
-            for (Record r : recordOccurrencesB.keySet()) {
-                int occurrences = recordOccurrencesB.get(r);
-                for (int i = 0; i < occurrences; i++) {
-                    table.add(r);
-                }
-            }
-
-            return table;
-        }
-    }*/
 
     public static Table Difference(Table A, Table B) {
     	Table sortedA = sortRecords(A);
@@ -453,9 +284,230 @@ public class TableOperations {
     }
     
     public static Table Select(Condition condition, Table A) {
-    	/*Table table = new Table();
+    	Table sortedA = sortRecords(A);
+    	Table table = new Table(A.getSignature());
     	
-    	return table;*/
-    	return null;
+    	List<Comparison> comparisons = condition.getComparisons();
+    	List<Condition.Type> cond = condition.getConditionTypes();
+    	System.out.println(cond);
+    	System.out.println(comparisons);
+    	
+    	for (Record r : sortedA) {
+    		boolean[] valueComparisons = new boolean[comparisons.size()];
+    		for (int i = 0; i < comparisons.size(); i++) {
+    			Comparison c = comparisons.get(i);
+    			Condition.Type type = c.getType();
+    			List<Term> terms = c.getTerms();
+    			Term left = terms.get(0);
+    			Term right = terms.get(1);
+    			if (left.isConstant()) {
+    				// right must be attribute
+    				int index = sortedA.getSignature().getAttributes().indexOf(right.getValue());
+    				Float rVal;
+    				Float termVal;
+    				switch (type) {
+    				case EQUALITY:
+    					if (sortedA.getSignature().getTypes().get(index).equals(Type.STRING)) {
+    						valueComparisons[i] = r.get(index).toString().equals(left.getValue());
+    					} else {
+    						rVal = new Float(r.get(index).toString());
+    						termVal = new Float(left.getValue());
+    						valueComparisons[i] = rVal.equals(termVal);
+    					}
+    					break;
+    				case INEQUALITY:
+    					if (sortedA.getSignature().getTypes().get(index).equals(Type.STRING)) {
+    						valueComparisons[i] = !(r.get(index).toString().equals(left.getValue()));
+    					} else {
+    						rVal = new Float(r.get(index).toString());
+    						termVal = new Float(left.getValue());
+    						valueComparisons[i] = !(rVal.equals(termVal));
+    					}
+    					break;
+    				case LESS:
+    					rVal = new Float(r.get(index).toString());
+						termVal = new Float(left.getValue());
+						valueComparisons[i] = rVal < termVal;
+    					break;
+    				case LESS_EQUAL:
+    					rVal = new Float(r.get(index).toString());
+						termVal = new Float(left.getValue());
+						valueComparisons[i] = rVal <= termVal;
+    					break;
+    				case GREATER:
+    					rVal = new Float(r.get(index).toString());
+						termVal = new Float(left.getValue());
+						valueComparisons[i] = rVal > termVal;
+    					break;
+    				case GREATER_EQUAL:
+    					rVal = new Float(r.get(index).toString());
+						termVal = new Float(left.getValue());
+						valueComparisons[i] = rVal >= termVal;
+    					break;
+    				default:
+    					throw new RuntimeException("This is not a comparison operator");
+    				}
+    			} else if (right.isConstant()) {
+    				// left must be attribute
+    				int index = sortedA.getSignature().getAttributes().indexOf(left.getValue());
+    				Float rVal;
+    				Float termVal;
+    				switch (type) {
+    				case EQUALITY:
+    					if (sortedA.getSignature().getTypes().get(index).equals(Type.STRING)) {
+    						valueComparisons[i] = r.get(index).toString().equals(right.getValue());
+    					} else {
+    						rVal = new Float(r.get(index).toString());
+    						termVal = new Float(right.getValue());
+    						valueComparisons[i] = rVal.equals(termVal);
+    					}
+    					break;
+    				case INEQUALITY:
+    					if (sortedA.getSignature().getTypes().get(index).equals(Type.STRING)) {
+    						valueComparisons[i] = !(r.get(index).toString().equals(right.getValue()));
+    					} else {
+    						rVal = new Float(r.get(index).toString());
+    						termVal = new Float(right.getValue());
+    						valueComparisons[i] = !(rVal.equals(termVal));
+    					}
+    					break;
+    				case LESS:
+    					rVal = new Float(r.get(index).toString());
+						termVal = new Float(right.getValue());
+						valueComparisons[i] = rVal < termVal;
+    					break;
+    				case LESS_EQUAL:
+    					rVal = new Float(r.get(index).toString());
+						termVal = new Float(right.getValue());
+						valueComparisons[i] = rVal <= termVal;
+    					break;
+    				case GREATER:
+    					rVal = new Float(r.get(index).toString());
+						termVal = new Float(right.getValue());
+						valueComparisons[i] = rVal > termVal;
+    					break;
+    				case GREATER_EQUAL:
+    					rVal = new Float(r.get(index).toString());
+						termVal = new Float(right.getValue());
+						valueComparisons[i] = rVal >= termVal;
+    					break;
+    				default:
+    					throw new RuntimeException("This is not a comparison operator");
+    				}
+    			} else {
+    				// left and right are attributes
+    				int indexL = sortedA.getSignature().getAttributes().indexOf(left.getValue());
+    				int indexR = sortedA.getSignature().getAttributes().indexOf(right.getValue());
+    				Float rVal;
+    				Float termVal;
+    				switch (type) {
+    				case EQUALITY:
+    					if (sortedA.getSignature().getTypes().get(indexL).equals(Type.STRING)) {
+    						valueComparisons[i] = r.get(indexL).toString().equals(r.get(indexR));
+    					} else {
+    						rVal = new Float(r.get(indexL).toString());
+    						termVal = new Float(r.get(indexR).toString());
+    						valueComparisons[i] = rVal.equals(termVal);
+    					}
+    					break;
+    				case INEQUALITY:
+    					if (sortedA.getSignature().getTypes().get(indexL).equals(Type.STRING)) {
+    						valueComparisons[i] = !(r.get(indexL).toString().equals(r.get(indexR)));
+    					} else {
+    						rVal = new Float(r.get(indexL).toString());
+    						termVal = new Float(r.get(indexR).toString());
+    						valueComparisons[i] = !(rVal.equals(termVal));
+    					}
+    					break;
+    				case LESS:
+    					rVal = new Float(r.get(indexL).toString());
+						termVal = new Float(r.get(indexR).toString());
+						valueComparisons[i] = rVal < termVal;
+    					break;
+    				case LESS_EQUAL:
+    					rVal = new Float(r.get(indexL).toString());
+						termVal = new Float(r.get(indexR).toString());
+						valueComparisons[i] = rVal <= termVal;
+    					break;
+    				case GREATER:
+    					rVal = new Float(r.get(indexL).toString());
+						termVal = new Float(r.get(indexR).toString());
+						valueComparisons[i] = rVal > termVal;
+    					break;
+    				case GREATER_EQUAL:
+    					rVal = new Float(r.get(indexL).toString());
+						termVal = new Float(r.get(indexR).toString());
+						valueComparisons[i] = rVal >= termVal;
+    					break;
+    				default:
+    					throw new RuntimeException("This is not a comparison operator");
+    				}
+    			}
+    		}
+    		
+    		if (comparisons.size() > 1) {
+    			List<String> values = new ArrayList<>();
+    			int index = 0;
+    			for (Condition.Type c : cond) {
+    				if (c.equals(Condition.Type.AND) || c.equals(Condition.Type.OR) || c.equals(Condition.Type.NOT)) {
+    					values.add(c.toString());
+    				} else {
+    					values.add(String.valueOf(valueComparisons[index]));
+    					index++;
+    				}
+    			}
+    			
+    			int notCounter = 0;
+    			index = 0;
+    			List<String> newValues = new ArrayList<>();
+    			for (String s : values) {
+    				if (!(s.equals("true") || s.equals("false")) && Condition.Type.valueOf(s).equals(Condition.Type.NOT)) {
+    					notCounter++;
+    				} else {
+    					if (s.equals("true") || s.equals("false")) {
+    						boolean b = Boolean.valueOf(s);
+    						if (notCounter % 2 == 1) {
+    							b = !b;
+    							newValues.add(String.valueOf(b));
+    							notCounter = 0;
+    							continue;
+    						} else {
+    							notCounter = 0;
+    						}
+    					}
+    					newValues.add(s);
+    				}
+    				index++;
+    			}
+    			
+    			boolean add = Boolean.valueOf(newValues.get(0));
+    			for (int i = 0; i < newValues.size(); i++) {
+    				String current = newValues.get(i);
+    				if (!(current.equals("true") || current.equals("false"))) {
+    					Condition.Type c = Condition.Type.valueOf(current);
+    					switch (c) {
+        				case AND:
+        					add = add && Boolean.valueOf(newValues.get(i+1));
+        					break;
+        				case OR:
+        					add = add || Boolean.valueOf(newValues.get(i+1));
+        					break;
+        				default:
+        				    throw new RuntimeException("We should only get AND or OR");
+        				}
+    				}
+    			}
+    			
+    			if (add) {
+    				table.add(r);
+    			}
+    		} else {
+    			if (valueComparisons[0]) {
+    				table.add(r);
+    			}
+    		}
+    	}
+    	
+    	return table;
     }
 }

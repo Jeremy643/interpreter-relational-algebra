@@ -19,20 +19,12 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
+import uk.ac.ed.inf.s1654170.mrai.conditions.*;
 import uk.ac.ed.inf.s1654170.mrai.exprs.RAExpr;
-import uk.ac.ed.inf.s1654170.mrai.instance.Record;
-import uk.ac.ed.inf.s1654170.mrai.instance.Table;
-import uk.ac.ed.inf.s1654170.mrai.instance.TableOperations;
-import uk.ac.ed.inf.s1654170.mrai.parser.BuildExpr;
-import uk.ac.ed.inf.s1654170.mrai.parser.RelationalAlgebraLexer;
-import uk.ac.ed.inf.s1654170.mrai.parser.RelationalAlgebraParser;
-import uk.ac.ed.inf.s1654170.mrai.schema.BaseSignature;
-import uk.ac.ed.inf.s1654170.mrai.schema.Column;
+import uk.ac.ed.inf.s1654170.mrai.instance.*;
+import uk.ac.ed.inf.s1654170.mrai.parser.*;
+import uk.ac.ed.inf.s1654170.mrai.schema.*;
 import uk.ac.ed.inf.s1654170.mrai.schema.Column.Type;
-import uk.ac.ed.inf.s1654170.mrai.schema.Database;
-import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
-import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
-import uk.ac.ed.inf.s1654170.mrai.schema.Signature;
 
 
 public class App {
@@ -186,6 +178,23 @@ public class App {
 		System.out.println(db.getTable("Students").getSignature().getAttributes());
 		System.out.println(TableOperations.Project(columns, db.getTable("Students")));
 		System.out.println(TableOperations.UnionMax(db.getTable("R"), db.getTable("S")));
+		
+		System.out.println();
+		
+		// Age='18'
+		Condition c1 = new Equality(new Term("Age",false), new Term("18",true));
+		// Age='15' && ID='s001'
+		Condition c2 = new And(new Equality(new Term("Age",false), new Term("15",true)),
+				new Equality(new Term("ID",false), new Term("s001",true)));
+		// (Age='16' && ID='s001') || Name='Homer'
+		Condition c3 = new Or(new And(new Equality(new Term("Age",false), new Term("16",true)),
+				new Equality(new Term("ID",false), new Term("s001",true))),
+				new Inequality(new Term("Name",false), new Term("Homer",true)));
+		// (Age='16' && ~(ID='s001')) || Name='Jane'
+		Condition c4 = new Or(new And(new Equality(new Term("Age",false), new Term("16",true)),
+				new Not(new Equality(new Term("ID",false), new Term("s001",true)))),
+				new Inequality(new Term("Name",false), new Term("Jane",true)));
+		System.out.println(TableOperations.Select(c4, db.getTable("Students")));
 		
 		/*Map<String,String> attrRename = new HashMap<>();
 		attrRename.put("Name", "FullName");
