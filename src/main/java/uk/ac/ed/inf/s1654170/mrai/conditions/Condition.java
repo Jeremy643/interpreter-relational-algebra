@@ -1,5 +1,7 @@
 package uk.ac.ed.inf.s1654170.mrai.conditions;
 
+import java.util.List;
+
 import uk.ac.ed.inf.s1654170.mrai.parser.RelationalAlgebraLexer;
 import uk.ac.ed.inf.s1654170.mrai.schema.Signature;
 
@@ -9,7 +11,7 @@ public abstract class Condition {
 		return RelationalAlgebraLexer.VOCABULARY.getLiteralName(i).replace("'", "");
 	}
 	
-	enum Type {
+	public enum Type {
 		EQUALITY		(getName(RelationalAlgebraLexer.EQUALITY)),
 		INEQUALITY		(getName(RelationalAlgebraLexer.INEQUALITY)),
 		LESS			(getName(RelationalAlgebraLexer.LESS)),
@@ -42,4 +44,8 @@ public abstract class Condition {
 	}
 	
 	public abstract boolean validate(Signature sig);
+	
+	public abstract List<Comparison> getComparisons();
+	
+	public abstract List<Type> getConditionTypes();
 }

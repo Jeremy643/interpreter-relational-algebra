@@ -1,14 +1,19 @@
 package uk.ac.ed.inf.s1654170.mrai.conditions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import uk.ac.ed.inf.s1654170.mrai.schema.Signature;
 
 public abstract class BinaryCondition extends Condition {
 
 	private Condition left;
 	private Condition right;
+	private Type type;
 
 	public BinaryCondition (Condition left, Condition right, Type type) {
 		super(type);
+		this.type = type;
 		this.left = left;
 		this.right = right;
 	}
@@ -27,5 +32,21 @@ public abstract class BinaryCondition extends Condition {
 		} else {
 			return false;
 		}
+	}
+	
+	@Override
+	public List<Comparison> getComparisons() {
+		List<Comparison> comparisons = new ArrayList<>(left.getComparisons());
+		comparisons.addAll(right.getComparisons());
+		return comparisons;
+	}
+	
+	@Override
+	public List<Type> getConditionTypes() {
+		List<Type> conditionTypes = new ArrayList<>();
+		conditionTypes.addAll(left.getConditionTypes());
+		conditionTypes.add(type);
+		conditionTypes.addAll(right.getConditionTypes());
+		return conditionTypes;
 	}
 }

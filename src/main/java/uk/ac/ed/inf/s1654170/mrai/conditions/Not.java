@@ -1,5 +1,8 @@
 package uk.ac.ed.inf.s1654170.mrai.conditions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import uk.ac.ed.inf.s1654170.mrai.schema.Signature;
 
 public class Not extends Condition {
@@ -26,4 +29,17 @@ public class Not extends Condition {
 		}
 	}
 	
+	@Override
+	public List<Comparison> getComparisons() {
+		List<Comparison> comparisons = new ArrayList<>(main.getComparisons());
+		return comparisons;
+	}
+
+	@Override
+	public List<Type> getConditionTypes() {
+		List<Type> conditionTypes = new ArrayList<>();
+		conditionTypes.add(Type.NOT);
+		conditionTypes.addAll(main.getConditionTypes());
+		return conditionTypes;
+	}
 }
