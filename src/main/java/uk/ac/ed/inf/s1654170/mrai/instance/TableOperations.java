@@ -256,12 +256,15 @@ public class TableOperations {
 		Table sortedA = sortRecords(A);
 		Table table = new Table(A.getSignature());
 
+		// gets comparisons; [Age='16', ID='s001', Name!='Jane']
 		List<Comparison> comparisons = condition.getComparisons();
+		// gets condition types; [EQUALITY, AND, NOT, EQUALITY, OR, INEQUALITY]
 		List<Condition.Type> cond = condition.getConditionTypes();
 		System.out.println(cond);
 		System.out.println(comparisons);
 
 		for (Record r : sortedA) {
+			// valueComparisons holds the comparisons outcomes for record r
 			boolean[] valueComparisons = new boolean[comparisons.size()];
 			for (int i = 0; i < comparisons.size(); i++) {
 				Comparison c = comparisons.get(i);
@@ -269,16 +272,20 @@ public class TableOperations {
 				List<Term> terms = c.getTerms();
 				Term left = terms.get(0);
 				Term right = terms.get(1);
-				if (left.isConstant()) {
-					// right must be attribute
+				
+				// perform comparison between left and right terms
+				if (left.isConstant()) { // right must be attribute
+					// index that right appears in table
 					int index = sortedA.getSignature().getAttributes().indexOf(right.getValue());
 					Float rVal;
 					Float termVal;
 					switch (type) {
 					case EQUALITY:
-						if (sortedA.getSignature().getTypes().get(index).equals(Type.STRING)) {
+						if (sortedA.getSignature().getTypes().get(index).equals(Type.STRING)) { 
+							// right has type String
 							valueComparisons[i] = r.get(index).toString().equals(left.getValue());
 						} else {
+							// right is a float
 							rVal = new Float(r.get(index).toString());
 							termVal = new Float(left.getValue());
 							valueComparisons[i] = rVal.equals(termVal);
@@ -316,8 +323,7 @@ public class TableOperations {
 					default:
 						throw new RuntimeException("This is not a comparison operator");
 					}
-				} else if (right.isConstant()) {
-					// left must be attribute
+				} else if (right.isConstant()) { // left must be attribute
 					int index = sortedA.getSignature().getAttributes().indexOf(left.getValue());
 					Float rVal;
 					Float termVal;
@@ -363,8 +369,7 @@ public class TableOperations {
 					default:
 						throw new RuntimeException("This is not a comparison operator");
 					}
-				} else {
-					// left and right are attributes
+				} else { // left and right are attributes
 					int indexL = sortedA.getSignature().getAttributes().indexOf(left.getValue());
 					int indexR = sortedA.getSignature().getAttributes().indexOf(right.getValue());
 					Float rVal;
@@ -372,7 +377,7 @@ public class TableOperations {
 					switch (type) {
 					case EQUALITY:
 						if (sortedA.getSignature().getTypes().get(indexL).equals(Type.STRING)) {
-							valueComparisons[i] = r.get(indexL).toString().equals(r.get(indexR));
+							valueComparisons[i] = r.get(indexL).toString().equals(r.get(indexR).toString());
 						} else {
 							rVal = new Float(r.get(indexL).toString());
 							termVal = new Float(r.get(indexR).toString());
@@ -381,7 +386,7 @@ public class TableOperations {
 						break;
 					case INEQUALITY:
 						if (sortedA.getSignature().getTypes().get(indexL).equals(Type.STRING)) {
-							valueComparisons[i] = !(r.get(indexL).toString().equals(r.get(indexR)));
+							valueComparisons[i] = !(r.get(indexL).toString().equals(r.get(indexR).toString()));
 						} else {
 							rVal = new Float(r.get(indexL).toString());
 							termVal = new Float(r.get(indexR).toString());
@@ -429,18 +434,20 @@ public class TableOperations {
 				int notCounter = 0;
 				index = 0;
 				List<String> newValues = new ArrayList<>();
+				// deal with NOT before AND and OR
 				for (String s : values) {
+					// if s is NOT increase notCounter
 					if (!(s.equals("true") || s.equals("false")) && Condition.Type.valueOf(s).equals(Condition.Type.NOT)) {
 						notCounter++;
 					} else {
 						if (s.equals("true") || s.equals("false")) {
 							boolean b = Boolean.valueOf(s);
-							if (notCounter % 2 == 1) {
+							if (notCounter % 2 == 1) { // if NOT applied an odd number of times, flip value
 								b = !b;
 								newValues.add(String.valueOf(b));
 								notCounter = 0;
 								continue;
-							} else {
+							} else { // NOT was applied either an even number of times or not at all
 								notCounter = 0;
 							}
 						}
@@ -454,15 +461,11 @@ public class TableOperations {
 					String current = newValues.get(i);
 					if (!(current.equals("true") || current.equals("false"))) {
 						Condition.Type c = Condition.Type.valueOf(current);
-						switch (c) {
-						case AND:
+						// take values either side of current and do AND or OR
+						if (c.equals(Condition.Type.AND)) {
 							add = add && Boolean.valueOf(newValues.get(i+1));
-							break;
-						case OR:
+						} else {
 							add = add || Boolean.valueOf(newValues.get(i+1));
-							break;
-						default:
-							throw new RuntimeException("We should only get AND or OR");
 						}
 					}
 				}
@@ -470,8 +473,9 @@ public class TableOperations {
 				if (add) {
 					table.add(r);
 				}
-			} else {
+			} else { // only one comparison made
 				if (valueComparisons[0]) {
+					// add record to table if comparison true
 					table.add(r);
 				}
 			}
