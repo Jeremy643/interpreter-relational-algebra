@@ -48,8 +48,9 @@ public class TableOperations {
 		Record b = null;
 		int comp = 0;
 
+		// continue only when A or B still hold values
 		while (contA || contB) {
-			
+			// add the rest of table B to output
 			if (!contA && contB) { // A empty, B non-empty
 				b = itB.next();
 				table.add(b);
@@ -57,6 +58,7 @@ public class TableOperations {
 				continue;
 			}
 			
+			// add the rest of table A to output
 			if (!contB && contA) { // A non-empty, B empty
 				a = itA.next();
 				table.add(a);
@@ -64,12 +66,15 @@ public class TableOperations {
 				continue;
 			}
 
+			// get next a if less than b
 			if (comp < 0) {				
 				a = itA.next();
 			}
+			// get next b if less than a
 			if (comp > 0) {				
 				b = itB.next();
 			}
+			// get next a and b if they're equal
 			if (comp == 0) {
 				a = itA.next();
 				b = itB.next();
@@ -77,18 +82,21 @@ public class TableOperations {
 			
 			comp = a.compareTo(b);
 			
+			// a less than b
 			if (comp < 0) {
 				table.add(a);
 				contA = itA.hasNext();
 				continue;
 			}
 			
+			// b less than a
 			if (comp > 0) {
 				table.add(b);
 				contB = itB.hasNext();
 				continue;
 			}
 			
+			// a and b equal
 			if (comp == 0) {
 				table.add(a);
 				contA = itA.hasNext();
@@ -218,15 +226,18 @@ public class TableOperations {
 
 		List<Type> types = new ArrayList<>();
 		List<Integer> indexColumns = new ArrayList<>();
+		// get the types of the attributes to be projected over
 		for (String col : columns) {
 			int index = attributesA.indexOf(col);
 			indexColumns.add(index);
 			types.add(typesA.get(index));
 		}
+		// create a signature for the resulting relation
 		Signature signature = new BaseSignature(columns, types);
 
 		Table table = new Table(signature);
 
+		// get the values associated with the relevant attributes
 		for (Record r : A) {
 			int counter = 0;
 			String[] values = new String[columns.size()];
