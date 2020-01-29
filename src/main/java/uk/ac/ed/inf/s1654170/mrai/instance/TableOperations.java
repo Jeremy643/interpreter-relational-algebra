@@ -115,7 +115,7 @@ public class TableOperations {
 		tempB.addAll(sortedB);
 
 		for (Record rA : sortedA) {
-			if (!sortedB.contains(rA)) {
+			if (!tempB.contains(rA)) {
 				table.add(rA);
 			} else {
 				tempB.remove(rA);
