@@ -52,18 +52,30 @@ public class TableOperations {
 		while (contA || contB) {
 			// add the rest of table B to output
 			if (!contA && contB) { // A empty, B non-empty
-				b = itB.next();
-				table.add(b);
-				contB = itB.hasNext();
-				continue;
+				if (itB.hasNext()) {
+					b = itB.next();
+					table.add(b);
+					contB = itB.hasNext();
+					continue;
+				} else {
+					table.add(b);
+					contB = itB.hasNext();
+					continue;
+				}
 			}
 			
 			// add the rest of table A to output
 			if (!contB && contA) { // A non-empty, B empty
-				a = itA.next();
-				table.add(a);
-				contA = itA.hasNext();
-				continue;
+				if (itA.hasNext()) {
+					a = itA.next();
+					table.add(a);
+					contA = itA.hasNext();
+					continue;
+				} else {
+					table.add(a);
+					contA = itA.hasNext();
+					continue;
+				}
 			}
 
 			// get next a if less than b
@@ -130,7 +142,7 @@ public class TableOperations {
 		Table sortedB = sortRecords(B);
 		Table table = new Table(A.getSignature());
 
-		Table tempB = new Table(B.getSignature());
+		/*Table tempB = new Table(B.getSignature());
 		tempB.addAll(sortedB);
 
 		for (Record rA : sortedA) {
@@ -140,6 +152,71 @@ public class TableOperations {
 					tempB.remove(rB);
 					break;
 				}
+			}
+		}*/
+		
+		ListIterator<Record> itA = sortedA.listIterator();
+		ListIterator<Record> itB = sortedB.listIterator();
+
+		// contA = false, when itA has no more values
+		boolean contA = itA.hasNext();
+		// contB = false, when itB has no more values
+		boolean contB = itB.hasNext();
+		
+		Record a = null;
+		Record b = null;
+		int comp = 0;
+
+		// continue only when A or B still hold values
+		while (contA || contB) {
+			System.out.println(comp);
+			if (!contA && contB) { // A empty, B non-empty
+				//contB = false;
+				//continue;
+				break;
+			}
+			
+			if (!contB && contA) { // A non-empty, B empty
+				//contA = false;
+				//continue;
+				break;
+			}
+
+			// get next a if less than b
+			if (comp < 0) {				
+				a = itA.next();
+			}
+			// get next b if less than a
+			if (comp > 0) {				
+				b = itB.next();
+			}
+			// get next a and b if they're equal
+			if (comp == 0) {
+				a = itA.next();
+				b = itB.next();
+			}
+			
+			comp = a.compareTo(b);
+			
+			// a less than b
+			/*if (comp < 0) {
+				table.add(a);
+				contA = itA.hasNext();
+				continue;
+			}*/
+			
+			// b less than a
+			/*if (comp > 0) {
+				table.add(b);
+				contB = itB.hasNext();
+				continue;
+			}*/
+			
+			// a and b equal
+			if (comp == 0) {
+				table.add(a);
+				contA = itA.hasNext();
+				contB = itB.hasNext();
 			}
 		}
 

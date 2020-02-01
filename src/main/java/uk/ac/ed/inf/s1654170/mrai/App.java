@@ -171,7 +171,7 @@ public class App {
 		
 		System.out.println(TableOperations.Union(db.getTable("Students"), db.getTable("SportStudents")));
 		System.out.println(TableOperations.Difference(db.getTable("Students"), db.getTable("SportStudents")));
-		System.out.println(TableOperations.Intersect(db.getTable("Students"), db.getTable("SportStudents")));
+		//System.out.println(TableOperations.Intersect(db.getTable("Students"), db.getTable("SportStudents")));
 		
 		List<String> columns = new ArrayList<>();
 		columns.add("Name");
