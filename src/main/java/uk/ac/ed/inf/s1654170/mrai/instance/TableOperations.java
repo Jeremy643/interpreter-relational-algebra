@@ -141,19 +141,6 @@ public class TableOperations {
 		Table sortedA = sortRecords(A);
 		Table sortedB = sortRecords(B);
 		Table table = new Table(A.getSignature());
-
-		/*Table tempB = new Table(B.getSignature());
-		tempB.addAll(sortedB);
-
-		for (Record rA : sortedA) {
-			for (Record rB : tempB) {
-				if (rA.equals(rB)) {
-					table.add(rA);
-					tempB.remove(rB);
-					break;
-				}
-			}
-		}*/
 		
 		ListIterator<Record> itA = sortedA.listIterator();
 		ListIterator<Record> itB = sortedB.listIterator();
@@ -167,21 +154,8 @@ public class TableOperations {
 		Record b = null;
 		int comp = 0;
 
-		// continue only when A or B still hold values
-		while (contA || contB) {
-			System.out.println(comp);
-			if (!contA && contB) { // A empty, B non-empty
-				//contB = false;
-				//continue;
-				break;
-			}
-			
-			if (!contB && contA) { // A non-empty, B empty
-				//contA = false;
-				//continue;
-				break;
-			}
-
+		// continue only when A and B still hold values
+		while (contA && contB) {
 			// get next a if less than b
 			if (comp < 0) {				
 				a = itA.next();
@@ -199,18 +173,16 @@ public class TableOperations {
 			comp = a.compareTo(b);
 			
 			// a less than b
-			/*if (comp < 0) {
-				table.add(a);
+			if (comp < 0) {
 				contA = itA.hasNext();
 				continue;
-			}*/
+			}
 			
 			// b less than a
-			/*if (comp > 0) {
-				table.add(b);
+			if (comp > 0) {
 				contB = itB.hasNext();
 				continue;
-			}*/
+			}
 			
 			// a and b equal
 			if (comp == 0) {
