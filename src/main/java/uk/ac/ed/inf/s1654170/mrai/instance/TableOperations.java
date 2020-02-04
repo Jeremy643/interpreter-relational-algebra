@@ -116,7 +116,80 @@ public class TableOperations {
 
 	public static Table Difference(Table tA, Table tB) {
 		// TODO: better implementation N log(N)
+		
+		Table sortedA = sortRecords(tA);
+		Table sortedB = sortRecords(tB);
+
+		ListIterator<Record> itA = sortedA.listIterator();
+		ListIterator<Record> itB = sortedB.listIterator();
+
 		Table table = new Table(tA.getSignature());
+
+		// contA = false, when itA has no more values
+		boolean contA = itA.hasNext();
+		// contB = false, when itB has no more values
+		boolean contB = itB.hasNext();
+
+		Record a = null;
+		Record b = null;
+		int comp = 0;
+
+		// continue only when A still hold values
+		while (contA) {
+			// add the rest of table A to output
+			if (!contB && contA) { // A non-empty, B empty
+				if (itA.hasNext()) {
+					a = itA.next();
+					table.add(a);
+					contA = itA.hasNext();
+					continue;
+				} else {
+					table.add(a);
+					contA = false;
+					continue;
+				}
+			}
+
+			// get next a if less than b
+			if (comp < 0) {				
+				a = itA.next();
+			}
+			// get next b if less than a
+			if (comp > 0) {				
+				b = itB.next();
+			}
+			// get next a and b if they're equal
+			if (comp == 0) {
+				a = itA.next();
+				b = itB.next();
+			}
+
+			comp = a.compareTo(b);
+
+			// a less than b
+			if (comp < 0) {
+				table.add(a);
+				contA = itA.hasNext();
+				continue;
+			}
+
+			// b less than a
+			if (comp > 0) {
+				//table.add(b);
+				contB = itB.hasNext();
+				continue;
+			}
+
+			// a and b equal
+			if (comp == 0) {
+				//table.add(a);
+				contA = itA.hasNext();
+				contB = itB.hasNext();
+			}
+		}
+		return table;
+		
+		/*Table table = new Table(tA.getSignature());
 
 		Table tempB = new Table(tB.getSignature());
 		tempB.addAll(tB);
@@ -128,7 +201,7 @@ public class TableOperations {
 				tempB.remove(rA);
 			}
 		}
-		return table;
+		return table;*/
 	}
 
 	public static Table Intersect(Table tA, Table tB) {
