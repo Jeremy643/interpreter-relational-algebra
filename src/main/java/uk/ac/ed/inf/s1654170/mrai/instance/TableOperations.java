@@ -19,31 +19,27 @@ public class TableOperations {
 		return t;
 	}
 
-	public static Table Union(Table A, Table B) {
-		Table sortedA = sortRecords(A);
-		Table sortedB = sortRecords(B);
-		Table table = new Table(A.getSignature());
-
-		table.addAll(sortedA);
-		table.addAll(sortedB);
-
+	public static Table Union(Table tA, Table tB) {
+		Table table = new Table(tA.getSignature());
+		table.addAll(tA);
+		table.addAll(tB);
 		return table;
 	}
 
-	public static Table UnionMax(Table A, Table B) {
-		Table sortedA = sortRecords(A);
-		Table sortedB = sortRecords(B);
+	public static Table UnionMax(Table tA, Table tB) {
+		Table sortedA = sortRecords(tA);
+		Table sortedB = sortRecords(tB);
 
 		ListIterator<Record> itA = sortedA.listIterator();
 		ListIterator<Record> itB = sortedB.listIterator();
 
-		Table table = new Table(A.getSignature());
+		Table table = new Table(tA.getSignature());
 
 		// contA = false, when itA has no more values
 		boolean contA = itA.hasNext();
 		// contB = false, when itB has no more values
 		boolean contB = itB.hasNext();
-		
+
 		Record a = null;
 		Record b = null;
 		int comp = 0;
@@ -59,11 +55,11 @@ public class TableOperations {
 					continue;
 				} else {
 					table.add(b);
-					contB = itB.hasNext();
+					contB = false;
 					continue;
 				}
 			}
-			
+
 			// add the rest of table A to output
 			if (!contB && contA) { // A non-empty, B empty
 				if (itA.hasNext()) {
@@ -73,7 +69,7 @@ public class TableOperations {
 					continue;
 				} else {
 					table.add(a);
-					contA = itA.hasNext();
+					contA = false;
 					continue;
 				}
 			}
@@ -91,23 +87,23 @@ public class TableOperations {
 				a = itA.next();
 				b = itB.next();
 			}
-			
+
 			comp = a.compareTo(b);
-			
+
 			// a less than b
 			if (comp < 0) {
 				table.add(a);
 				contA = itA.hasNext();
 				continue;
 			}
-			
+
 			// b less than a
 			if (comp > 0) {
 				table.add(b);
 				contB = itB.hasNext();
 				continue;
 			}
-			
+
 			// a and b equal
 			if (comp == 0) {
 				table.add(a);
@@ -118,30 +114,30 @@ public class TableOperations {
 		return table;
 	}
 
-	public static Table Difference(Table A, Table B) {
-		Table sortedA = sortRecords(A);
-		Table sortedB = sortRecords(B);
-		Table table = new Table(A.getSignature());
+	public static Table Difference(Table tA, Table tB) {
+		// TODO: better implementation N log(N)
+		Table table = new Table(tA.getSignature());
 
-		Table tempB = new Table(B.getSignature());
-		tempB.addAll(sortedB);
+		Table tempB = new Table(tB.getSignature());
+		tempB.addAll(tB);
 
-		for (Record rA : sortedA) {
+		for (Record rA : tA) {
 			if (!tempB.contains(rA)) {
 				table.add(rA);
 			} else {
 				tempB.remove(rA);
 			}
 		}
-
 		return table;
 	}
 
-	public static Table Intersect(Table A, Table B) {
-		Table sortedA = sortRecords(A);
-		Table sortedB = sortRecords(B);
-		Table table = new Table(A.getSignature());
-		
+	public static Table Intersect(Table tA, Table tB) {
+		//return Difference(tA,Difference(tA,tB));
+
+		Table sortedA = sortRecords(tA);
+		Table sortedB = sortRecords(tB);
+		Table table = new Table(tA.getSignature());
+
 		ListIterator<Record> itA = sortedA.listIterator();
 		ListIterator<Record> itB = sortedB.listIterator();
 
@@ -149,7 +145,7 @@ public class TableOperations {
 		boolean contA = itA.hasNext();
 		// contB = false, when itB has no more values
 		boolean contB = itB.hasNext();
-		
+
 		Record a = null;
 		Record b = null;
 		int comp = 0;
@@ -169,21 +165,21 @@ public class TableOperations {
 				a = itA.next();
 				b = itB.next();
 			}
-			
+
 			comp = a.compareTo(b);
-			
+
 			// a less than b
 			if (comp < 0) {
 				contA = itA.hasNext();
 				continue;
 			}
-			
+
 			// b less than a
 			if (comp > 0) {
 				contB = itB.hasNext();
 				continue;
 			}
-			
+
 			// a and b equal
 			if (comp == 0) {
 				table.add(a);
@@ -195,24 +191,21 @@ public class TableOperations {
 		return table;
 	}
 
-	public static Table Product(Table A, Table B) {
-		Table sortedA = sortRecords(A);
-		Table sortedB = sortRecords(B);
-
-		List<String> attributes = new ArrayList<>(A.getSignature().getAttributes());
-		attributes.addAll(B.getSignature().getAttributes());
-		List<Type> attributeTypes = new ArrayList<>(A.getSignature().getTypes());
-		attributeTypes.addAll(B.getSignature().getTypes());
+	public static Table Product(Table tA, Table tB) {
+		List<String> attributes = new ArrayList<>(tA.getSignature().getAttributes());
+		attributes.addAll(tB.getSignature().getAttributes());
+		List<Type> attributeTypes = new ArrayList<>(tA.getSignature().getTypes());
+		attributeTypes.addAll(tB.getSignature().getTypes());
 
 		Signature sig = new BaseSignature(attributes, attributeTypes);
 		Table table = new Table(sig);
 
 		List<Column.Type> types = new ArrayList<>();
-		types.addAll(sortedA.get(0).getTypes());
-		types.addAll(sortedB.get(0).getTypes());
+		types.addAll(tA.getSignature().getTypes());
+		types.addAll(tB.getSignature().getTypes());
 
-		for (Record rA : sortedA) {
-			for (Record rB : sortedB) {
+		for (Record rA : tA) {
+			for (Record rB : tB) {
 				String[] values = new String[rA.size() + rB.size()];
 				int index = 0;
 
@@ -234,16 +227,17 @@ public class TableOperations {
 		return table;
 	}
 
-	public static Table Eliminate(Table A) {
-		Table sortedA = sortRecords(A);
-		Table table = new Table(A.getSignature());
-
-		for (Record r : sortedA) {
-			if (!table.contains(r)) {
-				table.add(r);
+	public static Table Eliminate(Table tA) {
+		Table sortedA = sortRecords(tA);
+		Table table = new Table(tA.getSignature());
+		Record prev = null;
+		for (Record curr : sortedA) {
+			if (curr.equals(prev)) {
+				continue;
 			}
+			table.add(curr);
+			prev = curr;
 		}
-
 		return table;
 	}
 
@@ -321,7 +315,7 @@ public class TableOperations {
 				List<Term> terms = c.getTerms();
 				Term left = terms.get(0);
 				Term right = terms.get(1);
-				
+
 				// perform comparison between left and right terms
 				if (left.isConstant()) { // right must be attribute
 					// index that right appears in table
