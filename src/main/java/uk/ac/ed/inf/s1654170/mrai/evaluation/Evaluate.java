@@ -90,7 +90,7 @@ public class Evaluate {
 		}
 	}
 	
-	private static void pickChoice() {
+	/*private static void pickChoice() {
 		boolean cont = true;
 		
 		Scanner scanner = new Scanner(System.in);
@@ -136,7 +136,7 @@ public class Evaluate {
 			}
 		} while (cont == true);
 		scanner.close();
-	}
+	}*/
 	
 	private static void evaluateValidation() {
 		// Evaluate the validation method on correct and incorrect input
@@ -184,9 +184,18 @@ public class Evaluate {
 		System.out.println("Actual: " + correctUnion.execute(db));
 	}
 	
-	public static void main(String[] args) throws IOException {
+	public static void runEvaluation() throws IOException {
+		readData();
+
+		evaluateValidation();
+		evaluateTableOperations();
+	}
+	
+	/*public static void main(String[] args) throws IOException {
 		readData();
 		
-		pickChoice();
-	}
+		//pickChoice();
+		evaluateValidation();
+		evaluateTableOperations();
+	}*/
 }

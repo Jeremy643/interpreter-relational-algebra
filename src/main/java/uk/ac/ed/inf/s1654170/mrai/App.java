@@ -20,6 +20,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
 import uk.ac.ed.inf.s1654170.mrai.conditions.*;
+import uk.ac.ed.inf.s1654170.mrai.evaluation.Evaluate;
 import uk.ac.ed.inf.s1654170.mrai.exprs.RAExpr;
 import uk.ac.ed.inf.s1654170.mrai.instance.*;
 import uk.ac.ed.inf.s1654170.mrai.parser.*;
@@ -120,6 +121,8 @@ public class App {
 			}
 		}
 		
+		Evaluate.runEvaluation();
+		
 		/*for (File file : listOfFiles) {
 			String name = file.getName().replace(".csv", "");
 			
@@ -151,7 +154,7 @@ public class App {
 			csvReader.close();
 		}*/
 
-		Table tableA = db.getTable("R");
+		/*Table tableA = db.getTable("R");
 		Table tableB = db.getTable("S");
 		
 		for (Record r : tableA) {
@@ -195,7 +198,7 @@ public class App {
 		Condition c4 = new Or(new And(new Equality(new Term("Age",false), new Term("16",true)),
 				new Not(new Equality(new Term("ID",false), new Term("s001",true)))),
 				new Inequality(new Term("Name",false), new Term("Jane",true)));
-		System.out.println(TableOperations.Select(c4, db.getTable("Students")));
+		System.out.println(TableOperations.Select(c4, db.getTable("Students")));*/
 		
 		/*Map<String,String> attrRename = new HashMap<>();
 		attrRename.put("Name", "FullName");
