@@ -61,5 +61,10 @@ public abstract class RAExpr {
 		}
 	}
 	
-	public abstract Table execute(Database db);
+	public abstract Table execute(Database db); // rename to executeValid
+	
+//	public Table execute(Database db) throws SchemaException {
+//		validate(db.getSchema());
+//		return executeValid(db);
+//	}
 }

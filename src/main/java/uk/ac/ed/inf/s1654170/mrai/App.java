@@ -154,23 +154,23 @@ public class App {
 			csvReader.close();
 		}*/
 
-		/*Table tableA = db.getTable("R");
-		Table tableB = db.getTable("S");
-		
-		for (Record r : tableA) {
-			for (Record s : tableB) {
-				int comp = r.compareTo(s);
-				String op;
-				if (comp == 0) {
-					op = "=";
-				} else if (comp > 0) {
-					op = ">";
-				} else {
-					op = "<";
-				}
-				System.out.println(String.format("%s %s %s", r, op, s));
-			}
-		}
+//		Table tableA = db.getTable("R");
+//		Table tableB = db.getTable("S");
+//		
+//		for (Record r : tableA) {
+//			for (Record s : tableB) {
+//				int comp = r.compareTo(s);
+//				String op;
+//				if (comp == 0) {
+//					op = "=";
+//				} else if (comp > 0) {
+//					op = ">";
+//				} else {
+//					op = "<";
+//				}
+//				System.out.println(String.format("%s %s %s", r, op, s));
+//			}
+//		}
 		
 		System.out.println(TableOperations.Union(db.getTable("Students"), db.getTable("SportStudents")));
 		System.out.println(TableOperations.Difference(db.getTable("Students"), db.getTable("SportStudents")));
@@ -181,7 +181,7 @@ public class App {
 		System.out.println(db.getTable("Students").getSignature().getAttributes());
 		System.out.println(TableOperations.Project(columns, db.getTable("Students")));
 		
-		System.out.println(TableOperations.UnionMax(db.getTable("R"), db.getTable("S")));
+//		System.out.println(TableOperations.UnionMax(db.getTable("R"), db.getTable("S")));
 		
 		System.out.println();
 		
@@ -198,7 +198,7 @@ public class App {
 		Condition c4 = new Or(new And(new Equality(new Term("Age",false), new Term("16",true)),
 				new Not(new Equality(new Term("ID",false), new Term("s001",true)))),
 				new Inequality(new Term("Name",false), new Term("Jane",true)));
-		System.out.println(TableOperations.Select(c4, db.getTable("Students")));*/
+		System.out.println(TableOperations.Select(c4, db.getTable("Students")));
 		
 		/*Map<String,String> attrRename = new HashMap<>();
 		attrRename.put("Name", "FullName");
@@ -257,19 +257,20 @@ public class App {
 		//System.out.print("Schema: ");
 		//String schemaTest = "R:Name/STRING,Age/NUMBER;S:Name/STRING,Age/NUMBER;P:Name/STRING";
 		//Schema schema = new Schema(sc.nextLine());
-		try {
-			System.out.println(e.signature(sch));
-		} catch (SchemaException se) {
-			System.out.println(se.getMessage());
-			se.printStackTrace();
-		}
-		if (e.validate(sch)) {
-			System.out.println("Valid!");
-			// Valid therefore execute expression
-			System.out.println(e.execute(db));
-		} else {
-			System.out.println("Not valid!");
-		}
+//		try {
+//			System.out.println(e.signature(sch));
+//		} catch (SchemaException se) {
+//			System.out.println(se.getMessage());
+//			se.printStackTrace();
+//		}
+//		if (e.validate(sch)) {
+//			System.out.println("Valid!");
+//			// Valid therefore execute expression
+//			System.out.println(e.execute(db));
+//		} else {
+//			System.out.println("Not valid!");
+//		}
+		System.out.println(e.execute(db));
 
 		sc.close();
 
