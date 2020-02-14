@@ -121,7 +121,11 @@ public class App {
 			}
 		}
 		
-		Evaluate.runEvaluation();
+		try {
+			Evaluate.runEvaluation();
+		} catch (SchemaException e2) {
+			e2.printStackTrace();
+		}
 		
 		/*for (File file : listOfFiles) {
 			String name = file.getName().replace(".csv", "");
@@ -270,7 +274,12 @@ public class App {
 //		} else {
 //			System.out.println("Not valid!");
 //		}
-		System.out.println(e.execute(db));
+//		System.out.println(e.executeValid(db));
+		try {
+			System.out.println(e.execute(db));
+		} catch (SchemaException e1) {
+			e1.printStackTrace();
+		}
 
 		sc.close();
 

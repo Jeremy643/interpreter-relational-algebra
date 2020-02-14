@@ -48,7 +48,7 @@ public abstract class RAExpr {
 	
 	public abstract Signature signature(Schema s) throws SchemaException;
 	
-	public boolean validate(Schema schema) {
+	public boolean validate(Schema schema) throws SchemaException {
 		try {
 			Signature sign = signature(schema);
 			if (sign != null) {
@@ -57,14 +57,21 @@ public abstract class RAExpr {
 				return false;
 			}
 		} catch (SchemaException e) {
-			return false;
+			//return false;
+			throw new SchemaException(e.getMessage());
 		}
 	}
 	
-	public abstract Table execute(Database db); // rename to executeValid
+	public abstract Table executeValid(Database db);
 	
-//	public Table execute(Database db) throws SchemaException {
-//		validate(db.getSchema());
-//		return executeValid(db);
-//	}
+	public Table execute(Database db) throws SchemaException {
+//		if (validate(db.getSchema())) {
+//			return executeValid(db);
+//		} else {
+//			return null;
+//		}
+		
+		validate(db.getSchema());
+		return executeValid(db);
+	}
 }

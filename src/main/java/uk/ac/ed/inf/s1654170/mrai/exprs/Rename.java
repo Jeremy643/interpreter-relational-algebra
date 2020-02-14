@@ -62,7 +62,7 @@ public class Rename extends RAExpr {
 	}
 
 	@Override
-	public Table execute(Database db) {
-		return TableOperations.Rename(attributes, relation.execute(db));
+	public Table executeValid(Database db) {
+		return TableOperations.Rename(attributes, relation.executeValid(db));
 	}
 }

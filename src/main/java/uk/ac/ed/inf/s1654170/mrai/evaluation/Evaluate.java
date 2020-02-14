@@ -16,6 +16,7 @@ import uk.ac.ed.inf.s1654170.mrai.instance.Table;
 import uk.ac.ed.inf.s1654170.mrai.schema.Column;
 import uk.ac.ed.inf.s1654170.mrai.schema.Database;
 import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
+import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
 
 public class Evaluate {
 	
@@ -138,7 +139,7 @@ public class Evaluate {
 		scanner.close();
 	}*/
 	
-	private static void evaluateValidation() {
+	private static void evaluateValidation() throws SchemaException {
 		// Evaluate the validation method on correct and incorrect input
 		System.out.println();
 		System.out.println("Evaluating the validation method.");
@@ -181,10 +182,10 @@ public class Evaluate {
 		RAExpr correctUnion = new Union(new Base("Students"), new Base("SportStudents"));
 		System.out.println(correctUnion.toString());
 		System.out.println("Expected: " + db.getTable("_StudentsUnionSportStudents"));
-		System.out.println("Actual: " + correctUnion.execute(db));
+		System.out.println("Actual: " + correctUnion.executeValid(db));
 	}
 	
-	public static void runEvaluation() throws IOException {
+	public static void runEvaluation() throws IOException, SchemaException {
 		readData();
 
 		evaluateValidation();

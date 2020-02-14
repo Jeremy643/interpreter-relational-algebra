@@ -54,7 +54,7 @@ public class Project extends RAExpr {
 	}
 
 	@Override
-	public Table execute(Database db) {
-		return TableOperations.Project(attributes, expr.execute(db));
+	public Table executeValid(Database db) {
+		return TableOperations.Project(attributes, expr.executeValid(db));
 	}
 }

@@ -29,7 +29,7 @@ public class Base extends RAExpr {
 	}
 
 	@Override
-	public Table execute(Database db) {
+	public Table executeValid(Database db) {
 		return db.getTable(name);
 	}
 }

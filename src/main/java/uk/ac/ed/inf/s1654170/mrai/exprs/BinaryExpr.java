@@ -45,18 +45,18 @@ public abstract class BinaryExpr extends RAExpr {
 	}
 
 	@Override
-	public Table execute(Database db) {
+	public Table executeValid(Database db) {
 		switch (type) {
 		case UNION:
-			return TableOperations.Union(left.execute(db), right.execute(db));
+			return TableOperations.Union(left.executeValid(db), right.executeValid(db));
 		case UNION_MAX:
-			return TableOperations.UnionMax(left.execute(db), right.execute(db));
+			return TableOperations.UnionMax(left.executeValid(db), right.executeValid(db));
 		case PRODUCT:
-			return TableOperations.Product(left.execute(db), right.execute(db));
+			return TableOperations.Product(left.executeValid(db), right.executeValid(db));
 		case INTERSECT:
-			return TableOperations.Intersect(left.execute(db), right.execute(db));
+			return TableOperations.Intersect(left.executeValid(db), right.executeValid(db));
 		case DIFFERENCE:
-			return TableOperations.Difference(left.execute(db), right.execute(db));
+			return TableOperations.Difference(left.executeValid(db), right.executeValid(db));
 		default:
 			throw new RuntimeException("Unknown binary operation");
 		}

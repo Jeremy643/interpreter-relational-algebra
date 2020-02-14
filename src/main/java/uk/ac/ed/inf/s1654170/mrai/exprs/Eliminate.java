@@ -27,7 +27,7 @@ public class Eliminate extends RAExpr {
 	}
 
 	@Override
-	public Table execute(Database db) {
-		return TableOperations.Eliminate(expr.execute(db));
+	public Table executeValid(Database db) {
+		return TableOperations.Eliminate(expr.executeValid(db));
 	}
 }
