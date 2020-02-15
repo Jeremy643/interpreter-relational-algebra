@@ -2,8 +2,10 @@ package uk.ac.ed.inf.s1654170.mrai.exprs;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import uk.ac.ed.inf.s1654170.mrai.instance.Table;
 import uk.ac.ed.inf.s1654170.mrai.instance.TableOperations;
@@ -47,8 +49,16 @@ public class Rename extends RAExpr {
 		type = new ArrayList<>(sigRel.getTypes());
 		
 		List<String> oldName = new ArrayList<>(attributes.keySet());
+		//List<String> newName = new ArrayList<>(attributes.values());
+		Set<String> newName = new HashSet<>(attributes.values());
 		
-		if (!attr.containsAll(oldName)) {
+		for (String n : newName) {
+			if (attr.contains(n)) {
+				throw new SchemaException(SchemaException.RENAME_ERROR);
+			}
+		}
+		
+		if (!attr.containsAll(oldName) || oldName.size() != newName.size()) {
 			throw new SchemaException(SchemaException.RENAME_ERROR);
 		} else {
 			for (int i = 0; i < attr.size(); i++) {
