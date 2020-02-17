@@ -4,9 +4,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Scanner;
+import java.util.Map;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
 
 import uk.ac.ed.inf.s1654170.mrai.exprs.Base;
 import uk.ac.ed.inf.s1654170.mrai.exprs.RAExpr;
@@ -17,6 +22,7 @@ import uk.ac.ed.inf.s1654170.mrai.schema.Column;
 import uk.ac.ed.inf.s1654170.mrai.schema.Database;
 import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
 import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
+import uk.ac.ed.inf.s1654170.mrai.schema.Column.Type;
 
 public class Evaluate {
 	
@@ -24,16 +30,83 @@ public class Evaluate {
 	private static ArrayList<String> fileName = new ArrayList<>();
 	
 	private static void readData() throws IOException {
-		String dirPath = System.getProperty("user.dir");
-		dirPath += "\\src\\main\\java\\uk\\ac\\ed\\inf\\s1654170\\mrai\\evaluation";
-		File folder = new File(dirPath);
+		File dirPath = new File(System.getProperty("user.dir"));
+		File folder = new File(dirPath, "src/main/java/uk/ac/ed/inf/s1654170/mrai/evaluation");
 		File[] listOfFiles = folder.listFiles();
 		
 		//ArrayList<String> fileName = new ArrayList<>();
 		ArrayList<String> attributes = new ArrayList<>();
 		ArrayList<String> attributeTypes = new ArrayList<>();
 		
+		Map<String,List<Record>> tables = new HashMap<>();
 		for (File file : listOfFiles) {
+			if (file.getName().equals("Evaluate.java")) {
+				continue;
+			}
+			String name = file.getName().replace(".csv", "");
+			fileName.add(name);
+			
+			Reader in = new FileReader(file);
+			Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
+			
+			int index = 0;
+			List<Record> tableRecords = new ArrayList<>();
+			List<Type> types = new ArrayList<>();
+			for (CSVRecord record : records) {
+				int size = record.size();
+				switch (index) {
+					case 0:
+						String attr = "";
+						for (int i = 0; i < size; i++) {
+							if (i == size-1) {
+								attr += record.get(i);
+							} else {
+								attr += record.get(i) + ",";
+							}
+						}
+						attributes.add(attr);
+						break;
+					case 1:
+						String type = "";
+						for (int i = 0; i < size; i++) {
+							if (i == size-1) {
+								type += record.get(i);
+							} else {
+								type += record.get(i) + ",";
+							}
+							types.add(Type.valueOf(record.get(i)));
+						}
+						attributeTypes.add(type);
+						break;
+					default:
+						String[] values = new String[size];
+						for (int i = 0; i < size; i++) {
+							values[i] = record.get(i);
+						}
+						Record r = Record.valueOf(types, values);
+						tableRecords.add(r);
+						break;
+				}
+				tables.put(name, tableRecords);
+				index++;
+			}
+		}
+		
+		Schema sch = new Schema(fileName, attributes, attributeTypes);
+		
+		db = new Database(sch);
+		for (String name : fileName) {
+			Table table = new Table(sch.getSignature(name));
+			table.addAll(tables.get(name));
+			System.out.println(table);
+			try {
+				db.add(name, table);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		}
+		
+		/*for (File file : listOfFiles) {
 			if (file.getName().equals("Evaluate.java")) {
 				continue;
 			} else {
@@ -88,64 +161,16 @@ public class Evaluate {
 				
 				csvReader.close();
 			}
-		}
+		}*/
 	}
-	
-	/*private static void pickChoice() {
-		boolean cont = true;
-		
-		Scanner scanner = new Scanner(System.in);
-		do {
-			// Ask user to pick an evaluation option
-			System.out.println("Pick one of the following!");
-			System.out.println("(1) Evaluate validation method.");
-			System.out.println("(2) Evaluate table operations.");
-			System.out.print("Enter: ");
-			String choice = scanner.nextLine().replaceAll(" ", "");
-
-			switch(choice) {
-			case "1":
-				evaluateValidation();
-				break;
-			case "2":
-				evaluateTableOperations();
-				break;
-			default:
-				System.out.println("Wrong input. Enter either 1 or 2!");
-				break;
-			}
-			
-			System.out.println();
-			
-			// Ask user if they want to stop or pick another option
-			System.out.println("Do you wish to pick another option?[y/n]");
-			System.out.print("Enter: ");
-			String carryOn = scanner.nextLine().replaceAll(" ", "").toLowerCase();
-			
-			switch(carryOn) {
-			case "y":
-				System.out.println();
-				break;
-			case "n":
-				System.out.println("Exit...");
-				cont = false;
-				break;
-			default:
-				System.out.println("Your input was incorrect! Exit it is then!");
-				cont = false;
-				break;
-			}
-		} while (cont == true);
-		scanner.close();
-	}*/
 	
 	private static void evaluateValidation() throws SchemaException {
 		// Evaluate the validation method on correct and incorrect input
 		System.out.println();
 		System.out.println("Evaluating the validation method.");
 		System.out.println();
-		
-		for (String name : fileName) {	
+
+		for (String name : fileName) {
 			if (!name.substring(0, 1).equals("_")) {
 				System.out.println(String.format("%s: %s", name, db.getSchema().getSignature(name)));
 			}
@@ -162,7 +187,7 @@ public class Evaluate {
 		
 		RAExpr incorrectUnion = new Union(new Base("Students"), new Base("Teachers"));
 		System.out.println(incorrectUnion.toString());
-		System.out.println("Expected: false");
+		System.out.println("Expected: schema exception");
 		System.out.println("Actual: " + incorrectUnion.validate(db.getSchema()));
 	}
 	
@@ -191,12 +216,4 @@ public class Evaluate {
 		evaluateValidation();
 		evaluateTableOperations();
 	}
-	
-	/*public static void main(String[] args) throws IOException {
-		readData();
-		
-		//pickChoice();
-		evaluateValidation();
-		evaluateTableOperations();
-	}*/
 }
