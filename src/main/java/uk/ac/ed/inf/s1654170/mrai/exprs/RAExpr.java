@@ -8,7 +8,7 @@ import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
 import uk.ac.ed.inf.s1654170.mrai.schema.Signature;
 
 public abstract class RAExpr {
-	
+
 	private static final String getName(int i) {
 		return RelationalAlgebraLexer.VOCABULARY.getLiteralName(i).replace("'", "");
 	}
@@ -45,9 +45,9 @@ public abstract class RAExpr {
 	public Type getType() {
 		return type;
 	}
-	
+
 	public abstract Signature signature(Schema s) throws SchemaException;
-	
+
 	public boolean validate(Schema schema) throws SchemaException {
 		try {
 			Signature sign = signature(schema);
@@ -61,16 +61,10 @@ public abstract class RAExpr {
 			throw new SchemaException(e.getMessage());
 		}
 	}
-	
+
 	public abstract Table executeValid(Database db);
-	
+
 	public Table execute(Database db) throws SchemaException {
-//		if (validate(db.getSchema())) {
-//			return executeValid(db);
-//		} else {
-//			return null;
-//		}
-		
 		validate(db.getSchema());
 		return executeValid(db);
 	}
