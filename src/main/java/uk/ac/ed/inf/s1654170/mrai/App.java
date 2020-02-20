@@ -180,6 +180,8 @@ public class App {
 		System.out.println(TableOperations.Difference(db.getTable("Students"), db.getTable("SportStudents")));
 		//System.out.println(TableOperations.Intersect(db.getTable("Students"), db.getTable("SportStudents")));
 		
+		System.out.println(db.getTable("P").equals(db.getTable("Q")));
+		
 		List<String> columns = new ArrayList<>();
 		columns.add("Name");
 		System.out.println(db.getTable("Students").getSignature().getAttributes());
