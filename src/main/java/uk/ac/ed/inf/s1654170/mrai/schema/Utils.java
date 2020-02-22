@@ -4,13 +4,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Utils {
-	public static Signature concat(Signature left, Signature right) {
-		List<String> names = new ArrayList<>(left.getAttributes());
-		names.addAll(right.getAttributes());
-		
-		List<Column.Type> types = new ArrayList<>(left.getTypes());
-		types.addAll(right.getTypes());
+	public static Signature concat(Signature left, Signature right) throws SchemaException {
+		if (left.isOrdered() && right.isOrdered()) {
+			List<String> names = new ArrayList<>(left.getAttributes());
+			names.addAll(right.getAttributes());
+			
+			List<Column.Type> types = new ArrayList<>(left.getTypes());
+			types.addAll(right.getTypes());
 
-		return new BaseSignature(names, types);
+			return new BaseSignature(names, types, true);
+		} else {
+			for (String attr : right.getAttributes()) {
+				if (left.getAttributes().contains(attr)) {
+					throw new SchemaException(SchemaException.UNORDERED_SIGNATURE_ERROR);
+				}
+			}
+			
+			List<String> names = new ArrayList<>(left.getAttributes());
+			names.addAll(right.getAttributes());
+			
+			List<Column.Type> types = new ArrayList<>(left.getTypes());
+			types.addAll(right.getTypes());
+			
+			return new BaseSignature(names, types, false);
+		}
 	}
 }
