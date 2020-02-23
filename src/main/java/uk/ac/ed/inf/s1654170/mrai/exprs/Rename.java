@@ -54,12 +54,12 @@ public class Rename extends RAExpr {
 		
 		for (String n : newName) {
 			if (attr.contains(n)) {
-				throw new SchemaException(SchemaException.RENAME_ERROR);
+				throw new SchemaException(SchemaException.ErrorMessage.RENAME_ERROR.getErrorMessage());
 			}
 		}
 		
 		if (!attr.containsAll(oldName) || oldName.size() != newName.size()) {
-			throw new SchemaException(SchemaException.RENAME_ERROR);
+			throw new SchemaException(SchemaException.ErrorMessage.RENAME_ERROR.getErrorMessage());
 		} else {
 			for (int i = 0; i < attr.size(); i++) {
 				if (oldName.contains(attr.get(i))) {

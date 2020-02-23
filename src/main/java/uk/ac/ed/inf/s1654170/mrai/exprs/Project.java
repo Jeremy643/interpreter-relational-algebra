@@ -40,7 +40,7 @@ public class Project extends RAExpr {
 		type = new ArrayList<>(sigExpr.getTypes());
 		
 		if (!attr.containsAll(attributes)) {
-			throw new SchemaException(SchemaException.PROJECT_ERROR);
+			throw new SchemaException(SchemaException.ErrorMessage.PROJECT_ERROR.getErrorMessage());
 		} else {
 			for (int i = 0; i < attr.size(); i++) {
 				if (!attributes.contains(attr.get(i))) {

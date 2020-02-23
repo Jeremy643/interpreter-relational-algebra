@@ -33,7 +33,7 @@ public class Select extends RAExpr {
 		Signature sig = expr.signature(s);
 		
 		if (!condition.validate(sig)) {
-			throw new SchemaException(SchemaException.SELECT_ERROR);
+			throw new SchemaException(SchemaException.ErrorMessage.SELECT_ERROR.getErrorMessage());
 		} else {
 			return sig;
 		}

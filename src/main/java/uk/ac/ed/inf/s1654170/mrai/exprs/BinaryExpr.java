@@ -43,7 +43,7 @@ public abstract class BinaryExpr extends RAExpr {
 
 			//check that both signatures share the same attributes
 			if (!l.getAttributes().equals(r.getAttributes()) || !l.getTypes().equals(r.getTypes())) {
-				throw new SchemaException(SchemaException.NO_SAME_ATTR);
+				throw new SchemaException(SchemaException.ErrorMessage.NO_SAME_ATTR.getErrorMessage());
 			} else {
 				return left.signature(s);
 			}
@@ -57,7 +57,7 @@ public abstract class BinaryExpr extends RAExpr {
 			
 			//check that both signatures share the same attributes
 			if (!lSetAttr.equals(rSetAttr) || !l.getTypes().equals(r.getTypes())) {
-				throw new SchemaException(SchemaException.NO_SAME_ATTR);
+				throw new SchemaException(SchemaException.ErrorMessage.NO_SAME_ATTR.getErrorMessage());
 			} else {
 				return left.signature(s);
 			}

@@ -16,7 +16,7 @@ public class Utils {
 		} else {
 			for (String attr : right.getAttributes()) {
 				if (left.getAttributes().contains(attr)) {
-					throw new SchemaException(SchemaException.UNORDERED_SIGNATURE_ERROR);
+					throw new SchemaException(SchemaException.ErrorMessage.UNORDERED_SIGNATURE_ERROR.getErrorMessage());
 				}
 			}
 			
