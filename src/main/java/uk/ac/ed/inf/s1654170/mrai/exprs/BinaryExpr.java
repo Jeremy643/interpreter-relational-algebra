@@ -1,7 +1,11 @@
 package uk.ac.ed.inf.s1654170.mrai.exprs;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import uk.ac.ed.inf.s1654170.mrai.instance.Table;
 import uk.ac.ed.inf.s1654170.mrai.instance.TableOperations;
+import uk.ac.ed.inf.s1654170.mrai.schema.Column;
 import uk.ac.ed.inf.s1654170.mrai.schema.Database;
 import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
 import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
@@ -32,15 +36,31 @@ public abstract class BinaryExpr extends RAExpr {
 	public Signature signature(Schema s) throws SchemaException {
 		Signature l = left.signature(s);
 		Signature r = right.signature(s);
+		if (l.isOrdered() && r.isOrdered()) {
+			if (this.getType() == RAExpr.Type.PRODUCT) {
+				return Utils.concat(l, r);
+			}
 
-		if (this.getType() == RAExpr.Type.PRODUCT) {
-			return Utils.concat(l, r);
-		}
-
-		if (!l.getAttributes().equals(r.getAttributes()) || !l.getTypes().equals(r.getTypes())) {
-			throw new SchemaException(SchemaException.NO_SAME_ATTR);
+			//check that both signatures share the same attributes
+			if (!l.getAttributes().equals(r.getAttributes()) || !l.getTypes().equals(r.getTypes())) {
+				throw new SchemaException(SchemaException.NO_SAME_ATTR);
+			} else {
+				return left.signature(s);
+			}
 		} else {
-			return left.signature(s);
+			if (this.getType() == RAExpr.Type.PRODUCT) {
+				return Utils.concat(l, r);
+			}
+			
+			Set<String> lSetAttr = new HashSet<>(l.getAttributes());
+			Set<String> rSetAttr = new HashSet<>(r.getAttributes());
+			
+			//check that both signatures share the same attributes
+			if (!lSetAttr.equals(rSetAttr) || !l.getTypes().equals(r.getTypes())) {
+				throw new SchemaException(SchemaException.NO_SAME_ATTR);
+			} else {
+				return left.signature(s);
+			}
 		}
 	}
 
