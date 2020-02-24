@@ -42,32 +42,61 @@ public class Rename extends RAExpr {
 	public Signature signature(Schema s) throws SchemaException {
 		Signature sigRel = relation.signature(s);
 		
-		List<String> attr;
-		List<Column.Type> type;
-
-		attr = new ArrayList<>(sigRel.getAttributes());
-		type = new ArrayList<>(sigRel.getTypes());
-		
-		List<String> oldName = new ArrayList<>(attributes.keySet());
-		//List<String> newName = new ArrayList<>(attributes.values());
-		Set<String> newName = new HashSet<>(attributes.values());
-		
-		for (String n : newName) {
-			if (attr.contains(n)) {
+		if (sigRel.isOrdered()) {
+			List<String> attr = new ArrayList<>(sigRel.getAttributes());
+			List<Column.Type> type = new ArrayList<>(sigRel.getTypes());
+			
+			List<String> oldName = new ArrayList<>(attributes.keySet());
+			List<String> newName = new ArrayList<>(attributes.values());
+			//Set<String> newName = new HashSet<>(attributes.values());
+			
+			/*for (String n : newName) {
+				if (attr.contains(n)) {
+					throw new SchemaException(SchemaException.ErrorMessage.RENAME_ERROR.getErrorMessage());
+				}
+			}*/
+			
+			if (!attr.containsAll(oldName) || oldName.size() != newName.size()) {
+				throw new SchemaException(SchemaException.ErrorMessage.RENAME_ERROR.getErrorMessage());
+			} else {
+				for (int i = 0; i < attr.size(); i++) {
+					if (oldName.contains(attr.get(i))) {
+						String tempVal = attr.remove(i);
+						attr.add(i, attributes.get(tempVal));
+					}
+				}
+				return new BaseSignature(attr,type,true);
+			}
+		} else {
+			Set<String> attrSet = new HashSet<>(sigRel.getAttributes());
+			List<Column.Type> type = new ArrayList<>(sigRel.getTypes());
+			
+			if (attrSet.size() != sigRel.getAttributes().size()) {
+				//throw error if there are duplicate attribute names
 				throw new SchemaException(SchemaException.ErrorMessage.RENAME_ERROR.getErrorMessage());
 			}
-		}
-		
-		if (!attr.containsAll(oldName) || oldName.size() != newName.size()) {
-			throw new SchemaException(SchemaException.ErrorMessage.RENAME_ERROR.getErrorMessage());
-		} else {
-			for (int i = 0; i < attr.size(); i++) {
-				if (oldName.contains(attr.get(i))) {
-					String tempVal = attr.remove(i);
-					attr.add(i, attributes.get(tempVal));
+			
+			List<String> oldName = new ArrayList<>(attributes.keySet());
+			Set<String> newName = new HashSet<>(attributes.values());
+			
+			for (String n : newName) {
+				if (attrSet.contains(n)) {
+					throw new SchemaException(SchemaException.ErrorMessage.RENAME_ERROR.getErrorMessage());
 				}
 			}
-			return new BaseSignature(attr,type);
+			
+			List<String> attrList = new ArrayList<>(sigRel.getAttributes());
+			if (!attrList.containsAll(oldName) || oldName.size() != newName.size()) {
+				throw new SchemaException(SchemaException.ErrorMessage.RENAME_ERROR.getErrorMessage());
+			} else {
+				for (int i = 0; i < attrList.size(); i++) {
+					if (oldName.contains(attrList.get(i))) {
+						String tempVal = attrList.remove(i);
+						attrList.add(i, attributes.get(tempVal));
+					}
+				}
+				return new BaseSignature(attrList,type,false);
+			}
 		}
 	}
 
