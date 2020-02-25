@@ -1,9 +1,7 @@
 package uk.ac.ed.inf.s1654170.mrai.exprs;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import uk.ac.ed.inf.s1654170.mrai.instance.Table;
 import uk.ac.ed.inf.s1654170.mrai.instance.TableOperations;
@@ -21,6 +19,7 @@ public class Project extends RAExpr {
 	
 	public Project(RAExpr expr, List<String> attr) {
 		super(Type.PROJECT);
+		// TODO: check for repetitions of attributes in "attr"; throw exception is such case
 		this.attributes = new ArrayList<String>(attr);
 		this.expr = expr;
 	}
@@ -34,49 +33,43 @@ public class Project extends RAExpr {
 	@Override
 	public Signature signature(Schema s) throws SchemaException {
 		Signature sigExpr = expr.signature(s);
-		
-		if (sigExpr.isOrdered()) {
-			List<String> attr = new ArrayList<>(sigExpr.getAttributes());
-			List<Column.Type> type = new ArrayList<>(sigExpr.getTypes()); 
-			
-			if (!attr.containsAll(attributes)) {
-				//relation being projected over doesn't have the required attributes
-				throw new SchemaException(SchemaException.ErrorMessage.PROJECT_ERROR.getErrorMessage());
-			} else {
-				for (int i = 0; i < attr.size(); i++) {
-					if (!attributes.contains(attr.get(i))) {
-						attr.remove(i);
-						type.remove(i);
-					}
-				}
-				
-				return new BaseSignature(attr,type,true);
-			}
-		} else {
-			Set<String> attr = new HashSet<>(sigExpr.getAttributes());
-			List<Column.Type> type = new ArrayList<>(sigExpr.getTypes());
-			Set<String> attributesSet = new HashSet<>(attributes);
-			
-			if (attr.size() != sigExpr.getAttributes().size() || attributesSet.size() != attributes.size()) {
-				//unordered - attribute names must be distinct
-				throw new SchemaException(SchemaException.ErrorMessage.UNORDERED_SIGNATURE_ERROR.getErrorMessage());
-			}
-			
-			if (!attr.containsAll(attributes)) {
-				//relation being projected over doesn't have the required attributes
-				throw new SchemaException(SchemaException.ErrorMessage.PROJECT_ERROR.getErrorMessage());
-			} else {
-				List<String> attrList = new ArrayList<>(sigExpr.getAttributes());
-				for (int i = 0; i < attrList.size(); i++) {
-					if (!attributes.contains(attrList.get(i))) {
-						attrList.remove(i);
-						type.remove(i);
-					}
-				}
-				
-				return new BaseSignature(attrList,type,false);
+		List<String> attr = new ArrayList<>(sigExpr.getAttributes());
+		List<Column.Type> type = new ArrayList<>(sigExpr.getTypes()); 
+		if (!attr.containsAll(attributes)) {
+			//relation being projected over doesn't have the required attributes
+			throw new SchemaException(SchemaException.ErrorMessage.PROJECT_ERROR.getErrorMessage());
+		}
+		for (int i = 0; i < attr.size(); i++) {
+			if (!attributes.contains(attr.get(i))) {
+				attr.remove(i);
+				type.remove(i);
 			}
 		}
+		return new BaseSignature(attr,type,sigExpr.isOrdered());
+		// TODO: move relevant parts to constructor
+//			Set<String> attr = new HashSet<>(sigExpr.getAttributes());
+//			List<Column.Type> type = new ArrayList<>(sigExpr.getTypes());
+//			Set<String> attributesSet = new HashSet<>(attributes);
+//			
+//			if (attr.size() != sigExpr.getAttributes().size() || attributesSet.size() != attributes.size()) {
+//				//unordered - attribute names must be distinct
+//				throw new SchemaException(SchemaException.ErrorMessage.UNORDERED_SIGNATURE_ERROR.getErrorMessage());
+//			}
+//			
+//			if (!attr.containsAll(attributes)) {
+//				//relation being projected over doesn't have the required attributes
+//				throw new SchemaException(SchemaException.ErrorMessage.PROJECT_ERROR.getErrorMessage());
+//			} else {
+//				List<String> attrList = new ArrayList<>(sigExpr.getAttributes());
+//				for (int i = 0; i < attrList.size(); i++) {
+//					if (!attributes.contains(attrList.get(i))) {
+//						attrList.remove(i);
+//						type.remove(i);
+//					}
+//				}
+//				
+//				return new BaseSignature(attrList,type,false);
+//			}
 	}
 
 	@Override
