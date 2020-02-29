@@ -1,7 +1,9 @@
 package uk.ac.ed.inf.s1654170.mrai.exprs;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import uk.ac.ed.inf.s1654170.mrai.instance.Table;
 import uk.ac.ed.inf.s1654170.mrai.instance.TableOperations;
@@ -19,7 +21,17 @@ public class Project extends RAExpr {
 	
 	public Project(RAExpr expr, List<String> attr) {
 		super(Type.PROJECT);
-		// TODO: check for repetitions of attributes in "attr"; throw exception is such case
+		try {
+			Set<String> attrSet = new HashSet<>(attr);
+			if (attrSet.size() != attr.size()) {
+				//unordered - attribute names must be distinct
+				throw new Exception();
+			}
+		} catch(Exception e) {
+			System.out.println("You must have distinct attributes.");
+			e.printStackTrace();
+			System.exit(0);
+		}
 		this.attributes = new ArrayList<String>(attr);
 		this.expr = expr;
 	}
