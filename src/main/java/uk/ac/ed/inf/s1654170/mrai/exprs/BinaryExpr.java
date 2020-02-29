@@ -34,7 +34,11 @@ public abstract class BinaryExpr extends RAExpr {
 
 	@Override
 	public Signature signature(Schema s) throws SchemaException {
-		// TODO: if one ordered and the other unordered, then throw runtime exception
+		//if one ordered and the other unordered, then throw runtime exception
+		if ((left.signature(s).isOrdered() && !right.signature(s).isOrdered())||
+				(left.signature(s).isOrdered() && !right.signature(s).isOrdered())) {
+			throw new RuntimeException("One is ordered while the other is unordered.");
+		}
 		
 		// TODO: union max/plus, intersect, difference
 		// ordered case: validate types by position / take names from left operand
