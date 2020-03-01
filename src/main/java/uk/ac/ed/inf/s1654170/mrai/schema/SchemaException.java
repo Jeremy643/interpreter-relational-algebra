@@ -15,8 +15,10 @@ public class SchemaException extends Exception {
 		PROJECT_ERROR				("PROJECT ERROR: The attributes to be projected over do not appear in the relation."),
 		RENAME_ERROR				("RENAME ERROR: You have a mistake in the renaming of one or more of your attributes."),
 		SELECT_ERROR				("SELECT ERROR: The condition is not valid."),
+		ORDERED_SIGNATURE_ERROR		("The types do not match."),
 		UNORDERED_SIGNATURE_ERROR	("There are duplicate attributes."),
 		NO_SAME_ATTR				("The input arguments must have the same attributes and types."),
+		WRONG_TYPES					("The attributes do not share the same types."),
 		INSERT_ERROR				("INSERT ERROR: You are trying to insert data into a relation that does not exist in the schema.");
 
 		private final String errorMsg;
