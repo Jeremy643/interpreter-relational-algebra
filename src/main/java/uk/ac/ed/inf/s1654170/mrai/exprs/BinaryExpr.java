@@ -1,10 +1,13 @@
 package uk.ac.ed.inf.s1654170.mrai.exprs;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import uk.ac.ed.inf.s1654170.mrai.instance.Table;
 import uk.ac.ed.inf.s1654170.mrai.instance.TableOperations;
+import uk.ac.ed.inf.s1654170.mrai.schema.BaseSignature;
 import uk.ac.ed.inf.s1654170.mrai.schema.Column;
 import uk.ac.ed.inf.s1654170.mrai.schema.Database;
 import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
@@ -34,9 +37,12 @@ public abstract class BinaryExpr extends RAExpr {
 
 	@Override
 	public Signature signature(Schema s) throws SchemaException {
+		Signature l = left.signature(s);
+		Signature r = right.signature(s);
+		
 		//if one ordered and the other unordered, then throw runtime exception
-		if ((left.signature(s).isOrdered() && !right.signature(s).isOrdered())||
-				(left.signature(s).isOrdered() && !right.signature(s).isOrdered())) {
+		if ((l.isOrdered() && !r.isOrdered()) ||
+				(!l.isOrdered() && r.isOrdered())) {
 			throw new RuntimeException("One is ordered while the other is unordered.");
 		}
 		
@@ -46,35 +52,72 @@ public abstract class BinaryExpr extends RAExpr {
 		
 		// TODO: product: both ordered / unordered --> check operands have disjoint attributes
 		// concatenate signatures and return BaseSignature(..., true) or BaseSignature(..., false) depending on whether operands are (both) ordered / unordered
-		
-		Signature l = left.signature(s);
-		Signature r = right.signature(s);
-		if (l.isOrdered() && r.isOrdered()) {
-			if (this.getType() == RAExpr.Type.PRODUCT) {
-				return Utils.concat(l, r);
+		if (this.getType() == RAExpr.Type.PRODUCT) {
+			for (String rAttr : r.getAttributes()) {
+				if (l.getAttributes().contains(rAttr)) {
+					throw new SchemaException(SchemaException.ErrorMessage.NO_SAME_ATTR.getErrorMessage());
+				}
 			}
-
-			//check that both signatures share the same attributes
-			if (!l.getAttributes().equals(r.getAttributes()) || !l.getTypes().equals(r.getTypes())) {
-				throw new SchemaException(SchemaException.ErrorMessage.NO_SAME_ATTR.getErrorMessage());
-			} else {
-				return left.signature(s);
-			}
+			return Utils.concat(l, r);
 		} else {
-			if (this.getType() == RAExpr.Type.PRODUCT) {
-				return Utils.concat(l, r);
-			}
-			
-			Set<String> lSetAttr = new HashSet<>(l.getAttributes());
-			Set<String> rSetAttr = new HashSet<>(r.getAttributes());
-			
-			//check that both signatures share the same attributes
-			if (!lSetAttr.equals(rSetAttr) || !l.getTypes().equals(r.getTypes())) {
-				throw new SchemaException(SchemaException.ErrorMessage.NO_SAME_ATTR.getErrorMessage());
+			//if type is union max/plus, intersect, difference
+			if (l.isOrdered()) {
+				List<Column.Type> lTypes = new ArrayList<>(l.getTypes());
+				List<Column.Type> rTypes = new ArrayList<>(r.getTypes());
+				if (lTypes.equals(rTypes)) {
+					return new BaseSignature(l.getAttributes(), lTypes, true);
+				} else {
+					throw new SchemaException(SchemaException.ErrorMessage.ORDERED_SIGNATURE_ERROR.getErrorMessage());
+				}
 			} else {
-				return left.signature(s);
+				Set<String> lNames = new HashSet<>(l.getAttributes());
+				Set<String> rNames = new HashSet<>(r.getAttributes());
+				if (!lNames.equals(rNames)) {
+					//left and right do not share the same attributes
+					throw new SchemaException(SchemaException.ErrorMessage.UNORDERED_SIGNATURE_ERROR.getErrorMessage());
+				}
+				for (String lAttr : lNames) {
+					//check attribute types match
+					Column.Type lType = l.getTypes().get(l.getAttributes().indexOf(lAttr));
+					Column.Type rType = r.getTypes().get(r.getAttributes().indexOf(lAttr));
+					if (lType.equals(rType)) {
+						continue;
+					} else {
+						throw new SchemaException(SchemaException.ErrorMessage.WRONG_TYPES.getErrorMessage());
+					}
+				}
+				return new BaseSignature(l.getAttributes(), l.getTypes(), false);
 			}
 		}
+		
+//		Signature l = left.signature(s);
+//		Signature r = right.signature(s);
+//		if (l.isOrdered() && r.isOrdered()) {
+//			if (this.getType() == RAExpr.Type.PRODUCT) {
+//				return Utils.concat(l, r);
+//			}
+//
+//			//check that both signatures share the same attributes
+//			if (!l.getAttributes().equals(r.getAttributes()) || !l.getTypes().equals(r.getTypes())) {
+//				throw new SchemaException(SchemaException.ErrorMessage.NO_SAME_ATTR.getErrorMessage());
+//			} else {
+//				return left.signature(s);
+//			}
+//		} else {
+//			if (this.getType() == RAExpr.Type.PRODUCT) {
+//				return Utils.concat(l, r);
+//			}
+//			
+//			Set<String> lSetAttr = new HashSet<>(l.getAttributes());
+//			Set<String> rSetAttr = new HashSet<>(r.getAttributes());
+//			
+//			//check that both signatures share the same attributes
+//			if (!lSetAttr.equals(rSetAttr) || !l.getTypes().equals(r.getTypes())) {
+//				throw new SchemaException(SchemaException.ErrorMessage.NO_SAME_ATTR.getErrorMessage());
+//			} else {
+//				return left.signature(s);
+//			}
+//		}
 	}
 
 	@Override
