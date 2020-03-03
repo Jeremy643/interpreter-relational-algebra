@@ -1,6 +1,5 @@
 package uk.ac.ed.inf.s1654170.mrai;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -19,29 +18,44 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
-import uk.ac.ed.inf.s1654170.mrai.conditions.*;
+import de.vandermeer.asciitable.AT_Context;
+import de.vandermeer.asciitable.AsciiTable;
+import de.vandermeer.asciithemes.TA_GridThemes;
+import uk.ac.ed.inf.s1654170.mrai.conditions.And;
+import uk.ac.ed.inf.s1654170.mrai.conditions.Condition;
+import uk.ac.ed.inf.s1654170.mrai.conditions.Equality;
+import uk.ac.ed.inf.s1654170.mrai.conditions.Inequality;
+import uk.ac.ed.inf.s1654170.mrai.conditions.Not;
+import uk.ac.ed.inf.s1654170.mrai.conditions.Or;
+import uk.ac.ed.inf.s1654170.mrai.conditions.Term;
 import uk.ac.ed.inf.s1654170.mrai.evaluation.Evaluate;
 import uk.ac.ed.inf.s1654170.mrai.exprs.RAExpr;
-import uk.ac.ed.inf.s1654170.mrai.instance.*;
-import uk.ac.ed.inf.s1654170.mrai.parser.*;
-import uk.ac.ed.inf.s1654170.mrai.schema.*;
+import uk.ac.ed.inf.s1654170.mrai.instance.Record;
+import uk.ac.ed.inf.s1654170.mrai.instance.Table;
+import uk.ac.ed.inf.s1654170.mrai.instance.TableOperations;
+import uk.ac.ed.inf.s1654170.mrai.parser.BuildExpr;
+import uk.ac.ed.inf.s1654170.mrai.parser.RelationalAlgebraLexer;
+import uk.ac.ed.inf.s1654170.mrai.parser.RelationalAlgebraParser;
 import uk.ac.ed.inf.s1654170.mrai.schema.Column.Type;
+import uk.ac.ed.inf.s1654170.mrai.schema.Database;
+import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
+import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
 
 
 public class App {
 
 	public static void main(String[] args) throws IOException {
-				
+
 		Scanner sc = new Scanner(System.in);
 
 		File dirPath = new File(System.getProperty("user.dir"));
 		File folder = new File(dirPath, "src/main/java/uk/ac/ed/inf/s1654170/mrai/data");
 		File[] listOfFiles = folder.listFiles();
-		
+
 		List<String> fileName = new ArrayList<>();
 		List<String> attributes = new ArrayList<>();
 		List<String> attributeTypes = new ArrayList<>();
-		
+
 		/*for (File file : listOfFiles) {
 			fileName.add(file.getName().replace(".csv", ""));
 			String path = folder + File.separator + file.getName();
@@ -55,60 +69,60 @@ public class App {
 			}
 			csvReader.close();
 		}*/
-		
+
 		Map<String,List<Record>> tables = new HashMap<>();
 		for (File file : listOfFiles) {
 			String name = file.getName().replace(".csv", "");
 			fileName.add(name);
-			
+
 			Reader in = new FileReader(file);
 			Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
-			
+
 			int index = 0;
 			List<Record> tableRecords = new ArrayList<>();
 			List<Type> types = new ArrayList<>();
 			for (CSVRecord record : records) {
 				int size = record.size();
 				switch (index) {
-					case 0:
-						String attr = "";
-						for (int i = 0; i < size; i++) {
-							if (i == size-1) {
-								attr += record.get(i);
-							} else {
-								attr += record.get(i) + ",";
-							}
+				case 0:
+					String attr = "";
+					for (int i = 0; i < size; i++) {
+						if (i == size-1) {
+							attr += record.get(i);
+						} else {
+							attr += record.get(i) + ",";
 						}
-						attributes.add(attr);
-						break;
-					case 1:
-						String type = "";
-						for (int i = 0; i < size; i++) {
-							if (i == size-1) {
-								type += record.get(i);
-							} else {
-								type += record.get(i) + ",";
-							}
-							types.add(Type.valueOf(record.get(i)));
+					}
+					attributes.add(attr);
+					break;
+				case 1:
+					String type = "";
+					for (int i = 0; i < size; i++) {
+						if (i == size-1) {
+							type += record.get(i);
+						} else {
+							type += record.get(i) + ",";
 						}
-						attributeTypes.add(type);
-						break;
-					default:
-						String[] values = new String[size];
-						for (int i = 0; i < size; i++) {
-							values[i] = record.get(i);
-						}
-						Record r = Record.valueOf(types, values);
-						tableRecords.add(r);
-						break;
+						types.add(Type.valueOf(record.get(i)));
+					}
+					attributeTypes.add(type);
+					break;
+				default:
+					String[] values = new String[size];
+					for (int i = 0; i < size; i++) {
+						values[i] = record.get(i);
+					}
+					Record r = Record.valueOf(types, values);
+					tableRecords.add(r);
+					break;
 				}
 				tables.put(name, tableRecords);
 				index++;
 			}
 		}
-		
+
 		Schema sch = new Schema(fileName, attributes, attributeTypes);
-		
+
 		Database db = new Database(sch);
 		for (String name : fileName) {
 			Table table = new Table(sch.getSignature(name));
@@ -120,22 +134,22 @@ public class App {
 				e1.printStackTrace();
 			}
 		}
-		
+
 		try {
 			Evaluate.runEvaluation();
 		} catch (SchemaException e2) {
 			e2.printStackTrace();
 		}
-		
+
 		/*for (File file : listOfFiles) {
 			String name = file.getName().replace(".csv", "");
-			
+
 			Table table = new Table(db.getSchema().getSignature(name));
 			List<Column.Type> types = sch.getSignature(name).getTypes();
-			
+
 			String path = folder + File.separator + file.getName();
 			BufferedReader csvReader = new BufferedReader(new FileReader(path));
-			
+
 			int x = 0;
 			String row;
 			while((row = csvReader.readLine()) != null) {
@@ -148,49 +162,49 @@ public class App {
 					table.add(r);
 				}
 			}
-			
+
 			try {
 				db.add(name, table);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
-			
+
 			csvReader.close();
 		}*/
 
-//		Table tableA = db.getTable("R");
-//		Table tableB = db.getTable("S");
-//		
-//		for (Record r : tableA) {
-//			for (Record s : tableB) {
-//				int comp = r.compareTo(s);
-//				String op;
-//				if (comp == 0) {
-//					op = "=";
-//				} else if (comp > 0) {
-//					op = ">";
-//				} else {
-//					op = "<";
-//				}
-//				System.out.println(String.format("%s %s %s", r, op, s));
-//			}
-//		}
-		
+		//		Table tableA = db.getTable("R");
+		//		Table tableB = db.getTable("S");
+		//		
+		//		for (Record r : tableA) {
+		//			for (Record s : tableB) {
+		//				int comp = r.compareTo(s);
+		//				String op;
+		//				if (comp == 0) {
+		//					op = "=";
+		//				} else if (comp > 0) {
+		//					op = ">";
+		//				} else {
+		//					op = "<";
+		//				}
+		//				System.out.println(String.format("%s %s %s", r, op, s));
+		//			}
+		//		}
+
 		System.out.println(TableOperations.Union(db.getTable("Students"), db.getTable("SportStudents")));
 		System.out.println(TableOperations.Difference(db.getTable("Students"), db.getTable("SportStudents")));
 		//System.out.println(TableOperations.Intersect(db.getTable("Students"), db.getTable("SportStudents")));
-		
+
 		System.out.println(db.getTable("P").equals(db.getTable("Q")));
-		
+
 		List<String> columns = new ArrayList<>();
 		columns.add("Name");
 		System.out.println(db.getTable("Students").getSignature().getAttributes());
 		System.out.println(TableOperations.Project(columns, db.getTable("Students")));
-		
-//		System.out.println(TableOperations.UnionMax(db.getTable("R"), db.getTable("S")));
-		
+
+		//		System.out.println(TableOperations.UnionMax(db.getTable("R"), db.getTable("S")));
+
 		System.out.println();
-		
+
 		// Age='18'
 		Condition c1 = new Equality(new Term("Age",false), new Term("18",true));
 		// Age='15' && ID='s001'
@@ -205,13 +219,13 @@ public class App {
 				new Not(new Equality(new Term("ID",false), new Term("s001",true)))),
 				new Inequality(new Term("Name",false), new Term("Jane",true)));
 		System.out.println(TableOperations.Select(c4, db.getTable("Students")));
-		
+
 		/*Map<String,String> attrRename = new HashMap<>();
 		attrRename.put("Name", "FullName");
 		System.out.println(TableOperations.Rename(attrRename, db.getTable("Students")).getSignature().getAttributes());
 		System.out.println(db.getTable("Students"));*/
-		
-		
+
+
 		//Schema sch = new Schema("R:Name/STRING,Age/STRING;S:Name/STRING,Age/NUMBER;P:Name/STRING");
 		//Table tbl = new Table();
 		//List<Column.Type> types = sch.getSignature("R").getTypes();
@@ -221,70 +235,89 @@ public class App {
 		//tbl.add(r1);
 		//tbl.add(r2);
 		//System.out.println(r1.equals(r2));
-		
+
 		//tbl.add(Record.valueOf( types, "Mary", "20"));
 		//tbl.add(Record.valueOf( types, "Mary", "20"));
 		//for (Record r : tbl) {
-			//System.out.println(r);
+		//System.out.println(r);
 		//}
-		
+
 		//Database db = new Database(sch);
-//		try {
-//			db.add("R", tbl);
-//		} catch (Exception e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
+		//		try {
+		//			db.add("R", tbl);
+		//		} catch (Exception e1) {
+		//			// TODO Auto-generated catch block
+		//			e1.printStackTrace();
+		//		}
 
 		//System.exit(0);
 
 		//Scanner sc = new Scanner(System.in);
-		System.out.print("RA expression: ");
-		String input = sc.nextLine();
+		while (true) {
+			System.out.print("=> ");
+			String input = sc.nextLine();
+			
+			if (input.toLowerCase().trim().equals("\\exit")) {
+				break;
+			}
+			if (input.toLowerCase().trim().equals("\\schema")) {
+				for (String name : db.getSchema().getRelations()) {
+					String fmt = "%s: %s";
+					System.out.println(String.format(fmt, name, db.getSchema().getSignature(name)));
+				}
+				continue;
+			}
 
-		CharStream charStream = CharStreams.fromString(input);
+			CharStream charStream = CharStreams.fromString(input);
 
-		RelationalAlgebraLexer tl = new RelationalAlgebraLexer(charStream);
-		CommonTokenStream commonTokenStream = new CommonTokenStream(tl);
-		RelationalAlgebraParser tp = new RelationalAlgebraParser(commonTokenStream);
+			RelationalAlgebraLexer tl = new RelationalAlgebraLexer(charStream);
+			CommonTokenStream commonTokenStream = new CommonTokenStream(tl);
+			RelationalAlgebraParser tp = new RelationalAlgebraParser(commonTokenStream);
 
-		ParseTree parseTree = tp.start();
-		BuildExpr buildExpr = new BuildExpr();
+			ParseTree parseTree = tp.start();
+			BuildExpr buildExpr = new BuildExpr();
 
-		ParseTreeWalker walker = new ParseTreeWalker();
-		walker.walk(buildExpr, parseTree);
+			ParseTreeWalker walker = new ParseTreeWalker();
+			walker.walk(buildExpr, parseTree);
 
-		RAExpr e = buildExpr.getExpr();
+			RAExpr e = buildExpr.getExpr();
+//			System.out.println(e);
+//			System.out.println();
 
-		System.out.println(e);
-
-		System.out.println();
-
-		//System.out.print("Schema: ");
-		//String schemaTest = "R:Name/STRING,Age/NUMBER;S:Name/STRING,Age/NUMBER;P:Name/STRING";
-		//Schema schema = new Schema(sc.nextLine());
-//		try {
-//			System.out.println(e.signature(sch));
-//		} catch (SchemaException se) {
-//			System.out.println(se.getMessage());
-//			se.printStackTrace();
-//		}
-//		if (e.validate(sch)) {
-//			System.out.println("Valid!");
-//			// Valid therefore execute expression
-//			System.out.println(e.execute(db));
-//		} else {
-//			System.out.println("Not valid!");
-//		}
-//		System.out.println(e.executeValid(db));
-		try {
-			System.out.println(e.execute(db));
-		} catch (SchemaException e1) {
-			e1.printStackTrace();
+			//System.out.print("Schema: ");
+			//String schemaTest = "R:Name/STRING,Age/NUMBER;S:Name/STRING,Age/NUMBER;P:Name/STRING";
+			//Schema schema = new Schema(sc.nextLine());
+			//		try {
+			//			System.out.println(e.signature(sch));
+			//		} catch (SchemaException se) {
+			//			System.out.println(se.getMessage());
+			//			se.printStackTrace();
+			//		}
+			//		if (e.validate(sch)) {
+			//			System.out.println("Valid!");
+			//			// Valid therefore execute expression
+			//			System.out.println(e.execute(db));
+			//		} else {
+			//			System.out.println("Not valid!");
+			//		}
+			//		System.out.println(e.executeValid(db));
+			try {
+				Table t = e.execute(db);
+				AsciiTable at = new AsciiTable();
+				at.addRule();
+				at.addRow(t.getSignature().getAttributes());
+				at.addRule();
+				for (Record r : t) {
+					at.addRow(r);
+				}
+				at.addRule();
+				System.out.println(at.render());
+			} catch (SchemaException e1) {
+				System.out.println("ERROR: " + e1.getMessage());
+				continue;
+			}
 		}
-
 		sc.close();
-
 		/*
 		Base r = new Base("R");
 		Base s = new Base("S");

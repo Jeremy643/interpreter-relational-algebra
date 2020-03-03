@@ -49,7 +49,7 @@ public class TableOperations {
 			// add the rest of table B to output
 			if (!contA && contB) { // A empty, B non-empty
 				if (itB.hasNext()) {
-					b = itB.next();
+					b = itB.next(); // TODO: fix when all of tA is added before tB
 					table.add(b);
 					contB = itB.hasNext();
 					continue;
