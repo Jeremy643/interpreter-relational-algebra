@@ -20,6 +20,7 @@ import org.apache.commons.csv.CSVRecord;
 
 import de.vandermeer.asciitable.AT_Context;
 import de.vandermeer.asciitable.AsciiTable;
+import de.vandermeer.asciitable.CWC_LongestLine;
 import de.vandermeer.asciithemes.TA_GridThemes;
 import uk.ac.ed.inf.s1654170.mrai.conditions.And;
 import uk.ac.ed.inf.s1654170.mrai.conditions.Condition;
@@ -222,6 +223,8 @@ public class App {
 					at.addRow(r);
 				}
 				at.addRule();
+				CWC_LongestLine cwc = new CWC_LongestLine();
+				at.getRenderer().setCWC(cwc);
 				System.out.println(at.render());
 			} catch (SchemaException e1) {
 				System.out.println("ERROR: " + e1.getMessage());
