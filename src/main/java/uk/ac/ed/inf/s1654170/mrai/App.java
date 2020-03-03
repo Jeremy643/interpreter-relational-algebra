@@ -184,7 +184,7 @@ public class App {
 		
 		
 		while (true) {
-			System.out.print("=> ");
+			System.out.print("(mrai)=> ");
 			String input = sc.nextLine();
 			
 			if (input.toLowerCase().trim().equals("\\exit")) {

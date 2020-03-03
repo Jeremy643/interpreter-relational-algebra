@@ -28,7 +28,7 @@ public class Project extends RAExpr {
 				throw new Exception();
 			}
 		} catch(Exception e) {
-			System.out.println("You must have distinct attributes.");
+			System.out.println("ERROR: You must have distinct attributes.");
 			e.printStackTrace();
 			System.exit(0);
 		}
