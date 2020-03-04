@@ -1,6 +1,3 @@
-str,num
-STRING,NUMBER
-a,1
-a,1
-b,1
-b,1
+val,str
+NUMBER,STRING
+2,a
