@@ -358,7 +358,7 @@ public class TableOperations {
 			types.add(typesA.get(index));
 		}
 		// create a signature for the resulting relation
-		Signature signature = new BaseSignature(columns, types);
+		Signature signature = new BaseSignature(columns, types, A.getSignature().isOrdered());
 
 		Table table = new Table(signature);
 

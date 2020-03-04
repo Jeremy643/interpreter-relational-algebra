@@ -21,16 +21,10 @@ public class Project extends RAExpr {
 	
 	public Project(RAExpr expr, List<String> attr) {
 		super(Type.PROJECT);
-		try {
-			Set<String> attrSet = new HashSet<>(attr);
-			if (attrSet.size() != attr.size()) {
-				//unordered - attribute names must be distinct
-				throw new Exception();
-			}
-		} catch(Exception e) {
-			System.out.println("ERROR: You must have distinct attributes.");
-			e.printStackTrace();
-			System.exit(0);
+		Set<String> attrSet = new HashSet<>(attr);
+		if (attrSet.size() != attr.size()) {
+			//unordered - attribute names must be distinct
+			throw new RuntimeException();
 		}
 		this.attributes = new ArrayList<String>(attr);
 		this.expr = expr;
@@ -58,30 +52,6 @@ public class Project extends RAExpr {
 			}
 		}
 		return new BaseSignature(attr,type,sigExpr.isOrdered());
-		// TODO: move relevant parts to constructor
-//			Set<String> attr = new HashSet<>(sigExpr.getAttributes());
-//			List<Column.Type> type = new ArrayList<>(sigExpr.getTypes());
-//			Set<String> attributesSet = new HashSet<>(attributes);
-//			
-//			if (attr.size() != sigExpr.getAttributes().size() || attributesSet.size() != attributes.size()) {
-//				//unordered - attribute names must be distinct
-//				throw new SchemaException(SchemaException.ErrorMessage.UNORDERED_SIGNATURE_ERROR.getErrorMessage());
-//			}
-//			
-//			if (!attr.containsAll(attributes)) {
-//				//relation being projected over doesn't have the required attributes
-//				throw new SchemaException(SchemaException.ErrorMessage.PROJECT_ERROR.getErrorMessage());
-//			} else {
-//				List<String> attrList = new ArrayList<>(sigExpr.getAttributes());
-//				for (int i = 0; i < attrList.size(); i++) {
-//					if (!attributes.contains(attrList.get(i))) {
-//						attrList.remove(i);
-//						type.remove(i);
-//					}
-//				}
-//				
-//				return new BaseSignature(attrList,type,false);
-//			}
 	}
 
 	@Override
