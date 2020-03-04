@@ -279,7 +279,7 @@ public class TableOperations {
 		List<Type> attributeTypes = new ArrayList<>(tA.getSignature().getTypes());
 		attributeTypes.addAll(tB.getSignature().getTypes());
 
-		Signature sig = new BaseSignature(attributes, attributeTypes);
+		Signature sig = new BaseSignature(attributes, attributeTypes, tA.getSignature().isOrdered());
 		Table table = new Table(sig);
 
 		List<Column.Type> types = new ArrayList<>();
@@ -336,7 +336,7 @@ public class TableOperations {
 			}
 		}
 
-		Signature signature = new BaseSignature(attributesTable, typesA);
+		Signature signature = new BaseSignature(attributesTable, typesA, A.getSignature().isOrdered());
 		Table table = new Table(signature);
 
 		table.addAll(A);
