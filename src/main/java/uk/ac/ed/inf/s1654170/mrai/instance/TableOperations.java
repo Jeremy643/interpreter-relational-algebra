@@ -381,12 +381,10 @@ public class TableOperations {
 		Table sortedA = sortRecords(A);
 		Table table = new Table(A.getSignature());
 
-		// gets comparisons; [Age='16', ID='s001', Name!='Jane']
+		// gets comparisons, for example: [Age='16', ID='s001', Name!='Jane']
 		List<Comparison> comparisons = condition.getComparisons();
-		// gets condition types; [EQUALITY, AND, NOT, EQUALITY, OR, INEQUALITY]
+		// gets condition types, for example: [EQUALITY, AND, NOT, EQUALITY, OR, INEQUALITY]
 		List<Condition.Type> cond = condition.getConditionTypes();
-		System.out.println(cond);
-		System.out.println(comparisons);
 
 		for (Record r : sortedA) {
 			// valueComparisons holds the comparisons outcomes for record r
