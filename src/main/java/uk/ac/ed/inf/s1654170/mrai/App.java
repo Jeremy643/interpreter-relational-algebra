@@ -18,10 +18,8 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
-import de.vandermeer.asciitable.AT_Context;
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.asciitable.CWC_LongestLine;
-import de.vandermeer.asciithemes.TA_GridThemes;
 import uk.ac.ed.inf.s1654170.mrai.conditions.And;
 import uk.ac.ed.inf.s1654170.mrai.conditions.Condition;
 import uk.ac.ed.inf.s1654170.mrai.conditions.Equality;
@@ -210,8 +208,14 @@ public class App {
 
 			ParseTreeWalker walker = new ParseTreeWalker();
 			walker.walk(buildExpr, parseTree);
-
-			RAExpr e = buildExpr.getExpr();
+			
+			RAExpr e;
+			try {
+				e = buildExpr.getExpr();
+			} catch (Exception error) {
+				System.out.println("ERROR: You entered something that isn't recognized.");
+				continue;
+			}
 
 			try {
 				Table t = e.execute(db);
