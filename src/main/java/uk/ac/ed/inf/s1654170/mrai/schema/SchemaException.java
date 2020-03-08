@@ -8,18 +8,13 @@ public class SchemaException extends Exception {
 	private static final long serialVersionUID = 1L;
 
 	public enum ErrorMessage {
-		UNION_ERROR					("The arguments do not have the same set of attributes or types."),
-		UNION_MAX_ERROR				("The arguments do not have the same set of attributes or types."),
-		DIFFERENCE_ERROR			("The arguments do not have the same set of attributes or types."),
-		INTERSECT_ERROR				("The arguments do not have the same set of attributes or types."),
 		PROJECT_ERROR				("The attributes to be projected over do not appear in the relation."),
 		RENAME_ERROR				("You have a mistake in the renaming of one or more of your attributes."),
-		SELECT_ERROR				("The condition is not valid."),
+		SELECT_ERROR				("The condition of the selection operation is not valid."),
 		ORDERED_SIGNATURE_ERROR		("The types do not match."),
-		UNORDERED_SIGNATURE_ERROR	("There are duplicate attributes."),
+		UNORDERED_SIGNATURE_ERROR	("There is a mistake in your attributes."),
 		NO_SAME_ATTR				("The input arguments must have the same attributes and types."),
-		WRONG_TYPES					("The attributes do not share the same types."),
-		INSERT_ERROR				("You are trying to insert data into a relation that does not exist in the schema.");
+		WRONG_TYPES					("The attributes do not share the same types.");
 
 		private final String errorMsg;
 		

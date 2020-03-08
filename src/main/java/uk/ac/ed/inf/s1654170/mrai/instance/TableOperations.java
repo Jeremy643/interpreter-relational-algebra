@@ -197,20 +197,6 @@ public class TableOperations {
 			}
 		}
 		return table;
-		
-		/*Table table = new Table(tA.getSignature());
-
-		Table tempB = new Table(tB.getSignature());
-		tempB.addAll(tB);
-
-		for (Record rA : tA) {
-			if (!tempB.contains(rA)) {
-				table.add(rA);
-			} else {
-				tempB.remove(rA);
-			}
-		}
-		return table;*/
 	}
 
 	public static Table Intersect(Table tA, Table tB) {
