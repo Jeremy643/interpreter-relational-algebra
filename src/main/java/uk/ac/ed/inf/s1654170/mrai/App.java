@@ -15,6 +15,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.apache.commons.cli.*;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
@@ -43,7 +44,42 @@ import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
 
 public class App {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, Exception {
+		
+		
+		
+		
+		//========================COMMAND-LINE OPTIONS - IMPORTANT========================
+		
+		
+		
+		
+		Option help = new Option("help", "help", false, "print all options");
+		Option config = new Option("config", "configuration", true, "path to configuration file");
+		config.setArgName("PATH");
+		
+		Options options = new Options();
+		options.addOption(help);
+		options.addOption(config);
+		
+		CommandLineParser parser = new DefaultParser();
+		HelpFormatter formatter = new HelpFormatter();
+		try {
+			CommandLine cmd = parser.parse(options, args);
+			
+			if (cmd.hasOption("help")) {
+				formatter.printHelp("java -jar target/mrai-0.1-SNAPSHOT.jar", options);
+				System.exit(0);
+			}
+			if (cmd.hasOption("config")) {
+				String configPath = cmd.getOptionValue("config");
+				System.out.println(configPath);
+			}
+		} catch (ParseException e3) {
+			System.out.println(e3.getMessage());
+			formatter.printHelp("java -jar target/mrai-0.1-SNAPSHOT.jar", options);
+			System.exit(1);
+		}
 		
 		
 		
