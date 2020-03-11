@@ -92,7 +92,7 @@ public class Evaluate {
 			}
 		}
 		
-		Schema sch = new Schema(fileName, attributes, attributeTypes);
+		Schema sch = new Schema(fileName, attributes, attributeTypes, true);
 		
 		db = new Database(sch);
 		for (String name : fileName) {
