@@ -1,13 +1,16 @@
 package uk.ac.ed.inf.s1654170.mrai;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Scanner;
 
 import org.antlr.v4.runtime.CharStream;
@@ -74,6 +77,14 @@ public class App {
 			if (cmd.hasOption("config")) {
 				String configPath = cmd.getOptionValue("config");
 				System.out.println(configPath);
+				
+				InputStream configStream = new FileInputStream(configPath);
+				Properties prop = new Properties();
+				prop.load(configStream);
+				
+				System.out.println(prop.getProperty("data_path"));
+	            System.out.println(prop.getProperty("ordered_columns"));
+	            System.out.println(prop.getProperty("bag_evaluation"));
 			}
 		} catch (ParseException e3) {
 			System.out.println(e3.getMessage());
