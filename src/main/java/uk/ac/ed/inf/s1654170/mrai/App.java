@@ -196,21 +196,21 @@ public class App {
 				}
 				continue;
 			}
-
-			CharStream charStream = CharStreams.fromString(input);
-
-			RelationalAlgebraLexer tl = new RelationalAlgebraLexer(charStream);
-			CommonTokenStream commonTokenStream = new CommonTokenStream(tl);
-			RelationalAlgebraParser tp = new RelationalAlgebraParser(commonTokenStream);
-
-			ParseTree parseTree = tp.start();
-			BuildExpr buildExpr = new BuildExpr();
-
-			ParseTreeWalker walker = new ParseTreeWalker();
-			walker.walk(buildExpr, parseTree);
 			
 			RAExpr e;
 			try {
+				CharStream charStream = CharStreams.fromString(input);
+
+				RelationalAlgebraLexer tl = new RelationalAlgebraLexer(charStream);
+				CommonTokenStream commonTokenStream = new CommonTokenStream(tl);
+				RelationalAlgebraParser tp = new RelationalAlgebraParser(commonTokenStream);
+
+				ParseTree parseTree = tp.start();
+				BuildExpr buildExpr = new BuildExpr();
+
+				ParseTreeWalker walker = new ParseTreeWalker();
+				walker.walk(buildExpr, parseTree);
+
 				e = buildExpr.getExpr();
 			} catch (Exception error) {
 				System.out.println("ERROR: You entered something that isn't recognized.");

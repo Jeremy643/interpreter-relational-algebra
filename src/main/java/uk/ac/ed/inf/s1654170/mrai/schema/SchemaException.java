@@ -8,6 +8,7 @@ public class SchemaException extends Exception {
 	private static final long serialVersionUID = 1L;
 
 	public enum ErrorMessage {
+		BASE_ERROR					("The relation you entered does not seem to exist."),
 		PROJECT_ERROR				("The attributes to be projected over do not appear in the relation."),
 		RENAME_ERROR				("You have a mistake in the renaming of one or more of your attributes."),
 		SELECT_ERROR				("The condition of the selection operation is not valid."),

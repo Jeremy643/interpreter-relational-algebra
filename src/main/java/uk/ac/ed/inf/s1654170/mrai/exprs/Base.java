@@ -27,7 +27,7 @@ public class Base extends RAExpr {
 	@Override
 	public Signature signature(Schema s) throws SchemaException {
 		if (s.getSignature(name) == null) {
-			throw new SchemaException(String.format("The base relation %s does not appear in the schema.", name));
+			throw new SchemaException(SchemaException.ErrorMessage.BASE_ERROR.getErrorMessage());
 		} else {
 			return s.getSignature(name);
 		}
