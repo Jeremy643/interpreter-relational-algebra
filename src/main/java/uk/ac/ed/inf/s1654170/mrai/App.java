@@ -49,6 +49,10 @@ public class App {
 
 	public static void main(String[] args) throws IOException, Exception {
 		
+		//File folder;
+		boolean orderedColumns = false;
+		boolean bagEvaluation = false;
+		
 		
 		
 		
@@ -81,10 +85,13 @@ public class App {
 				InputStream configStream = new FileInputStream(configPath);
 				Properties prop = new Properties();
 				prop.load(configStream);
+				//folder = new File(prop.getProperty("data_path"));
+				orderedColumns = prop.getProperty("ordered_columns").equals("yes") ? true : false;
+				bagEvaluation = prop.getProperty("bag_evaluation").equals("yes") ? true : false;
 				
-				System.out.println(prop.getProperty("data_path"));
-	            System.out.println(prop.getProperty("ordered_columns"));
-	            System.out.println(prop.getProperty("bag_evaluation"));
+				//System.out.println(folder);
+	            System.out.println(orderedColumns);
+	            System.out.println(bagEvaluation);
 			}
 		} catch (ParseException e3) {
 			System.out.println(e3.getMessage());
@@ -161,7 +168,7 @@ public class App {
 			}
 		}
 
-		Schema sch = new Schema(fileName, attributes, attributeTypes);
+		Schema sch = new Schema(fileName, attributes, attributeTypes, orderedColumns);
 
 		Database db = new Database(sch);
 		for (String name : fileName) {

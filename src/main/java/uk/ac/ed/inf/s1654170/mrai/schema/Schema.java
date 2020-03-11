@@ -13,8 +13,7 @@ public class Schema {
 	
 	private Map<String,Signature> relations = new HashMap<>();
 	
-	public Schema(List<String> fileName, List<String> attributes, List<String> attributeTypes) { //String relations
-		//this.relations = new HashMap<>(formatInput(relations));
+	public Schema(List<String> fileName, List<String> attributes, List<String> attributeTypes, boolean orderedColumns) {
 		for (int i = 0; i < fileName.size(); i++) {
 			String file = fileName.get(i);
 			String attr = attributes.get(i);
@@ -32,38 +31,10 @@ public class Schema {
 				}
 			}
 			
-			Signature sig = new BaseSignature(attribute, type);
+			Signature sig = new BaseSignature(attribute, type, orderedColumns);
 			relations.put(file, sig);
 		}
 	}
-	
-	/*private HashMap<String,Signature> formatInput(String rel) {
-		HashMap<String,Signature> returnRelations = new HashMap<>();
-		
-		//remove any whitespace that might be in the input
-		rel = rel.replaceAll(" ", "");
-		
-		String[] relations = rel.split(";");
-		for (String relation : relations) {
-			List<String> attr = new ArrayList<>();
-			List<Type> type = new ArrayList<>();
-			
-			String[] relAttributes = relation.split(":");
-			String relName = relAttributes[0];
-			
-			String[] attributes = relAttributes[1].split(",");
-			for (String attribute : attributes) {
-				String[] attributeType = attribute.split("/");
-				attr.add(attributeType[0]);
-				type.add(Type.valueOf(attributeType[1]));
-			}
-			
-			Signature sig = new BaseSignature(attr, type);
-			returnRelations.put(relName, sig);
-		}
-		
-		return returnRelations;
-	}*/
 	
 	public Set<String> getRelations() {
 		return relations.keySet();
