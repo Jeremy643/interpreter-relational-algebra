@@ -151,6 +151,19 @@ public class App {
 		//File dirPath = new File(System.getProperty("user.dir"));
 		//File folder = new File(dirPath, "src/main/java/uk/ac/ed/inf/s1654170/mrai/data");
 		File[] listOfFiles = folder.listFiles();
+		
+		//make sure that there are at least 2 csv files
+		int counter = 0;
+		for (File f : listOfFiles) {
+			String name = f.getName();
+			if (name.endsWith(".csv")) {
+				counter++;
+			}
+		}
+		if (counter < 2) {
+			System.out.println("ERROR: Your chosen directory does not contain enough csv files.");
+			System.exit(1);
+		}
 
 		List<String> fileName = new ArrayList<>();
 		List<String> attributes = new ArrayList<>();
