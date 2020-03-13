@@ -24,18 +24,9 @@ import org.apache.commons.csv.CSVRecord;
 
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.asciitable.CWC_LongestLine;
-import uk.ac.ed.inf.s1654170.mrai.conditions.And;
-import uk.ac.ed.inf.s1654170.mrai.conditions.Condition;
-import uk.ac.ed.inf.s1654170.mrai.conditions.Equality;
-import uk.ac.ed.inf.s1654170.mrai.conditions.Inequality;
-import uk.ac.ed.inf.s1654170.mrai.conditions.Not;
-import uk.ac.ed.inf.s1654170.mrai.conditions.Or;
-import uk.ac.ed.inf.s1654170.mrai.conditions.Term;
-import uk.ac.ed.inf.s1654170.mrai.evaluation.Evaluate;
 import uk.ac.ed.inf.s1654170.mrai.exprs.RAExpr;
 import uk.ac.ed.inf.s1654170.mrai.instance.Record;
 import uk.ac.ed.inf.s1654170.mrai.instance.Table;
-import uk.ac.ed.inf.s1654170.mrai.instance.TableOperations;
 import uk.ac.ed.inf.s1654170.mrai.parser.BuildExpr;
 import uk.ac.ed.inf.s1654170.mrai.parser.RelationalAlgebraLexer;
 import uk.ac.ed.inf.s1654170.mrai.parser.RelationalAlgebraParser;
@@ -148,11 +139,9 @@ public class App {
 
 		Scanner sc = new Scanner(System.in);
 
-		//File dirPath = new File(System.getProperty("user.dir"));
-		//File folder = new File(dirPath, "src/main/java/uk/ac/ed/inf/s1654170/mrai/data");
 		File[] listOfFiles = folder.listFiles();
 		
-		//make sure that there are at least 2 csv files
+		//make sure that there is at least one csv file
 		int counter = 0;
 		for (File f : listOfFiles) {
 			String name = f.getName();
@@ -160,7 +149,7 @@ public class App {
 				counter++;
 			}
 		}
-		if (counter < 2) {
+		if (counter == 0) {
 			System.out.println("ERROR: Your chosen directory does not contain enough csv files.");
 			System.exit(1);
 		}
@@ -226,7 +215,6 @@ public class App {
 		for (String name : fileName) {
 			Table table = new Table(sch.getSignature(name));
 			table.addAll(tables.get(name));
-			System.out.println(table);
 			try {
 				db.add(name, table);
 			} catch (Exception e1) {
@@ -234,54 +222,17 @@ public class App {
 			}
 		}
 
-		try {
-			Evaluate.runEvaluation();
-		} catch (SchemaException e2) {
-			e2.printStackTrace();
-		}
-
-		// ========================OPERATION AND CONDITION PLAY AROUND - NOT IMPORTANT========================
-
-		System.out.println(TableOperations.Union(db.getTable("Students"), db.getTable("SportStudents")));
-		System.out.println(TableOperations.Difference(db.getTable("Students"), db.getTable("SportStudents")));
-
-		System.out.println(db.getTable("P").equals(db.getTable("Q")));
-
-		List<String> columns = new ArrayList<>();
-		columns.add("Name");
-		System.out.println(db.getTable("Students").getSignature().getAttributes());
-		System.out.println(TableOperations.Project(columns, db.getTable("Students")));
-
-		System.out.println();
-
-		// Age='18'
-		Condition c1 = new Equality(new Term("Age", false), new Term("18", true));
-		// Age='15' && ID='s001'
-		Condition c2 = new And(new Equality(new Term("Age", false), new Term("15", true)),
-				new Equality(new Term("ID", false), new Term("s001", true)));
-		// (Age='16' && ID='s001') || Name='Homer'
-		Condition c3 = new Or(
-				new And(new Equality(new Term("Age", false), new Term("16", true)),
-						new Equality(new Term("ID", false), new Term("s001", true))),
-				new Inequality(new Term("Name", false), new Term("Homer", true)));
-		// (Age='16' && ~(ID='s001')) || Name='Jane'
-		Condition c4 = new Or(
-				new And(new Equality(new Term("Age", false), new Term("16", true)),
-						new Not(new Equality(new Term("ID", false), new Term("s001", true)))),
-				new Inequality(new Term("Name", false), new Term("Jane", true)));
-
-		System.out.println(TableOperations.Select(c1, db.getTable("Students")));
-		System.out.println(TableOperations.Select(c2, db.getTable("Students")));
-		System.out.println(TableOperations.Select(c3, db.getTable("Students")));
-		System.out.println(TableOperations.Select(c4, db.getTable("Students")));
-		System.out.println();
-
 		// ========================PARSING AND EXECUTION - IMPORTANT========================
 
+		System.out.println("A multimodal interpreter for relational algebra by Jeremy Scott.\n"
+				+ "Type \"\\help\" for more information.");
 		while (true) {
 			System.out.print("(mrai)=> ");
 			String input = sc.nextLine();
 
+			if (input.toLowerCase().trim().equals("")) {
+				continue;
+			}
 			if (input.toLowerCase().trim().equals("\\exit")) {
 				break;
 			}
@@ -290,6 +241,10 @@ public class App {
 					String fmt = "%s: %s";
 					System.out.println(String.format(fmt, name, db.getSchema().getSignature(name)));
 				}
+				continue;
+			}
+			if (input.toLowerCase().trim().equals("\\help")) {
+				System.out.println("HELP");
 				continue;
 			}
 
