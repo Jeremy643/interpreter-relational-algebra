@@ -395,8 +395,8 @@ public class TableOperations {
 							valueComparisons[i] = r.get(index).toString().equals(left.getValue());
 						} else {
 							// right is a float
-							rVal = new Float(r.get(index).toString());
-							termVal = new Float(left.getValue());
+							rVal = Float.valueOf(r.get(index).toString());
+							termVal = Float.valueOf(left.getValue());
 							valueComparisons[i] = rVal.equals(termVal);
 						}
 						break;
@@ -404,29 +404,29 @@ public class TableOperations {
 						if (sortedA.getSignature().getTypes().get(index).equals(Type.STRING)) {
 							valueComparisons[i] = !(r.get(index).toString().equals(left.getValue()));
 						} else {
-							rVal = new Float(r.get(index).toString());
-							termVal = new Float(left.getValue());
+							rVal = Float.valueOf(r.get(index).toString());
+							termVal = Float.valueOf(left.getValue());
 							valueComparisons[i] = !(rVal.equals(termVal));
 						}
 						break;
 					case LESS:
-						rVal = new Float(r.get(index).toString());
-						termVal = new Float(left.getValue());
+						rVal = Float.valueOf(r.get(index).toString());
+						termVal = Float.valueOf(left.getValue());
 						valueComparisons[i] = rVal < termVal;
 						break;
 					case LESS_EQUAL:
-						rVal = new Float(r.get(index).toString());
-						termVal = new Float(left.getValue());
+						rVal = Float.valueOf(r.get(index).toString());
+						termVal = Float.valueOf(left.getValue());
 						valueComparisons[i] = rVal <= termVal;
 						break;
 					case GREATER:
-						rVal = new Float(r.get(index).toString());
-						termVal = new Float(left.getValue());
+						rVal = Float.valueOf(r.get(index).toString());
+						termVal = Float.valueOf(left.getValue());
 						valueComparisons[i] = rVal > termVal;
 						break;
 					case GREATER_EQUAL:
-						rVal = new Float(r.get(index).toString());
-						termVal = new Float(left.getValue());
+						rVal = Float.valueOf(r.get(index).toString());
+						termVal = Float.valueOf(left.getValue());
 						valueComparisons[i] = rVal >= termVal;
 						break;
 					default:
@@ -441,8 +441,8 @@ public class TableOperations {
 						if (sortedA.getSignature().getTypes().get(index).equals(Type.STRING)) {
 							valueComparisons[i] = r.get(index).toString().equals(right.getValue());
 						} else {
-							rVal = new Float(r.get(index).toString());
-							termVal = new Float(right.getValue());
+							rVal = Float.valueOf(r.get(index).toString());
+							termVal = Float.valueOf(right.getValue());
 							valueComparisons[i] = rVal.equals(termVal);
 						}
 						break;
@@ -450,29 +450,29 @@ public class TableOperations {
 						if (sortedA.getSignature().getTypes().get(index).equals(Type.STRING)) {
 							valueComparisons[i] = !(r.get(index).toString().equals(right.getValue()));
 						} else {
-							rVal = new Float(r.get(index).toString());
-							termVal = new Float(right.getValue());
+							rVal = Float.valueOf(r.get(index).toString());
+							termVal = Float.valueOf(right.getValue());
 							valueComparisons[i] = !(rVal.equals(termVal));
 						}
 						break;
 					case LESS:
-						rVal = new Float(r.get(index).toString());
-						termVal = new Float(right.getValue());
+						rVal = Float.valueOf(r.get(index).toString());
+						termVal = Float.valueOf(right.getValue());
 						valueComparisons[i] = rVal < termVal;
 						break;
 					case LESS_EQUAL:
-						rVal = new Float(r.get(index).toString());
-						termVal = new Float(right.getValue());
+						rVal = Float.valueOf(r.get(index).toString());
+						termVal = Float.valueOf(right.getValue());
 						valueComparisons[i] = rVal <= termVal;
 						break;
 					case GREATER:
-						rVal = new Float(r.get(index).toString());
-						termVal = new Float(right.getValue());
+						rVal = Float.valueOf(r.get(index).toString());
+						termVal = Float.valueOf(right.getValue());
 						valueComparisons[i] = rVal > termVal;
 						break;
 					case GREATER_EQUAL:
-						rVal = new Float(r.get(index).toString());
-						termVal = new Float(right.getValue());
+						rVal = Float.valueOf(r.get(index).toString());
+						termVal = Float.valueOf(right.getValue());
 						valueComparisons[i] = rVal >= termVal;
 						break;
 					default:
@@ -488,8 +488,8 @@ public class TableOperations {
 						if (sortedA.getSignature().getTypes().get(indexL).equals(Type.STRING)) {
 							valueComparisons[i] = r.get(indexL).toString().equals(r.get(indexR).toString());
 						} else {
-							rVal = new Float(r.get(indexL).toString());
-							termVal = new Float(r.get(indexR).toString());
+							rVal = Float.valueOf(r.get(indexL).toString());
+							termVal = Float.valueOf(r.get(indexR).toString());
 							valueComparisons[i] = rVal.equals(termVal);
 						}
 						break;
@@ -497,29 +497,29 @@ public class TableOperations {
 						if (sortedA.getSignature().getTypes().get(indexL).equals(Type.STRING)) {
 							valueComparisons[i] = !(r.get(indexL).toString().equals(r.get(indexR).toString()));
 						} else {
-							rVal = new Float(r.get(indexL).toString());
-							termVal = new Float(r.get(indexR).toString());
+							rVal = Float.valueOf(r.get(indexL).toString());
+							termVal = Float.valueOf(r.get(indexR).toString());
 							valueComparisons[i] = !(rVal.equals(termVal));
 						}
 						break;
 					case LESS:
-						rVal = new Float(r.get(indexL).toString());
-						termVal = new Float(r.get(indexR).toString());
+						rVal = Float.valueOf(r.get(indexL).toString());
+						termVal = Float.valueOf(r.get(indexR).toString());
 						valueComparisons[i] = rVal < termVal;
 						break;
 					case LESS_EQUAL:
-						rVal = new Float(r.get(indexL).toString());
-						termVal = new Float(r.get(indexR).toString());
+						rVal = Float.valueOf(r.get(indexL).toString());
+						termVal = Float.valueOf(r.get(indexR).toString());
 						valueComparisons[i] = rVal <= termVal;
 						break;
 					case GREATER:
-						rVal = new Float(r.get(indexL).toString());
-						termVal = new Float(r.get(indexR).toString());
+						rVal = Float.valueOf(r.get(indexL).toString());
+						termVal = Float.valueOf(r.get(indexR).toString());
 						valueComparisons[i] = rVal > termVal;
 						break;
 					case GREATER_EQUAL:
-						rVal = new Float(r.get(indexL).toString());
-						termVal = new Float(r.get(indexR).toString());
+						rVal = Float.valueOf(r.get(indexL).toString());
+						termVal = Float.valueOf(r.get(indexR).toString());
 						valueComparisons[i] = rVal >= termVal;
 						break;
 					default:

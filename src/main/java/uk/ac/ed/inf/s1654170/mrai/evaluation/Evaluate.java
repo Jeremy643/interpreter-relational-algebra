@@ -1,6 +1,5 @@
 package uk.ac.ed.inf.s1654170.mrai.evaluation;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -18,11 +17,10 @@ import uk.ac.ed.inf.s1654170.mrai.exprs.RAExpr;
 import uk.ac.ed.inf.s1654170.mrai.exprs.Union;
 import uk.ac.ed.inf.s1654170.mrai.instance.Record;
 import uk.ac.ed.inf.s1654170.mrai.instance.Table;
-import uk.ac.ed.inf.s1654170.mrai.schema.Column;
+import uk.ac.ed.inf.s1654170.mrai.schema.Column.Type;
 import uk.ac.ed.inf.s1654170.mrai.schema.Database;
 import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
 import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
-import uk.ac.ed.inf.s1654170.mrai.schema.Column.Type;
 
 public class Evaluate {
 	
