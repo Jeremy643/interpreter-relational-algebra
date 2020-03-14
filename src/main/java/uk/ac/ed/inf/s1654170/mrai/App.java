@@ -216,7 +216,7 @@ public class App {
 
 		Database db = new Database(sch);
 		for (String name : fileName) {
-			Table table = new Table(sch.getSignature(name));
+			Table table = new Table(sch.getSignature(name), bagEvaluation);
 			table.addAll(tables.get(name));
 			try {
 				db.add(name, table);

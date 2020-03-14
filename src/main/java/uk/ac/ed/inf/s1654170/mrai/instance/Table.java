@@ -16,19 +16,25 @@ public class Table extends ArrayList<Record> {
 	private static final long serialVersionUID = 2180789515268198297L;
 	
 	private Signature signature;
+	private boolean bagEvaluation;
 	
-	public Table(Signature signature) {
+	public Table(Signature signature, boolean bagEvaluation) {
 		this.signature = signature;
+		this.bagEvaluation = bagEvaluation;
 	}
 	
 	public Signature getSignature() {
 		return signature;
 	}
 	
+	public boolean getBagEvaluation() {
+		return bagEvaluation;
+	}
+	
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof Table) {
-			Table oTable = new Table(((Table) o).getSignature());
+			Table oTable = new Table(((Table) o).getSignature(), ((Table) o).getBagEvaluation());
 			oTable.addAll((Table) o);
 			if (signature.isOrdered() && oTable.getSignature().isOrdered()) {
 				//columns are ordered
@@ -56,13 +62,6 @@ public class Table extends ArrayList<Record> {
 				boolean sameSetAttr = thisSetAttr.equals(oTableSetAttr);
 				boolean sameSetType = thisSetType.equals(oTableSetType);
 				
-//				//Check size difference between set and list - should be the same
-//				if (thisSetAttr.size() != this.getSignature().getAttributes().size() ||
-//						oTableSetAttr.size() != oTable.getSignature().getAttributes().size()) {
-//					//throw error?
-//					return false;
-//				}
-				
 				if (sameSetAttr && sameSetType && this.size() == oTable.size()) {
 					//compare records
 					for (int i = 0; i < this.size(); i++) {
@@ -84,28 +83,4 @@ public class Table extends ArrayList<Record> {
 			return false;
 		}
 	}
-	
-	/*@Override
-	public String toString() {
-		List<String> attributes = new ArrayList<>(signature.getAttributes());
-		String table = "";
-		
-		for (int i = 0; i < attributes.size(); i++) {
-			if (i == 0) {
-				table += String.format("| %s |", attributes.get(i));
-			} else {
-				if (i == attributes.size()-1) {
-					table += String.format(" %s |\n", attributes.get(i));
-				} else {
-					table += String.format(" %s |", attributes.get(i));
-				}
-			}
-		}
-		
-		for (Record r : this) {
-			table += r;
-		}
-		
-		return table;
-	}*/
 }

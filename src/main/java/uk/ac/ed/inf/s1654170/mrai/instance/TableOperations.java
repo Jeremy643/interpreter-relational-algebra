@@ -20,7 +20,7 @@ public class TableOperations {
 	}
 
 	public static Table Union(Table tA, Table tB) {
-		Table table = new Table(tA.getSignature());
+		Table table = new Table(tA.getSignature(), tA.getBagEvaluation());
 		table.addAll(tA);
 		table.addAll(tB);
 		return table;
@@ -33,7 +33,7 @@ public class TableOperations {
 		ListIterator<Record> itA = sortedA.listIterator();
 		ListIterator<Record> itB = sortedB.listIterator();
 
-		Table table = new Table(tA.getSignature());
+		Table table = new Table(tA.getSignature(), tA.getBagEvaluation());
 
 		// contA = false, when itA has no more values
 		boolean contA = itA.hasNext();
@@ -124,15 +124,13 @@ public class TableOperations {
 	}
 
 	public static Table Difference(Table tA, Table tB) {
-		// TODO: better implementation N log(N)
-		
 		Table sortedA = sortRecords(tA);
 		Table sortedB = sortRecords(tB);
 
 		ListIterator<Record> itA = sortedA.listIterator();
 		ListIterator<Record> itB = sortedB.listIterator();
 
-		Table table = new Table(tA.getSignature());
+		Table table = new Table(tA.getSignature(), tA.getBagEvaluation());
 
 		// contA = false, when itA has no more values
 		boolean contA = itA.hasNext();
@@ -200,11 +198,9 @@ public class TableOperations {
 	}
 
 	public static Table Intersect(Table tA, Table tB) {
-		//return Difference(tA,Difference(tA,tB));
-
 		Table sortedA = sortRecords(tA);
 		Table sortedB = sortRecords(tB);
-		Table table = new Table(tA.getSignature());
+		Table table = new Table(tA.getSignature(), tA.getBagEvaluation());
 
 		ListIterator<Record> itA = sortedA.listIterator();
 		ListIterator<Record> itB = sortedB.listIterator();
@@ -266,7 +262,7 @@ public class TableOperations {
 		attributeTypes.addAll(tB.getSignature().getTypes());
 
 		Signature sig = new BaseSignature(attributes, attributeTypes, tA.getSignature().isOrdered());
-		Table table = new Table(sig);
+		Table table = new Table(sig, tA.getBagEvaluation());
 
 		List<Column.Type> types = new ArrayList<>();
 		types.addAll(tA.getSignature().getTypes());
@@ -297,7 +293,7 @@ public class TableOperations {
 
 	public static Table Eliminate(Table tA) {
 		Table sortedA = sortRecords(tA);
-		Table table = new Table(tA.getSignature());
+		Table table = new Table(tA.getSignature(), tA.getBagEvaluation());
 		Record prev = null;
 		for (Record curr : sortedA) {
 			if (curr.equals(prev)) {
@@ -323,7 +319,7 @@ public class TableOperations {
 		}
 
 		Signature signature = new BaseSignature(attributesTable, typesA, A.getSignature().isOrdered());
-		Table table = new Table(signature);
+		Table table = new Table(signature, A.getBagEvaluation());
 
 		table.addAll(A);
 		A = table;
@@ -346,7 +342,7 @@ public class TableOperations {
 		// create a signature for the resulting relation
 		Signature signature = new BaseSignature(columns, types, A.getSignature().isOrdered());
 
-		Table table = new Table(signature);
+		Table table = new Table(signature, A.getBagEvaluation());
 
 		// get the values associated with the relevant attributes
 		for (Record r : A) {
@@ -365,7 +361,7 @@ public class TableOperations {
 
 	public static Table Select(Condition condition, Table A) {
 		Table sortedA = sortRecords(A);
-		Table table = new Table(A.getSignature());
+		Table table = new Table(A.getSignature(), A.getBagEvaluation());
 
 		// gets comparisons, for example: [Age='16', ID='s001', Name!='Jane']
 		List<Comparison> comparisons = condition.getComparisons();

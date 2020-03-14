@@ -94,7 +94,7 @@ public class Evaluate {
 		
 		db = new Database(sch);
 		for (String name : fileName) {
-			Table table = new Table(sch.getSignature(name));
+			Table table = new Table(sch.getSignature(name), true);
 			table.addAll(tables.get(name));
 			System.out.println(table);
 			try {
