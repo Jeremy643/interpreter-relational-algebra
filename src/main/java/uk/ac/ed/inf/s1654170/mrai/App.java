@@ -13,9 +13,12 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
 
+import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.apache.commons.cli.*;
@@ -253,6 +256,14 @@ public class App {
 				CharStream charStream = CharStreams.fromString(input);
 
 				RelationalAlgebraLexer tl = new RelationalAlgebraLexer(charStream);
+				tl.addErrorListener(new BaseErrorListener() {
+					@Override
+					public void syntaxError(Recognizer<?,?> recognizer, Object offendingSymbol, int line, int charPositionInLine,
+							String msg, RecognitionException e) {
+						throw new RuntimeException(e);
+					}
+				});
+				
 				CommonTokenStream commonTokenStream = new CommonTokenStream(tl);
 				RelationalAlgebraParser tp = new RelationalAlgebraParser(commonTokenStream);
 
