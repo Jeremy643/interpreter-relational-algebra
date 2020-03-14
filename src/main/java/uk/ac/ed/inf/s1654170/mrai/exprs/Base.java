@@ -1,6 +1,7 @@
 package uk.ac.ed.inf.s1654170.mrai.exprs;
 
 import uk.ac.ed.inf.s1654170.mrai.instance.Table;
+import uk.ac.ed.inf.s1654170.mrai.instance.TableOperations;
 import uk.ac.ed.inf.s1654170.mrai.schema.Database;
 import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
 import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
@@ -35,6 +36,11 @@ public class Base extends RAExpr {
 
 	@Override
 	public Table executeValid(Database db) {
-		return db.getTable(name);
+		if (db.getTable(name).getBagEvaluation()) {
+			return db.getTable(name);
+		} else {
+			//set evaluation - remove duplicates
+			return TableOperations.Eliminate(db.getTable(name));
+		}
 	}
 }

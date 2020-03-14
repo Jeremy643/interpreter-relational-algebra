@@ -41,6 +41,12 @@ public class Select extends RAExpr {
 
 	@Override
 	public Table executeValid(Database db) {
-		return TableOperations.Select(condition, expr.executeValid(db));
+		if (expr.executeValid(db).getBagEvaluation()) {
+			//bag evaluation
+			return TableOperations.Select(condition, expr.executeValid(db));
+		} else {
+			//set evaluation
+			return TableOperations.Eliminate(TableOperations.Select(condition, expr.executeValid(db)));
+		}
 	}
 }

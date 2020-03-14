@@ -48,13 +48,6 @@ public class Rename extends RAExpr {
 			
 			List<String> oldName = new ArrayList<>(attributes.keySet());
 			List<String> newName = new ArrayList<>(attributes.values());
-			//Set<String> newName = new HashSet<>(attributes.values());
-			
-			/*for (String n : newName) {
-				if (attr.contains(n)) {
-					throw new SchemaException(SchemaException.ErrorMessage.RENAME_ERROR.getErrorMessage());
-				}
-			}*/
 			
 			if (!attr.containsAll(oldName) || oldName.size() != newName.size()) {
 				throw new SchemaException(SchemaException.ErrorMessage.RENAME_ERROR.getErrorMessage());
@@ -102,6 +95,12 @@ public class Rename extends RAExpr {
 
 	@Override
 	public Table executeValid(Database db) {
-		return TableOperations.Rename(attributes, relation.executeValid(db));
+		if (relation.executeValid(db).getBagEvaluation()) {
+			//bag evaluation
+			return TableOperations.Rename(attributes, relation.executeValid(db));
+		} else {
+			//set evaluation
+			return TableOperations.Eliminate(TableOperations.Rename(attributes, relation.executeValid(db)));
+		}
 	}
 }

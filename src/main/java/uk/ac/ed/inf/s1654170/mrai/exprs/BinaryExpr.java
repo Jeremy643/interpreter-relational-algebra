@@ -46,12 +46,6 @@ public abstract class BinaryExpr extends RAExpr {
 			throw new RuntimeException("One is ordered while the other is unordered.");
 		}
 		
-		// TODO: union max/plus, intersect, difference
-		// ordered case: validate types by position / take names from left operand
-		// unordered case: validate types by name / check operands have same attributes
-		
-		// TODO: product: both ordered / unordered --> check operands have disjoint attributes
-		// concatenate signatures and return BaseSignature(..., true) or BaseSignature(..., false) depending on whether operands are (both) ordered / unordered
 		if (this.getType() == RAExpr.Type.PRODUCT) {
 			for (String rAttr : r.getAttributes()) {
 				if (l.getAttributes().contains(rAttr)) {
@@ -89,52 +83,42 @@ public abstract class BinaryExpr extends RAExpr {
 				return new BaseSignature(l.getAttributes(), l.getTypes(), false);
 			}
 		}
-		
-//		Signature l = left.signature(s);
-//		Signature r = right.signature(s);
-//		if (l.isOrdered() && r.isOrdered()) {
-//			if (this.getType() == RAExpr.Type.PRODUCT) {
-//				return Utils.concat(l, r);
-//			}
-//
-//			//check that both signatures share the same attributes
-//			if (!l.getAttributes().equals(r.getAttributes()) || !l.getTypes().equals(r.getTypes())) {
-//				throw new SchemaException(SchemaException.ErrorMessage.NO_SAME_ATTR.getErrorMessage());
-//			} else {
-//				return left.signature(s);
-//			}
-//		} else {
-//			if (this.getType() == RAExpr.Type.PRODUCT) {
-//				return Utils.concat(l, r);
-//			}
-//			
-//			Set<String> lSetAttr = new HashSet<>(l.getAttributes());
-//			Set<String> rSetAttr = new HashSet<>(r.getAttributes());
-//			
-//			//check that both signatures share the same attributes
-//			if (!lSetAttr.equals(rSetAttr) || !l.getTypes().equals(r.getTypes())) {
-//				throw new SchemaException(SchemaException.ErrorMessage.NO_SAME_ATTR.getErrorMessage());
-//			} else {
-//				return left.signature(s);
-//			}
-//		}
 	}
 
 	@Override
 	public Table executeValid(Database db) {
-		switch (type) {
-		case UNION:
-			return TableOperations.Union(left.executeValid(db), right.executeValid(db));
-		case UNION_MAX:
-			return TableOperations.UnionMax(left.executeValid(db), right.executeValid(db));
-		case PRODUCT:
-			return TableOperations.Product(left.executeValid(db), right.executeValid(db));
-		case INTERSECT:
-			return TableOperations.Intersect(left.executeValid(db), right.executeValid(db));
-		case DIFFERENCE:
-			return TableOperations.Difference(left.executeValid(db), right.executeValid(db));
-		default:
-			throw new RuntimeException("Unknown binary operation");
+		if (left.executeValid(db).getBagEvaluation()) {
+			//bag evaluation
+			switch (type) {
+			case UNION:
+				return TableOperations.Union(left.executeValid(db), right.executeValid(db));
+			case UNION_MAX:
+				return TableOperations.UnionMax(left.executeValid(db), right.executeValid(db));
+			case PRODUCT:
+				return TableOperations.Product(left.executeValid(db), right.executeValid(db));
+			case INTERSECT:
+				return TableOperations.Intersect(left.executeValid(db), right.executeValid(db));
+			case DIFFERENCE:
+				return TableOperations.Difference(left.executeValid(db), right.executeValid(db));
+			default:
+				throw new RuntimeException("Unknown binary operation");
+			}
+		} else {
+			//set evaluation
+			switch (type) {
+			case UNION:
+				return TableOperations.Eliminate(TableOperations.Union(left.executeValid(db), right.executeValid(db)));
+			case UNION_MAX:
+				return TableOperations.Eliminate(TableOperations.UnionMax(left.executeValid(db), right.executeValid(db)));
+			case PRODUCT:
+				return TableOperations.Eliminate(TableOperations.Product(left.executeValid(db), right.executeValid(db)));
+			case INTERSECT:
+				return TableOperations.Eliminate(TableOperations.Intersect(left.executeValid(db), right.executeValid(db)));
+			case DIFFERENCE:
+				return TableOperations.Eliminate(TableOperations.Difference(left.executeValid(db), right.executeValid(db)));
+			default:
+				throw new RuntimeException("Unknown binary operation");
+			}
 		}
 	}
 }
