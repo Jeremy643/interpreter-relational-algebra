@@ -20,10 +20,10 @@ import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
 
 public class GetDataHelper {
 	
-	private static Database db;
-	private static ArrayList<String> fileName = new ArrayList<>();
-	
 	public static Database readData(boolean ordered, boolean bags) throws IOException {
+		Database db;
+		ArrayList<String> fileName = new ArrayList<>();
+		
 		File dirPath = new File(System.getProperty("user.dir"));
 		File folder = new File(dirPath, "src/main/java/uk/ac/ed/inf/s1654170/mrai/evaluation");
 		File[] listOfFiles = folder.listFiles();
