@@ -1,4 +1,4 @@
-package uk.ac.ed.inf.s1654170.mrai.evaluation;
+package evaluation;
 
 import java.io.File;
 import java.io.FileReader;
@@ -25,7 +25,7 @@ public class GetDataHelper {
 		ArrayList<String> fileName = new ArrayList<>();
 		
 		File dirPath = new File(System.getProperty("user.dir"));
-		File folder = new File(dirPath, "src/main/java/uk/ac/ed/inf/s1654170/mrai/evaluation");
+		File folder = new File(dirPath, "src/test/java/evaluation");
 		File[] listOfFiles = folder.listFiles();
 		
 		ArrayList<String> attributes = new ArrayList<>();
@@ -92,7 +92,6 @@ public class GetDataHelper {
 		for (String name : fileName) {
 			Table table = new Table(sch.getSignature(name), bags);
 			table.addAll(tables.get(name));
-			System.out.println(table);
 			try {
 				db.add(name, table);
 			} catch (Exception e1) {

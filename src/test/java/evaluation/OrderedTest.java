@@ -1,17 +1,18 @@
-package uk.ac.ed.inf.s1654170.mrai.evaluation;
+package evaluation;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import uk.ac.ed.inf.s1654170.mrai.exprs.*;
 import uk.ac.ed.inf.s1654170.mrai.instance.*;
 import uk.ac.ed.inf.s1654170.mrai.schema.*;
 
-class OrderedTests {
+class OrderedTest {
 	
 	private static Database dbBags;
 	private static Database dbSets;
