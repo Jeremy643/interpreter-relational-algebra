@@ -27,8 +27,12 @@ public class TableOperations {
 	}
 
 	public static Table UnionMax(Table tA, Table tB) {
-		Table sortedA = sortRecords(tA);
-		Table sortedB = sortRecords(tB);
+		Table tempA = new Table(tA.getSignature(), tA.getSignature().isOrdered());
+		tempA.addAll(tA);
+		Table tempB = new Table(tB.getSignature(), tB.getSignature().isOrdered());
+		tempB.addAll(tB);
+		Table sortedA = sortRecords(tempA);
+		Table sortedB = sortRecords(tempB);
 
 		ListIterator<Record> itA = sortedA.listIterator();
 		ListIterator<Record> itB = sortedB.listIterator();
@@ -124,8 +128,12 @@ public class TableOperations {
 	}
 
 	public static Table Difference(Table tA, Table tB) {
-		Table sortedA = sortRecords(tA);
-		Table sortedB = sortRecords(tB);
+		Table tempA = new Table(tA.getSignature(), tA.getSignature().isOrdered());
+		tempA.addAll(tA);
+		Table tempB = new Table(tB.getSignature(), tB.getSignature().isOrdered());
+		tempB.addAll(tB);
+		Table sortedA = sortRecords(tempA);
+		Table sortedB = sortRecords(tempB);
 
 		ListIterator<Record> itA = sortedA.listIterator();
 		ListIterator<Record> itB = sortedB.listIterator();
@@ -198,8 +206,12 @@ public class TableOperations {
 	}
 
 	public static Table Intersect(Table tA, Table tB) {
-		Table sortedA = sortRecords(tA);
-		Table sortedB = sortRecords(tB);
+		Table tempA = new Table(tA.getSignature(), tA.getSignature().isOrdered());
+		tempA.addAll(tA);
+		Table tempB = new Table(tB.getSignature(), tB.getSignature().isOrdered());
+		tempB.addAll(tB);
+		Table sortedA = sortRecords(tempA);
+		Table sortedB = sortRecords(tempB);
 		Table table = new Table(tA.getSignature(), tA.getBagEvaluation());
 
 		ListIterator<Record> itA = sortedA.listIterator();
@@ -292,7 +304,9 @@ public class TableOperations {
 	}
 
 	public static Table Eliminate(Table tA) {
-		Table sortedA = sortRecords(tA);
+		Table tempA = new Table(tA.getSignature(), tA.getSignature().isOrdered());
+		tempA.addAll(tA);
+		Table sortedA = sortRecords(tempA);
 		Table table = new Table(tA.getSignature(), tA.getBagEvaluation());
 		Record prev = null;
 		for (Record curr : sortedA) {
@@ -360,7 +374,9 @@ public class TableOperations {
 	}
 
 	public static Table Select(Condition condition, Table A) {
-		Table sortedA = sortRecords(A);
+		Table tempA = new Table(A.getSignature(), A.getSignature().isOrdered());
+		tempA.addAll(A);
+		Table sortedA = sortRecords(tempA);
 		Table table = new Table(A.getSignature(), A.getBagEvaluation());
 
 		// gets comparisons, for example: [Age='16', ID='s001', Name!='Jane']
