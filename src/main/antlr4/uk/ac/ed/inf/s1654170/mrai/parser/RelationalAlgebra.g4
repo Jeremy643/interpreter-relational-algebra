@@ -28,7 +28,7 @@ GREATER:                '>';
 GREATER_EQUAL:          '>=';
 NOT:                    '~';
 
-start:  raExpr;
+start:  raExpr EOF;
 
 raExpr: base #baseRelation
       | LEFT_BRACKET raExpr RIGHT_BRACKET #ParenthesizedExpr

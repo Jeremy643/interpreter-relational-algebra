@@ -13,15 +13,19 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
 
-import org.antlr.v4.runtime.BaseErrorListener;
+import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
@@ -256,16 +260,10 @@ public class App {
 				CharStream charStream = CharStreams.fromString(input);
 
 				RelationalAlgebraLexer tl = new RelationalAlgebraLexer(charStream);
-				tl.addErrorListener(new BaseErrorListener() {
-					@Override
-					public void syntaxError(Recognizer<?,?> recognizer, Object offendingSymbol, int line, int charPositionInLine,
-							String msg, RecognitionException e) {
-						throw new RuntimeException(e);
-					}
-				});
 				
 				CommonTokenStream commonTokenStream = new CommonTokenStream(tl);
 				RelationalAlgebraParser tp = new RelationalAlgebraParser(commonTokenStream);
+				tp.setErrorHandler(new BailErrorStrategy());
 
 				ParseTree parseTree = tp.start();
 				BuildExpr buildExpr = new BuildExpr();
