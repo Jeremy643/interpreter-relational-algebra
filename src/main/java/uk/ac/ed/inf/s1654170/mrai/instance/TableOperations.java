@@ -148,18 +148,27 @@ public class TableOperations {
 		Record a = null;
 		Record b = null;
 		int comp = 0;
+		boolean first = true;
 
-		// continue only when A still hold values
+		// continue only when A or B still hold values
 		while (contA) {
+			if (a == null && b == null && comp == 0) {
+				if (contA) {
+					a = itA.next();
+				}
+				if (contB) {
+					b = itB.next();
+				}
+			}
+
 			// add the rest of table A to output
 			if (!contB && contA) { // A non-empty, B empty
+				table.add(a);
 				if (itA.hasNext()) {
-					a = itA.next();
-					table.add(a);
 					contA = itA.hasNext();
+					a = itA.next();
 					continue;
 				} else {
-					table.add(a);
 					contA = false;
 					continue;
 				}
@@ -174,7 +183,7 @@ public class TableOperations {
 				b = itB.next();
 			}
 			// get next a and b if they're equal
-			if (comp == 0) {
+			if (first == false && comp == 0) {
 				a = itA.next();
 				b = itB.next();
 			}
@@ -190,17 +199,16 @@ public class TableOperations {
 
 			// b less than a
 			if (comp > 0) {
-				//table.add(b);
 				contB = itB.hasNext();
 				continue;
 			}
 
 			// a and b equal
 			if (comp == 0) {
-				//table.add(a);
 				contA = itA.hasNext();
 				contB = itB.hasNext();
 			}
+			first = false;
 		}
 		return table;
 	}
