@@ -87,7 +87,7 @@ public abstract class BinaryExpr extends RAExpr {
 
 	@Override
 	public Table executeValid(Database db) {
-		if (left.executeValid(db).getBagEvaluation()) {
+		if (db.getBagEval()) {
 			//bag evaluation
 			switch (type) {
 			case UNION:

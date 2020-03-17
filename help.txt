@@ -1,0 +1,24 @@
+The following are commands that you can run while in the interpreter;
+
+\help - displays this information
+\exit - stops the interpreter
+\schema - displays the schema of the current database
+\settings - displays the configuration of the columns and how the database is being evaluated
+\configure - allows you to change if the columns are being ordered or unordered and if the database is being evaluated under bags or sets
+
+The following is a list of the available table operations and how to use them;
+
+Projection - <P>[attr1,attr2,...](relation)
+Renaming - <R>[attr1->attr2,...](relation)
+Product - relation1 <X> relation2
+Union - relation1 <+> relation2
+Union Max - relation1 <U> relation2
+Intersection - relation1 <I> relation2
+Difference - relation1 <D> relation2
+Duplicate Elimination - <E>(relation)
+Selection - <S>[condition](relation) - <S>[attr1='Red' & attr2>'15'](relation)
+	condition - and : &
+		    or : |
+		    not : ~
+		    comparisons : =,!=,<,<=,>,>=
+		    constant : '_'

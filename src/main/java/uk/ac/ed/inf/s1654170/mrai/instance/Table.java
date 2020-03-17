@@ -16,25 +16,19 @@ public class Table extends ArrayList<Record> {
 	private static final long serialVersionUID = 2180789515268198297L;
 	
 	private Signature signature;
-	private boolean bagEvaluation;
 	
-	public Table(Signature signature, boolean bagEvaluation) {
+	public Table(Signature signature) {
 		this.signature = signature;
-		this.bagEvaluation = bagEvaluation;
 	}
 	
 	public Signature getSignature() {
 		return signature;
 	}
 	
-	public boolean getBagEvaluation() {
-		return bagEvaluation;
-	}
-	
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof Table) {
-			Table oTable = new Table(((Table) o).getSignature(), ((Table) o).getBagEvaluation());
+			Table oTable = new Table(((Table) o).getSignature());
 			oTable.addAll((Table) o);
 			if (signature.isOrdered() && oTable.getSignature().isOrdered()) {
 				//columns are ordered

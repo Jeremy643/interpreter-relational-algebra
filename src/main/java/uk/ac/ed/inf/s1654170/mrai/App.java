@@ -2,6 +2,7 @@ package uk.ac.ed.inf.s1654170.mrai;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -256,9 +257,9 @@ public class App {
 		
 		Schema sch = new Schema(fileName, attributes, attributeTypes, orderedColumns);
 
-		Database db = new Database(sch);
+		Database db = new Database(sch, bagEvaluation);
 		for (String name : fileName) {
-			Table table = new Table(sch.getSignature(name), bagEvaluation);
+			Table table = new Table(sch.getSignature(name));
 			table.addAll(tables.get(name));
 			try {
 				db.add(name, table);
@@ -304,10 +305,76 @@ public class App {
 			}
 			if (input.toLowerCase().trim().equals("\\configure")) {
 				// change the configuration of ordered/unordered or bags/sets
+				if (orderedColumns) {
+					System.out.println("Set columns... unordered?[y/n]");
+					String ans = sc.nextLine();
+					if (ans.toLowerCase().trim().equals("y")) {
+						// set columns to unordered
+						unorderedColumns = true;
+						orderedColumns = false;
+						sch = new Schema(fileName, attributes, attributeTypes, orderedColumns);
+					}
+				} else {
+					System.out.println("Set columns... ordered?[y/n]");
+					String ans = sc.nextLine();
+					if (ans.toLowerCase().trim().equals("y")) {
+						// set columns to ordered
+						orderedColumns = true;
+						unorderedColumns = false;
+						sch = new Schema(fileName, attributes, attributeTypes, orderedColumns);
+					}
+				}
+				if (bagEvaluation) {
+					System.out.println("Set evaluation... sets?[y/n]");
+					String ans = sc.nextLine();
+					if (ans.toLowerCase().trim().equals("y")) {
+						// change evaluation to sets
+						setEvaluation = true;
+						bagEvaluation = false;
+						db = new Database(sch, bagEvaluation);
+						for (String name : fileName) {
+							Table table = new Table(sch.getSignature(name));
+							table.addAll(tables.get(name));
+							try {
+								db.add(name, table);
+							} catch (Exception e1) {
+								e1.printStackTrace();
+							}
+						}
+					}
+				} else {
+					System.out.println("Set evaluation... bags?[y/n]");
+					String ans = sc.nextLine();
+					if (ans.toLowerCase().trim().equals("y")) {
+						// change evaluation to bags
+						setEvaluation = false;
+						bagEvaluation = true;
+						db = new Database(sch, bagEvaluation);
+						for (String name : fileName) {
+							Table table = new Table(sch.getSignature(name));
+							table.addAll(tables.get(name));
+							try {
+								db.add(name, table);
+							} catch (Exception e1) {
+								e1.printStackTrace();
+							}
+						}
+					}
+				}
 				continue;
 			}
 			if (input.toLowerCase().trim().equals("\\help")) {
-				System.out.println("HELP");
+				try {
+					File helpFile = new File("help.txt");
+					Scanner helpScanner = new Scanner(helpFile);
+					while (helpScanner.hasNext()) {
+						System.out.println(helpScanner.nextLine());
+					}
+					helpScanner.close();
+				} catch (FileNotFoundException e) {
+					System.out.println("ERROR: Could not find the help text file.");
+					System.exit(1);
+				}
 				continue;
 			}
 

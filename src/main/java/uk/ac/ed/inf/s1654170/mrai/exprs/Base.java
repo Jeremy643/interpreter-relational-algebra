@@ -36,7 +36,7 @@ public class Base extends RAExpr {
 
 	@Override
 	public Table executeValid(Database db) {
-		if (db.getTable(name).getBagEvaluation()) {
+		if (db.getBagEval()) {
 			return db.getTable(name);
 		} else {
 			//set evaluation - remove duplicates

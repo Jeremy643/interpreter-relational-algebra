@@ -95,7 +95,7 @@ public class Rename extends RAExpr {
 
 	@Override
 	public Table executeValid(Database db) {
-		if (relation.executeValid(db).getBagEvaluation()) {
+		if (db.getBagEval()) {
 			//bag evaluation
 			return TableOperations.Rename(attributes, relation.executeValid(db));
 		} else {

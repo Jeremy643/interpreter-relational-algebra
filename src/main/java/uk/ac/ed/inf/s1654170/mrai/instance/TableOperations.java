@@ -20,16 +20,16 @@ public class TableOperations {
 	}
 
 	public static Table Union(Table tA, Table tB) {
-		Table table = new Table(tA.getSignature(), tA.getBagEvaluation());
+		Table table = new Table(tA.getSignature());
 		table.addAll(tA);
 		table.addAll(tB);
 		return table;
 	}
 
 	public static Table UnionMax(Table tA, Table tB) {
-		Table tempA = new Table(tA.getSignature(), tA.getSignature().isOrdered());
+		Table tempA = new Table(tA.getSignature());
 		tempA.addAll(tA);
-		Table tempB = new Table(tB.getSignature(), tB.getSignature().isOrdered());
+		Table tempB = new Table(tB.getSignature());
 		tempB.addAll(tB);
 		Table sortedA = sortRecords(tempA);
 		Table sortedB = sortRecords(tempB);
@@ -37,7 +37,7 @@ public class TableOperations {
 		ListIterator<Record> itA = sortedA.listIterator();
 		ListIterator<Record> itB = sortedB.listIterator();
 
-		Table table = new Table(tA.getSignature(), tA.getBagEvaluation());
+		Table table = new Table(tA.getSignature());
 
 		// contA = false, when itA has no more values
 		boolean contA = itA.hasNext();
@@ -128,9 +128,9 @@ public class TableOperations {
 	}
 
 	public static Table Difference(Table tA, Table tB) {
-		Table tempA = new Table(tA.getSignature(), tA.getSignature().isOrdered());
+		Table tempA = new Table(tA.getSignature());
 		tempA.addAll(tA);
-		Table tempB = new Table(tB.getSignature(), tB.getSignature().isOrdered());
+		Table tempB = new Table(tB.getSignature());
 		tempB.addAll(tB);
 		Table sortedA = sortRecords(tempA);
 		Table sortedB = sortRecords(tempB);
@@ -138,7 +138,7 @@ public class TableOperations {
 		ListIterator<Record> itA = sortedA.listIterator();
 		ListIterator<Record> itB = sortedB.listIterator();
 
-		Table table = new Table(tA.getSignature(), tA.getBagEvaluation());
+		Table table = new Table(tA.getSignature());
 
 		// contA = false, when itA has no more values
 		boolean contA = itA.hasNext();
@@ -214,13 +214,13 @@ public class TableOperations {
 	}
 
 	public static Table Intersect(Table tA, Table tB) {
-		Table tempA = new Table(tA.getSignature(), tA.getSignature().isOrdered());
+		Table tempA = new Table(tA.getSignature());
 		tempA.addAll(tA);
-		Table tempB = new Table(tB.getSignature(), tB.getSignature().isOrdered());
+		Table tempB = new Table(tB.getSignature());
 		tempB.addAll(tB);
 		Table sortedA = sortRecords(tempA);
 		Table sortedB = sortRecords(tempB);
-		Table table = new Table(tA.getSignature(), tA.getBagEvaluation());
+		Table table = new Table(tA.getSignature());
 
 		ListIterator<Record> itA = sortedA.listIterator();
 		ListIterator<Record> itB = sortedB.listIterator();
@@ -282,7 +282,7 @@ public class TableOperations {
 		attributeTypes.addAll(tB.getSignature().getTypes());
 
 		Signature sig = new BaseSignature(attributes, attributeTypes, tA.getSignature().isOrdered());
-		Table table = new Table(sig, tA.getBagEvaluation());
+		Table table = new Table(sig);
 
 		for (Record rA : tA) {
 			for (Record rB : tB) {
@@ -308,10 +308,10 @@ public class TableOperations {
 	}
 
 	public static Table Eliminate(Table tA) {
-		Table tempA = new Table(tA.getSignature(), tA.getSignature().isOrdered());
+		Table tempA = new Table(tA.getSignature());
 		tempA.addAll(tA);
 		Table sortedA = sortRecords(tempA);
-		Table table = new Table(tA.getSignature(), tA.getBagEvaluation());
+		Table table = new Table(tA.getSignature());
 		Record prev = null;
 		for (Record curr : sortedA) {
 			if (curr.equals(prev)) {
@@ -337,7 +337,7 @@ public class TableOperations {
 		}
 
 		Signature signature = new BaseSignature(attributesTable, typesA, A.getSignature().isOrdered());
-		Table table = new Table(signature, A.getBagEvaluation());
+		Table table = new Table(signature);
 
 		table.addAll(A);
 		A = table;
@@ -360,7 +360,7 @@ public class TableOperations {
 		// create a signature for the resulting relation
 		Signature signature = new BaseSignature(columns, types, A.getSignature().isOrdered());
 
-		Table table = new Table(signature, A.getBagEvaluation());
+		Table table = new Table(signature);
 
 		// get the values associated with the relevant attributes
 		for (Record r : A) {
@@ -378,10 +378,10 @@ public class TableOperations {
 	}
 
 	public static Table Select(Condition condition, Table A) {
-		Table tempA = new Table(A.getSignature(), A.getSignature().isOrdered());
+		Table tempA = new Table(A.getSignature());
 		tempA.addAll(A);
 		Table sortedA = sortRecords(tempA);
-		Table table = new Table(A.getSignature(), A.getBagEvaluation());
+		Table table = new Table(A.getSignature());
 
 		// gets comparisons, for example: [Age='16', ID='s001', Name!='Jane']
 		List<Comparison> comparisons = condition.getComparisons();
