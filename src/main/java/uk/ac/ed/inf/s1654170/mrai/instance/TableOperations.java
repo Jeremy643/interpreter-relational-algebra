@@ -278,15 +278,11 @@ public class TableOperations {
 	public static Table Product(Table tA, Table tB) {
 		List<String> attributes = new ArrayList<>(tA.getSignature().getAttributes());
 		attributes.addAll(tB.getSignature().getAttributes());
-		List<Type> attributeTypes = new ArrayList<>(tA.getSignature().getTypes());
+		List<Column.Type> attributeTypes = new ArrayList<>(tA.getSignature().getTypes());
 		attributeTypes.addAll(tB.getSignature().getTypes());
 
 		Signature sig = new BaseSignature(attributes, attributeTypes, tA.getSignature().isOrdered());
 		Table table = new Table(sig, tA.getBagEvaluation());
-
-		List<Column.Type> types = new ArrayList<>();
-		types.addAll(tA.getSignature().getTypes());
-		types.addAll(tB.getSignature().getTypes());
 
 		for (Record rA : tA) {
 			for (Record rB : tB) {
@@ -303,7 +299,7 @@ public class TableOperations {
 					index++;
 				}
 
-				Record rNew = Record.valueOf(types, values);
+				Record rNew = Record.valueOf(attributeTypes, values);
 				table.add(rNew);
 			}
 		}
