@@ -73,13 +73,18 @@ public class App {
 		try {
 			CommandLine cmd = parser.parse(options, args);
 
+			if (cmd.getOptions().length == 0) {
+				formatter.printHelp("java -jar target/mrai-0.1-SNAPSHOT.jar", options);
+				System.exit(0);
+			}
 			if (cmd.hasOption("help")) {
 				formatter.printHelp("java -jar target/mrai-0.1-SNAPSHOT.jar", options);
 				System.exit(0);
 			}
 			if (cmd.hasOption("config") && cmd.getOptions().length > 1) {
 				//if config and other options are used - display message
-				System.out.println("NOTE: Only the config file will be considered.");
+				System.out.println("WARNING: By including other options with the configuration file will cause the relevant values"
+						+ " being held in the file to be ignored.");
 			}
 			// user must provide a config file or else use other relevant options
 			if (cmd.hasOption("config")) {
@@ -113,29 +118,35 @@ public class App {
 					System.exit(1);
 				}
 				bagEvaluation = bagConfig.equals("yes") ? true : false;
-			} else {
-				if (cmd.hasOption("db")) {
-					String databasePath = cmd.getOptionValue("db");
-					folder = new File(databasePath);
-				} else {
-					// No database given - print error and exit
-					System.out.println("ERROR: You must use the \"db\" option to specify a database to use.");
+			}
+			if (cmd.hasOption("db")) {
+				folder = new File(cmd.getOptionValue("db"));
+				if (!folder.isDirectory()) {
+					//path entered is not a valid directory
+					System.out.println(String.format("ERROR: The following is not a valid directory path:\n\"%s\"", folder));
 					System.exit(1);
 				}
-				if (cmd.hasOption("ord")) {
-					// columns are ordered
-					orderedColumns = true;
-				} else {
-					// if option not used then columns are unordered
-					orderedColumns = false;
+			} else {
+				if (!cmd.hasOption("config")) {
+					// No database given - print error and exit
+					System.out.println("ERROR: You must use specify a database either by a configuration file or by using the"
+							+ " option \"-db\".");
+					System.exit(1);
 				}
-				if (cmd.hasOption("bag")) {
-					// bag evaluation
-					bagEvaluation = true;
-				} else {
-					// set evaluation
-					bagEvaluation = false;
-				}
+			}
+			if (cmd.hasOption("ord")) {
+				// columns are ordered
+				orderedColumns = true;
+			} else {
+				// if option not used then columns are unordered
+				orderedColumns = false;
+			}
+			if (cmd.hasOption("bag")) {
+				// bag evaluation
+				bagEvaluation = true;
+			} else {
+				// set evaluation
+				bagEvaluation = false;
 			}
 		} catch (ParseException e3) {
 			System.out.println(e3.getMessage());
@@ -168,6 +179,10 @@ public class App {
 
 		Map<String, List<Record>> tables = new HashMap<>();
 		for (File file : listOfFiles) {
+			if (!file.getName().endsWith(".csv")) {
+				//if file not csv then ignore
+				continue;
+			}
 			String name = file.getName().replace(".csv", "");
 			fileName.add(name);
 
