@@ -31,6 +31,7 @@ import org.apache.commons.csv.CSVRecord;
 
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.asciitable.CWC_LongestLine;
+import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 import uk.ac.ed.inf.s1654170.mrai.exprs.RAExpr;
 import uk.ac.ed.inf.s1654170.mrai.instance.Record;
 import uk.ac.ed.inf.s1654170.mrai.instance.Table;
@@ -285,6 +286,9 @@ public class App {
 				at.addRule();
 				for (Record r : t) {
 					at.addRow(r);
+					at.setTextAlignment(TextAlignment.CENTER);
+					at.setPaddingLeft(1);
+					at.setPaddingRight(1);
 				}
 				at.addRule();
 				CWC_LongestLine cwc = new CWC_LongestLine();
