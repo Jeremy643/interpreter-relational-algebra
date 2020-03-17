@@ -1,6 +1,4 @@
-ID,Name,Age
-STRING,STRING,NUMBER
-s001,Jane,15
-s002,Bill,15
-s003,Tom,18
-s004,Alice,12
+Name,Age,Class
+STRING,NUMBER,STRING
+Hamish,18,s6
+Jane,18,s6
