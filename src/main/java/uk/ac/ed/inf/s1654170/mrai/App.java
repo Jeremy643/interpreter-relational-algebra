@@ -49,7 +49,9 @@ public class App {
 		
 		File folder = null;
 		boolean orderedColumns = false;
+		boolean unorderedColumns = false;
 		boolean bagEvaluation = false;
+		boolean setEvaluation = false;
 
 		// ========================COMMAND-LINE OPTIONS - IMPORTANT========================
 
@@ -59,14 +61,18 @@ public class App {
 		Option dbPath = new Option("db", "database", true, "path to database");
 		dbPath.setArgName("PATH");
 		Option ordered = new Option("ord", "ordered", false, "ordered columns");
+		Option unordered = new Option("unord", "unordered", false, "unordered columns");
 		Option bag = new Option("bag", "bag", false, "bag evaluation");
+		Option set = new Option("set", "set", false, "set evaluation");
 
 		Options options = new Options();
 		options.addOption(help);
 		options.addOption(config);
 		options.addOption(dbPath);
 		options.addOption(ordered);
+		options.addOption(unordered);
 		options.addOption(bag);
+		options.addOption(set);
 
 		CommandLineParser parser = new DefaultParser();
 		HelpFormatter formatter = new HelpFormatter();
@@ -83,7 +89,7 @@ public class App {
 			}
 			if (cmd.hasOption("config") && cmd.getOptions().length > 1) {
 				//if config and other options are used - display message
-				System.out.println("WARNING: By including other options with the configuration file will cause the relevant values"
+				System.out.println("WARNING: By including other options with the configuration file this will cause the relevant values"
 						+ " being held in the file to be ignored.");
 			}
 			// user must provide a config file or else use other relevant options
@@ -112,12 +118,14 @@ public class App {
 					System.exit(1);
 				}
 				orderedColumns = orderedConfig.equals("yes") ? true : false;
+				unorderedColumns = orderedColumns ? false : true;
 				String bagConfig = prop.getProperty("bag_evaluation");
 				if (!bagConfig.equals("yes") && !bagConfig.equals("no")) {
 					System.out.println(String.format("ERROR: bag_evaluation should be a \"yes\" or a \"no\", not \"%s\".", bagConfig));
 					System.exit(1);
 				}
 				bagEvaluation = bagConfig.equals("yes") ? true : false;
+				setEvaluation = bagEvaluation ? false : true;
 			}
 			if (cmd.hasOption("db")) {
 				folder = new File(cmd.getOptionValue("db"));
@@ -135,17 +143,31 @@ public class App {
 				}
 			}
 			if (cmd.hasOption("ord")) {
-				// columns are ordered
+				// columns are ordered - default
 				orderedColumns = true;
-			} else {
-				// if option not used then columns are unordered
+				unorderedColumns = false;
+			}
+			if (cmd.hasOption("unord") && !cmd.hasOption("ord")) {
+				// columns are unordered
+				unorderedColumns = true;
+			}
+			if (orderedColumns && unorderedColumns) {
+				// config file gives orderedColumns true and unord option used as well
+				unorderedColumns = true;
 				orderedColumns = false;
 			}
 			if (cmd.hasOption("bag")) {
-				// bag evaluation
+				// bag evaluation - default
 				bagEvaluation = true;
-			} else {
+				setEvaluation = false;
+			}
+			if (cmd.hasOption("set") && !cmd.hasOption("bag")) {
 				// set evaluation
+				setEvaluation = true;
+			}
+			if (bagEvaluation && setEvaluation) {
+				// config file gives bagEvaluation true and set option used as well
+				setEvaluation = true;
 				bagEvaluation = false;
 			}
 		} catch (ParseException e3) {
@@ -231,7 +253,7 @@ public class App {
 				index++;
 			}
 		}
-
+		
 		Schema sch = new Schema(fileName, attributes, attributeTypes, orderedColumns);
 
 		Database db = new Database(sch);
@@ -264,6 +286,24 @@ public class App {
 					String fmt = "%s: %s";
 					System.out.println(String.format(fmt, name, db.getSchema().getSignature(name)));
 				}
+				continue;
+			}
+			if (input.toLowerCase().trim().equals("\\settings")) {
+				// display configuration
+				if (orderedColumns) {
+					System.out.println("Columns = ordered");
+				} else {
+					System.out.println("Columns = unordered");
+				}
+				if (bagEvaluation) {
+					System.out.println("Evaluation = bags");
+				} else {
+					System.out.println("Evaluation = sets");
+				}
+				continue;
+			}
+			if (input.toLowerCase().trim().equals("\\configure")) {
+				// change the configuration of ordered/unordered or bags/sets
 				continue;
 			}
 			if (input.toLowerCase().trim().equals("\\help")) {
