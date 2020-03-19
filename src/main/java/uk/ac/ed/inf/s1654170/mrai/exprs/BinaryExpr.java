@@ -49,7 +49,7 @@ public abstract class BinaryExpr extends RAExpr {
 		if (this.getType() == RAExpr.Type.PRODUCT) {
 			for (String rAttr : r.getAttributes()) {
 				if (l.getAttributes().contains(rAttr)) {
-					throw new SchemaException(SchemaException.ErrorMessage.NO_SAME_ATTR.getErrorMessage());
+					throw new SchemaException(SchemaException.ErrorMessage.PRODUCT_ERROR.getErrorMessage());
 				}
 			}
 			return Utils.concat(l, r);

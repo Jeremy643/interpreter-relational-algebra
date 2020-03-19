@@ -9,10 +9,12 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
+import java.util.Set;
 
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStream;
@@ -219,17 +221,29 @@ public class App {
 			int index = 0;
 			List<Record> tableRecords = new ArrayList<>();
 			List<Type> types = new ArrayList<>();
-			for (CSVRecord record : records) {
+			recordLoop: for (CSVRecord record : records) {
 				int size = record.size();
 				switch (index) {
 				case 0:
 					String attr = "";
+					List<String> dupAttr = new ArrayList<>();
 					for (int i = 0; i < size; i++) {
+						dupAttr.add(record.get(i));
 						if (i == size - 1) {
 							attr += record.get(i);
 						} else {
 							attr += record.get(i) + ",";
 						}
+					}
+					// check for duplicate attributes
+					Set<String> dupSetAttr = new HashSet<>(dupAttr);
+					if (dupAttr.size() != dupSetAttr.size()) {
+						// display error and don't include in database
+						fileName.remove(name);
+						System.out.println(
+								String.format("WARNING: The relation \"%s\" contains duplicate attributes and will"
+										+ " therefore not be included in the database.", name));
+						break recordLoop;
 					}
 					attributes.add(attr.trim().replaceAll("\\s+", " "));
 					break;
