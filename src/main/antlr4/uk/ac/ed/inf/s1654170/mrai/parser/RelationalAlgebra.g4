@@ -8,7 +8,7 @@ RIGHT_BRACKET:          ')';
 LEFT_SQUARE_BRACKET:    '[';
 RIGHT_SQUARE_BRACKET:   ']';
 SINGLE_QUOTE:           '\'';
-NAME:                   (LETTER(LETTER|DIGIT)*)|DIGIT+;
+NAME:                   (LETTER(LETTER|DIGIT|' ')*)|DIGIT+;
 PROJECTION:             '<P>';
 RENAMING:             	'<R>';
 PRODUCT:                '<X>';

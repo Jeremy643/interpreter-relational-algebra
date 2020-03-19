@@ -20,7 +20,7 @@ public class BuildExpr extends RelationalAlgebraBaseListener {
 	
 	@Override
 	public void enterBaseRelation(RelationalAlgebraParser.BaseRelationContext ctx) {
-		RAExpr base = new Base(ctx.getChild(0).getText());
+		RAExpr base = new Base(ctx.getChild(0).getText().trim().replaceAll("\\s+", " "));
 		exprPart.push(base);
 	}
 	
@@ -30,11 +30,11 @@ public class BuildExpr extends RelationalAlgebraBaseListener {
 		boolean constant;
 		if (ctx.getChild(0).getText().equals("'")) {
 			constant = true;
-			Term term = new Term(ctx.getChild(1).getText(), constant);
+			Term term = new Term(ctx.getChild(1).getText().trim().replaceAll("\\s+", " "), constant);
 			terms.push(term);
 		} else {
 			constant = false;
-			Term term = new Term(ctx.getChild(0).getText(), constant);
+			Term term = new Term(ctx.getChild(0).getText().trim().replaceAll("\\s+", " "), constant);
 			terms.push(term);
 		}
 	}
@@ -46,7 +46,7 @@ public class BuildExpr extends RelationalAlgebraBaseListener {
 			if (ctx.getChild(i).getText().equals(",")) {
 				continue;
 			} else {
-				attributes.add(ctx.getChild(i).getText());
+				attributes.add(ctx.getChild(i).getText().trim().replaceAll("\\s+", " "));
 			}
 		}
 	}
@@ -61,9 +61,9 @@ public class BuildExpr extends RelationalAlgebraBaseListener {
 				continue;
 			} else {
 				if (i == 0) {
-					key = ctx.getChild(i).getText();
+					key = ctx.getChild(i).getText().trim().replaceAll("\\s+", " ");
 				} else {
-					value = ctx.getChild(i).getText();
+					value = ctx.getChild(i).getText().trim().replaceAll("\\s+", " ");
 				}
 			}
 		}

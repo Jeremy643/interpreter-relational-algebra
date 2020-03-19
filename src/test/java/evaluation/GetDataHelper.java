@@ -58,17 +58,17 @@ public class GetDataHelper {
 								attr += record.get(i) + ",";
 							}
 						}
-						attributes.add(attr);
+						attributes.add(attr.trim().replaceAll("\\s+", " "));
 						break;
 					case 1:
 						String type = "";
 						for (int i = 0; i < size; i++) {
 							if (i == size-1) {
-								type += record.get(i);
+								type += record.get(i).trim();
 							} else {
-								type += record.get(i) + ",";
+								type += record.get(i).trim() + ",";
 							}
-							types.add(Type.valueOf(record.get(i)));
+							types.add(Type.valueOf(record.get(i).trim()));
 						}
 						attributeTypes.add(type);
 						break;
