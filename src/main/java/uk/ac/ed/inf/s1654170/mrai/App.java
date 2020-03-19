@@ -93,6 +93,10 @@ public class App {
 				System.out.println("WARNING: By including other options with the configuration file this will cause the relevant values"
 						+ " being held in the file to be ignored.");
 			}
+			if (!cmd.hasOption("config") && cmd.hasOption("db") && cmd.getOptions().length < 3) {
+				// display warning message about defualt setting
+				System.out.println("WARNING: The defualt setting is; columns=unordered, evaluation=sets.");
+			}
 			// user must provide a config file or else use other relevant options
 			if (cmd.hasOption("config")) {
 				String configPath = cmd.getOptionValue("config");
