@@ -42,7 +42,42 @@ public class Rename extends RAExpr {
 	public Signature signature(Schema s) throws SchemaException {
 		Signature sigRel = relation.signature(s);
 		
-		if (sigRel.isOrdered()) {
+		Set<String> attrSet = new HashSet<>(sigRel.getAttributes());
+		List<Column.Type> type = new ArrayList<>(sigRel.getTypes());
+		
+		if (attrSet.size() != sigRel.getAttributes().size()) {
+			//throw error if there are duplicate attribute names
+			throw new SchemaException(SchemaException.ErrorMessage.DUPLICATE_ATTR.getErrorMessage());
+		}
+		
+		List<String> oldName = new ArrayList<>(attributes.keySet());
+		Set<String> newName = new HashSet<>(attributes.values());
+
+		for (String n : newName) {
+			/*
+			 * if we are renaming an attribute to the same name as another attribute
+			 * that already exists and that attribute itself is not being renamed or
+			 * it is being renamed but to the same name then throw error
+			 */
+			if (attrSet.contains(n) && (!oldName.contains(n) || (oldName.contains(n) && attributes.get(n).equals(n)))) {
+				throw new SchemaException(SchemaException.ErrorMessage.RENAME_ERROR.getErrorMessage());
+			}
+		}
+		
+		List<String> attrList = new ArrayList<>(sigRel.getAttributes());
+		if (!attrList.containsAll(oldName) || oldName.size() != newName.size()) {
+			throw new SchemaException(SchemaException.ErrorMessage.RENAME_ERROR.getErrorMessage());
+		} else {
+			for (int i = 0; i < attrList.size(); i++) {
+				if (oldName.contains(attrList.get(i))) {
+					String tempVal = attrList.remove(i);
+					attrList.add(i, attributes.get(tempVal));
+				}
+			}
+			return new BaseSignature(attrList,type,sigRel.isOrdered());
+		}
+		
+		/*if (sigRel.isOrdered()) {
 			List<String> attr = new ArrayList<>(sigRel.getAttributes());
 			List<Column.Type> type = new ArrayList<>(sigRel.getTypes());
 			
@@ -90,7 +125,7 @@ public class Rename extends RAExpr {
 				}
 				return new BaseSignature(attrList,type,false);
 			}
-		}
+		}*/
 	}
 
 	@Override

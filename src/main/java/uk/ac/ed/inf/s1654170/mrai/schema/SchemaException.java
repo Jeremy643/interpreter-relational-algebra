@@ -16,6 +16,7 @@ public class SchemaException extends Exception {
 		ORDERED_SIGNATURE_ERROR		("The types do not match."),
 		UNORDERED_SIGNATURE_ERROR	("There is a mistake in your attributes."),
 		NO_SAME_ATTR				("The input arguments must have the same attributes and types."),
+		DUPLICATE_ATTR				("There are duplicate attributes."),
 		WRONG_TYPES					("The attributes do not share the same types.");
 
 		private final String errorMsg;
