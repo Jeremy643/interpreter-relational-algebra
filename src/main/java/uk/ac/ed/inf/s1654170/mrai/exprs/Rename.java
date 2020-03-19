@@ -71,7 +71,7 @@ public class Rename extends RAExpr {
 			
 			List<String> oldName = new ArrayList<>(attributes.keySet());
 			Set<String> newName = new HashSet<>(attributes.values());
-			
+
 			for (String n : newName) {
 				if (attrSet.contains(n)) {
 					throw new SchemaException(SchemaException.ErrorMessage.RENAME_ERROR.getErrorMessage());

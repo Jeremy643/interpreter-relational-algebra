@@ -317,6 +317,16 @@ public class App {
 						unorderedColumns = true;
 						orderedColumns = false;
 						sch = new Schema(fileName, attributes, attributeTypes, orderedColumns);
+						db = new Database(sch, bagEvaluation);
+						for (String name : fileName) {
+							Table table = new Table(sch.getSignature(name));
+							table.addAll(tables.get(name));
+							try {
+								db.add(name, table);
+							} catch (Exception e1) {
+								e1.printStackTrace();
+							}
+						}
 					}
 				} else {
 					System.out.println("Set columns... ordered?[y/n]");
@@ -326,6 +336,16 @@ public class App {
 						orderedColumns = true;
 						unorderedColumns = false;
 						sch = new Schema(fileName, attributes, attributeTypes, orderedColumns);
+						db = new Database(sch, bagEvaluation);
+						for (String name : fileName) {
+							Table table = new Table(sch.getSignature(name));
+							table.addAll(tables.get(name));
+							try {
+								db.add(name, table);
+							} catch (Exception e1) {
+								e1.printStackTrace();
+							}
+						}
 					}
 				}
 				if (bagEvaluation) {
