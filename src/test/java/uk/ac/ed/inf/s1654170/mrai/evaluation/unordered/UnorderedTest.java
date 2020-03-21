@@ -1,4 +1,4 @@
-package evaluation;
+package uk.ac.ed.inf.s1654170.mrai.evaluation.unordered;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -7,6 +7,7 @@ import java.io.IOException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import uk.ac.ed.inf.s1654170.mrai.evaluation.GetDataHelper;
 import uk.ac.ed.inf.s1654170.mrai.schema.Database;
 
 class UnorderedTest {

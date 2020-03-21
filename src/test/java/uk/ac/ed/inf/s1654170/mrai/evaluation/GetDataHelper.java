@@ -1,4 +1,4 @@
-package evaluation;
+package uk.ac.ed.inf.s1654170.mrai.evaluation;
 
 import java.io.File;
 import java.io.FileReader;
@@ -25,7 +25,7 @@ public class GetDataHelper {
 		ArrayList<String> fileName = new ArrayList<>();
 		
 		File dirPath = new File(System.getProperty("user.dir"));
-		File folder = new File(dirPath, "src/test/java/evaluation");
+		File folder = new File(dirPath, "src/test/java/uk/ac/ed/inf/s1654170/mrai/evaluation");
 		File[] listOfFiles = folder.listFiles();
 		
 		ArrayList<String> attributes = new ArrayList<>();

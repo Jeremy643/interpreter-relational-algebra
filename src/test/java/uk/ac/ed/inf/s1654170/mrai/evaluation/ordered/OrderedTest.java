@@ -1,67 +1,150 @@
-//package evaluation;
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//
-//import java.io.IOException;
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//import org.junit.jupiter.api.BeforeAll;
-//import org.junit.jupiter.api.Test;
-//
-//import uk.ac.ed.inf.s1654170.mrai.exprs.*;
-//import uk.ac.ed.inf.s1654170.mrai.instance.*;
-//import uk.ac.ed.inf.s1654170.mrai.schema.*;
-//
-//class OrderedTest {
-//
-//	private static Database dbBags;
-//	private static Database dbSets;
-//	private static boolean ordered = true;
-//	private static boolean bags = true;
-//
-//	@BeforeAll
-//	static void readData() throws IOException {
-//		dbBags = GetDataHelper.readData(ordered, bags);
-//		dbSets = GetDataHelper.readData(ordered, !bags);
-//	}
-//
+package uk.ac.ed.inf.s1654170.mrai.evaluation.ordered;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVRecord;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import uk.ac.ed.inf.s1654170.mrai.evaluation.GetDataHelper;
+import uk.ac.ed.inf.s1654170.mrai.exprs.Base;
+import uk.ac.ed.inf.s1654170.mrai.exprs.Eliminate;
+import uk.ac.ed.inf.s1654170.mrai.exprs.RAExpr;
+import uk.ac.ed.inf.s1654170.mrai.exprs.Union;
+import uk.ac.ed.inf.s1654170.mrai.instance.Record;
+import uk.ac.ed.inf.s1654170.mrai.instance.Table;
+import uk.ac.ed.inf.s1654170.mrai.schema.BaseSignature;
+import uk.ac.ed.inf.s1654170.mrai.schema.Column.Type;
+import uk.ac.ed.inf.s1654170.mrai.schema.Database;
+import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
+import uk.ac.ed.inf.s1654170.mrai.schema.Signature;
+
+class OrderedTest {
+
+	private static Database dbBags;
+	private static Database dbSets;
+	private static boolean ordered = true;
+	private static boolean bags = true;
+	
+	private Table getExpectedTable(String expr) throws IOException {
+		String expectedPath = System.getProperty("user.dir") + "/src/test/java/uk/ac/ed/inf/s1654170/mrai/evaluation/ordered/";
+		InputStream configStream = new FileInputStream(expectedPath + "expected.properties");
+		Properties prop = new Properties();
+		try {
+			prop.load(configStream);
+		} catch (Exception e) {
+			System.out.println("ERROR: " + e.getMessage());
+			System.exit(1);
+		}
+		
+		String file = expectedPath + String.valueOf(prop.getProperty(expr.replaceAll("\\s+", "")));
+		File resultFile = new File(file);
+		Reader in = new FileReader(resultFile);
+		Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
+		
+		int index = 0;
+		List<Record> tableRecords = new ArrayList<>();
+		List<String> attributes = new ArrayList<>();
+		List<Type> types = new ArrayList<>();
+		for (CSVRecord record : records) {
+			int size = record.size();
+			switch (index) {
+				case 0:
+					for (int i = 0; i < size; i++) {
+						attributes.add(record.get(i).trim().replaceAll("\\s+", " "));
+					}
+					break;
+				case 1:
+					for (int i = 0; i < size; i++) {
+						types.add(Type.valueOf(record.get(i).trim()));
+					}
+					break;
+				default:
+					String[] values = new String[size];
+					for (int i = 0; i < size; i++) {
+						values[i] = record.get(i);
+					}
+					Record r = Record.valueOf(types, values);
+					tableRecords.add(r);
+					break;
+			}
+			index++;
+		}
+		Signature sig = new BaseSignature(attributes, types, ordered);
+		Table table = new Table(sig);
+		table.addAll(tableRecords);
+			
+		return table;
+	}
+
+	@BeforeAll
+	static void readData() throws IOException {
+		dbBags = GetDataHelper.readData(ordered, bags);
+		dbSets = GetDataHelper.readData(ordered, !bags);
+	}
+
+	@Test
+	void testBaseBags() throws SchemaException {
+		RAExpr e = new Base("Students");
+		Signature studentSig = dbBags.getSchema().getSignature("Students");
+		Table expected = new Table(studentSig);
+		expected.add(Record.valueOf(studentSig.getTypes(), "Hamish", "18", "s6"));
+		expected.add(Record.valueOf(studentSig.getTypes(), "Jane", "18", "s6"));
+		assertEquals(expected, e.execute(dbBags));
+	}
+
+	@Test
+	void testBaseSets() throws SchemaException {
+		RAExpr e = new Base("SportStudents");
+		Signature sportStudentSig = dbSets.getSchema().getSignature("SportStudents");
+		Table expected = new Table(sportStudentSig);
+		expected.add(Record.valueOf(sportStudentSig.getTypes(), "Hamish", "18", "s6"));
+		expected.add(Record.valueOf(sportStudentSig.getTypes(), "Sarah", "15", "s4"));
+		expected.add(Record.valueOf(sportStudentSig.getTypes(), "Sean", "14", "s3"));
+		assertEquals(expected, e.execute(dbSets));
+	}
+	
 //	@Test
-//	void testBaseBags() throws SchemaException {
-//		RAExpr e = new Base("Students");
-//		Signature studentSig = dbBags.getSchema().getSignature("Students");
-//		Table expected = new Table(studentSig);
-//		expected.add(Record.valueOf(studentSig.getTypes(), "Hamish", "18", "s6"));
-//		expected.add(Record.valueOf(studentSig.getTypes(), "Jane", "18", "s6"));
+//	void testEliminateBags() throws SchemaException {
+//		// <E>(SportStudents)
+//		RAExpr e = new Eliminate(new Base("SportStudents"));
+//		Signature sig = dbBags.getSchema().getSignature("SportStudents");
+//		Table expected = new Table(sig);
+//		expected.add(Record.valueOf(sig.getTypes(), "Hamish", "18", "s6"));
+//		expected.add(Record.valueOf(sig.getTypes(), "Sarah", "15", "s4"));
+//		expected.add(Record.valueOf(sig.getTypes(), "Sean", "14", "s3"));
 //		assertEquals(expected, e.execute(dbBags));
 //	}
-//
+//	
 //	@Test
-//	void testBaseSets() throws SchemaException {
-//		RAExpr e = new Base("SportStudents");
-//		Signature sportStudentSig = dbSets.getSchema().getSignature("SportStudents");
-//		Table expected = new Table(sportStudentSig);
-//		expected.add(Record.valueOf(sportStudentSig.getTypes(), "Hamish", "18", "s6"));
-//		expected.add(Record.valueOf(sportStudentSig.getTypes(), "Sarah", "15", "s4"));
-//		expected.add(Record.valueOf(sportStudentSig.getTypes(), "Sean", "14", "s3"));
+//	void testEliminateSets() throws SchemaException {
+//		// <E>(Parents)
+//		RAExpr e = new Eliminate(new Base("Parents"));
+//		Signature sig = dbSets.getSchema().getSignature("Parents");
+//		Table expected = new Table(sig);
+//		expected.add(Record.valueOf(sig.getTypes(), "Hugo", "3/09/88", "2"));
 //		assertEquals(expected, e.execute(dbSets));
 //	}
-//
-//	@Test
-//	void testUnionBags() throws SchemaException {
-//		// Students <+> SportStudents
-//		RAExpr e = new Union(new Base("Students"), new Base("SportStudents"));
-//		Signature studentSig = dbBags.getSchema().getSignature("Students");
-//		Table expected = new Table(studentSig);
-//		expected.add(Record.valueOf(studentSig.getTypes(), "Hamish", "18", "s6"));
-//		expected.add(Record.valueOf(studentSig.getTypes(), "Jane", "18", "s6"));
-//		expected.add(Record.valueOf(studentSig.getTypes(), "Hamish", "18", "s6"));
-//		expected.add(Record.valueOf(studentSig.getTypes(), "Sarah", "15", "s4"));
-//		expected.add(Record.valueOf(studentSig.getTypes(), "Sean", "14", "s3"));
-//		expected.add(Record.valueOf(studentSig.getTypes(), "Sarah", "15", "s4"));
-//		assertEquals(expected, e.execute(dbBags));
-//	}
-//
+
+	@Test
+	void testUnionBags() throws SchemaException, IOException {
+		// Students <+> SportStudents
+		RAExpr e = new Union(new Base("Students"), new Base("SportStudents"));
+		Table expected = getExpectedTable(e.toString());
+		assertEquals(expected, e.execute(dbBags));
+	}
+
 //	@Test
 //	void testUnionSets() throws SchemaException {
 //		// Students <+> SportStudents
@@ -157,28 +240,6 @@
 //	}
 //	
 //	@Test
-//	void testEliminateBags() throws SchemaException {
-//		// <E>(SportStudents)
-//		RAExpr e = new Eliminate(new Base("SportStudents"));
-//		Signature sig = dbBags.getSchema().getSignature("SportStudents");
-//		Table expected = new Table(sig);
-//		expected.add(Record.valueOf(sig.getTypes(), "Hamish", "18", "s6"));
-//		expected.add(Record.valueOf(sig.getTypes(), "Sarah", "15", "s4"));
-//		expected.add(Record.valueOf(sig.getTypes(), "Sean", "14", "s3"));
-//		assertEquals(expected, e.execute(dbBags));
-//	}
-//	
-//	@Test
-//	void testEliminateSets() throws SchemaException {
-//		// <E>(Parents)
-//		RAExpr e = new Eliminate(new Base("Parents"));
-//		Signature sig = dbSets.getSchema().getSignature("Parents");
-//		Table expected = new Table(sig);
-//		expected.add(Record.valueOf(sig.getTypes(), "Hugo", "3/09/88", "2"));
-//		assertEquals(expected, e.execute(dbSets));
-//	}
-//	
-//	@Test
 //	void testIntersectBags() throws SchemaException {
 //		// Students <I> SportStudents
 //		RAExpr e = new Intersect(new Base("Students"), new Base("SportStudents"));
@@ -220,4 +281,4 @@
 //		expected.add(Record.valueOf(sig.getTypes(), "Hugo", "3/09/88", "2", "London"));
 //		assertEquals(expected, e.execute(dbSets));
 //	}
-//}
+}

@@ -20,12 +20,12 @@ public class BaseSignature implements Signature {
 	public BaseSignature(List<String> attr, List<Type> types, boolean ordered) {
 		this.ordered = ordered;
 		if (attr.size() != types.size()) {
-			throw new RuntimeException();
+			throw new RuntimeException("You must have the same number of attributes as types and vice versa.");
 		}
 		if (ordered == false) {
 			Set<String> attrSet = new HashSet<>(attr);
 			if (attrSet.size() != attr.size()) {
-				throw new RuntimeException();
+				throw new RuntimeException("Duplicate attributes.");
 			}
 		}
 		this.names = new ArrayList<String>(attr);
