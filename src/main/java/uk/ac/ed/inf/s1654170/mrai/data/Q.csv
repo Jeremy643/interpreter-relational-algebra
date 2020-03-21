@@ -1,3 +1,6 @@
-A,B
-NUMBER,NUMBER
-2,2
+B,A
+NUMBER,STRING
+2,x
+1,y
+2,x
+2,y

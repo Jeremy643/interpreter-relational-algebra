@@ -18,11 +18,51 @@ public class TableOperations {
 		Collections.sort(t);
 		return t;
 	}
+	
+	private static Table matchOrder(Table A, Table B) {
+		// swap the columns of B to match the order of columns in A
+		List<String> attrA = new ArrayList<>(A.getSignature().getAttributes());
+		List<String> attrB = new ArrayList<>(B.getSignature().getAttributes());
+		int[] indices = new int[attrA.size()];
+		for (int i = 0; i < attrB.size(); i++) {
+			// get the relevant position in B for each position 1 to A.size()
+			int tBIndex = attrB.indexOf(attrA.get(i));
+			if (tBIndex == i) {
+				indices[i] = -1;
+			} else {
+				indices[i] = tBIndex;
+			}
+		}
+		for (int i = 0; i < B.size(); i++) {
+			int counter = 0;
+			for (int index : indices) {
+				if (index == -1 || index < counter) {
+					/*
+					 * index = -1 - the column in B is already in the right position
+					 * index < counter - stops double swapping 
+					 */
+					continue;
+				} else {
+					Collections.swap(B.get(i), counter, index);
+				}
+				counter++;
+			}
+		}
+		return B;
+	}
 
 	public static Table Union(Table tA, Table tB) {
+		Table newB = new Table(tB.getSignature());
+		for (Record r : tB) {
+			newB.add((Record) r.clone());
+		}
+		if (!tA.getSignature().isOrdered()) {
+			//unordered - swap columns in tB to match tA
+			newB = matchOrder(tA, newB);
+		}
 		Table table = new Table(tA.getSignature());
 		table.addAll(tA);
-		table.addAll(tB);
+		table.addAll(newB);
 		return table;
 	}
 
@@ -30,7 +70,13 @@ public class TableOperations {
 		Table tempA = new Table(tA.getSignature());
 		tempA.addAll(tA);
 		Table tempB = new Table(tB.getSignature());
-		tempB.addAll(tB);
+		for (Record r : tB) {
+			tempB.add((Record) r.clone());
+		}
+		if (!tA.getSignature().isOrdered()) {
+			//unordered - swap columns in tB to match tA
+			tempB = matchOrder(tA, tempB);
+		}
 		Table sortedA = sortRecords(tempA);
 		Table sortedB = sortRecords(tempB);
 
@@ -131,7 +177,13 @@ public class TableOperations {
 		Table tempA = new Table(tA.getSignature());
 		tempA.addAll(tA);
 		Table tempB = new Table(tB.getSignature());
-		tempB.addAll(tB);
+		for (Record r : tB) {
+			tempB.add((Record) r.clone());
+		}
+		if (!tA.getSignature().isOrdered()) {
+			//unordered - swap columns in tB to match tA
+			tempB = matchOrder(tA, tempB);
+		}
 		Table sortedA = sortRecords(tempA);
 		Table sortedB = sortRecords(tempB);
 
@@ -217,7 +269,13 @@ public class TableOperations {
 		Table tempA = new Table(tA.getSignature());
 		tempA.addAll(tA);
 		Table tempB = new Table(tB.getSignature());
-		tempB.addAll(tB);
+		for (Record r : tB) {
+			tempB.add((Record) r.clone());
+		}
+		if (!tA.getSignature().isOrdered()) {
+			//unordered - swap columns in tB to match tA
+			tempB = matchOrder(tA, tempB);
+		}
 		Table sortedA = sortRecords(tempA);
 		Table sortedB = sortRecords(tempB);
 		Table table = new Table(tA.getSignature());
