@@ -77,23 +77,4 @@ public class Record extends ArrayList<DataValue> implements Comparable<Record> {
 		}
 		return 0;
 	}
-	
-	/*@Override
-	public String toString() {
-		String record = "";
-		
-		for (int i = 0; i < this.size(); i++) {
-			if (i == 0) {
-				record += String.format("| %s |", this.get(i));
-			} else {
-				if (i == this.size()-1) {
-					record += String.format(" | %s |\n", this.get(i));
-				} else {
-					record += String.format(" %s", this.get(i));
-				}
-			}
-		}
-		
-		return record;
-	}*/
 }

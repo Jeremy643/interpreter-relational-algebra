@@ -1,3 +1,6 @@
+
+=========================== Help File ===========================
+
 The following are commands that you can run while in the interpreter;
 
 \help - displays this information

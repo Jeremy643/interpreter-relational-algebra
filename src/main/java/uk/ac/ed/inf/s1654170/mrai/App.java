@@ -221,12 +221,12 @@ public class App {
 			int index = 0;
 			List<Record> tableRecords = new ArrayList<>();
 			List<Type> types = new ArrayList<>();
+			List<String> dupAttr = new ArrayList<>();
 			recordLoop: for (CSVRecord record : records) {
 				int size = record.size();
 				switch (index) {
 				case 0:
 					String attr = "";
-					List<String> dupAttr = new ArrayList<>();
 					for (int i = 0; i < size; i++) {
 						dupAttr.add(record.get(i));
 						if (i == size - 1) {
