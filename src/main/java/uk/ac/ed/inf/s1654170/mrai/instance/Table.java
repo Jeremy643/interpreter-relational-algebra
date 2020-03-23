@@ -1,7 +1,6 @@
 package uk.ac.ed.inf.s1654170.mrai.instance;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -60,9 +59,7 @@ public class Table extends ArrayList<Record> {
 					//compare records
 					for (int i = 0; i < this.size(); i++) {
 						Record thisRecord = this.get(i);
-						Collections.sort(thisRecord);
 						Record oTableRecord = oTable.get(i);
-						Collections.sort(oTableRecord);
 						if (!thisRecord.equals(oTableRecord)) {
 							//does not equal
 							return false;

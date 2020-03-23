@@ -25,7 +25,12 @@ public class GetDataHelper {
 		ArrayList<String> fileName = new ArrayList<>();
 		
 		File dirPath = new File(System.getProperty("user.dir"));
-		File folder = new File(dirPath, "src/test/java/uk/ac/ed/inf/s1654170/mrai/evaluation");
+		File folder;
+		if (ordered) {
+			folder = new File(dirPath, "src/test/java/uk/ac/ed/inf/s1654170/mrai/evaluation/ordered");
+		} else {
+			folder = new File(dirPath, "src/test/java/uk/ac/ed/inf/s1654170/mrai/evaluation/unordered");
+		}
 		File[] listOfFiles = folder.listFiles();
 		
 		ArrayList<String> attributes = new ArrayList<>();

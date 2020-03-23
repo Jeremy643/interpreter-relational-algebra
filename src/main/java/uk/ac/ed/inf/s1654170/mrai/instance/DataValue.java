@@ -54,7 +54,7 @@ public class DataValue implements Comparable<DataValue> {
 	@Override
 	public int compareTo(DataValue o) {
 		if (this.type != o.getType()) {
-			throw new RuntimeException("Cannot compare values of different type");
+			throw new RuntimeException("Cannot compare values of different types");
 		}
 		if (this.type == Type.NUMBER) {
 			return this.numberValue.compareTo(o.numberValue);
