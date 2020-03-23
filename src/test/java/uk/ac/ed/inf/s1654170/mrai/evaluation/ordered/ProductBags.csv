@@ -1,0 +1,5 @@
+Name,Birthday,Number of Children,City
+STRING,STRING,NUMBER,STRING
+Hugo,3/09/88,2,Edinburgh
+Hugo,3/09/88,2,London
+Hugo,3/09/88,2,Glasgow
