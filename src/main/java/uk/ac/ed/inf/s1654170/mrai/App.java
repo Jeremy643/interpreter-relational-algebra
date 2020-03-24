@@ -49,7 +49,7 @@ import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
 public class App {
 
 	public static void main(String[] args) throws IOException, Exception {
-		
+
 		File folder = null;
 		boolean orderedColumns = false;
 		boolean unorderedColumns = false;
@@ -188,7 +188,7 @@ public class App {
 		Scanner sc = new Scanner(System.in);
 
 		File[] listOfFiles = folder.listFiles();
-		
+
 		//make sure that there is at least one csv file
 		int counter = 0;
 		for (File f : listOfFiles) {
@@ -272,7 +272,7 @@ public class App {
 				index++;
 			}
 		}
-		
+
 		Schema sch = new Schema(fileName, attributes, attributeTypes, orderedColumns);
 
 		Database db = new Database(sch, bagEvaluation);
@@ -418,21 +418,7 @@ public class App {
 
 			RAExpr e;
 			try {
-				CharStream charStream = CharStreams.fromString(input);
-
-				RelationalAlgebraLexer tl = new RelationalAlgebraLexer(charStream);
-				
-				CommonTokenStream commonTokenStream = new CommonTokenStream(tl);
-				RelationalAlgebraParser tp = new RelationalAlgebraParser(commonTokenStream);
-				tp.setErrorHandler(new BailErrorStrategy());
-
-				ParseTree parseTree = tp.start();
-				BuildExpr buildExpr = new BuildExpr();
-
-				ParseTreeWalker walker = new ParseTreeWalker();
-				walker.walk(buildExpr, parseTree);
-
-				e = buildExpr.getExpr();
+				e = RAExpr.parse(input);
 			} catch (Exception error) {
 				System.out.println("ERROR: You entered something that isn't recognized.");
 				continue;
