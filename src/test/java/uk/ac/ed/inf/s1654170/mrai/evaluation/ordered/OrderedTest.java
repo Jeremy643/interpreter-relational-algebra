@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.csv.CSVFormat;
@@ -41,6 +43,8 @@ class OrderedTest {
 	private static Database dbSets;
 	private static boolean ordered = true;
 	private static boolean bags = true;
+	
+	private static Map<RAExpr,Table> resultMap = new HashMap<>();
 	
 	private Table getExpectedTable(String expr) throws IOException {
 		String expectedPath = System.getProperty("user.dir") + "/src/test/java/uk/ac/ed/inf/s1654170/mrai/evaluation/ordered/";
@@ -94,9 +98,33 @@ class OrderedTest {
 	}
 
 	@BeforeAll
-	static void readData() throws IOException {
+	static void readData() throws IOException, SchemaException {
 		dbBags = GetDataHelper.readData(ordered, bags);
 		dbSets = GetDataHelper.readData(ordered, !bags);
+		
+		String path = System.getProperty("user.dir") + "/src/test/java/uk/ac/ed/inf/s1654170/mrai/evaluation/ordered/";
+		InputStream configStream = new FileInputStream(path + "expected.properties");
+		Properties prop = new Properties();
+		try {
+			prop.load(configStream);
+		} catch (Exception e) {
+			System.out.println("ERROR: " + e.getMessage());
+			System.exit(1);
+		}
+		for (Object o : prop.keySet()) {
+			String k = (String) o;
+			RAExpr e = RAExpr.parse(k);
+			Table t = Table.fromCSV(new File(path + "/" + prop.getProperty(k)));
+			resultMap.put(e, t);
+		}
+	}
+	
+	@Test
+	void test1() throws SchemaException {
+		for (RAExpr e : resultMap.keySet()) {
+			Table t = e.execute(dbSets);
+			assertEquals(resultMap.get(e), t);
+		}
 	}
 
 	@Test
@@ -119,7 +147,7 @@ class OrderedTest {
 		expected.add(Record.valueOf(sportStudentSig.getTypes(), "Sean", "14", "s3"));
 		assertEquals(expected, e.execute(dbSets));
 	}
-	
+
 	@Test
 	void testEliminateBags() throws SchemaException, IOException {
 		// <E>(SportStudents)
