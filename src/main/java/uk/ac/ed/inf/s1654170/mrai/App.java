@@ -16,12 +16,6 @@ import java.util.Properties;
 import java.util.Scanner;
 import java.util.Set;
 
-import org.antlr.v4.runtime.BailErrorStrategy;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -38,9 +32,6 @@ import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 import uk.ac.ed.inf.s1654170.mrai.exprs.RAExpr;
 import uk.ac.ed.inf.s1654170.mrai.instance.Record;
 import uk.ac.ed.inf.s1654170.mrai.instance.Table;
-import uk.ac.ed.inf.s1654170.mrai.parser.BuildExpr;
-import uk.ac.ed.inf.s1654170.mrai.parser.RelationalAlgebraLexer;
-import uk.ac.ed.inf.s1654170.mrai.parser.RelationalAlgebraParser;
 import uk.ac.ed.inf.s1654170.mrai.schema.Column.Type;
 import uk.ac.ed.inf.s1654170.mrai.schema.Database;
 import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
@@ -58,15 +49,15 @@ public class App {
 
 		// ========================COMMAND-LINE OPTIONS - IMPORTANT========================
 
-		Option help = new Option("help", "help", false, "print all options");
-		Option config = new Option("config", "configuration", true, "path to configuration file");
+		Option help = new Option("h", "help", false, "print this help");
+		Option config = new Option("c", "config", true, "path to configuration file");
 		config.setArgName("PATH");
-		Option dbPath = new Option("db", "database", true, "path to database");
+		Option dbPath = new Option("d", "data", true, "path to CSV files");
 		dbPath.setArgName("PATH");
-		Option ordered = new Option("ord", "ordered", false, "ordered columns");
-		Option unordered = new Option("unord", "unordered", false, "unordered columns");
-		Option bag = new Option("bag", "bag", false, "bag evaluation");
-		Option set = new Option("set", "set", false, "set evaluation");
+		Option ordered = new Option("o", "ordered", false, "ordered columns (default: --unordered)\nMutually exclusive with --unordered");
+		Option unordered = new Option("u", "unordered", false, "unordered columns (DEFAULT)\nMutually exclusive with --ordered");
+		Option bag = new Option("b", "bag", false, "bag evaluation (default: sets)\nMutually exclusive with --set");
+		Option set = new Option("s", "set", false, "set evaluation (DEFAULT)\nMutually exclusive with --bag");
 
 		Options options = new Options();
 		options.addOption(help);

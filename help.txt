@@ -11,15 +11,15 @@ The following are commands that you can run while in the interpreter;
 
 The following is a list of the available table operations and how to use them;
 
-Projection - <P>[attr1,attr2,...](relation)
-Renaming - <R>[attr1->attr2,...](relation)
-Product - relation1 <X> relation2
-Union - relation1 <+> relation2
-Union Max - relation1 <U> relation2
-Intersection - relation1 <I> relation2
-Difference - relation1 <D> relation2
-Duplicate Elimination - <E>(relation)
-Selection - <S>[condition](relation) - <S>[attr1='Red' & attr2>'15'](relation)
+Projection - <P>[attr1,attr2,...](expression)
+Renaming - <R>[attr1->attr2,...](expression)
+Product - expression <X> expression
+Union - expression <+> expression
+Union Max - expression <U> expression
+Intersection - expression <I> expression
+Difference - expression <D> expression
+Duplicate Elimination - <E>(expression)
+Selection - <S>[condition](expression) - Example: <S>[attr1='Red' & attr2>'15'](relation)
 	        condition - and : &
 		            or : |
 		            not : ~
