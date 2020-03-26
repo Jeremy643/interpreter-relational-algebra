@@ -9,12 +9,10 @@ import uk.ac.ed.inf.s1654170.mrai.instance.Table;
 public class Database {
 
 	private Schema schema;
-	private boolean bagEval;
 	private HashMap<String, Table> instance;
 
-	public Database(Schema schema, boolean bagEval) {
+	public Database(Schema schema) {
 		this.schema = schema;
-		this.bagEval = bagEval;
 		this.instance = new HashMap<>();
 	}
 	
@@ -24,10 +22,6 @@ public class Database {
 	
 	public Schema getSchema() {
 		return schema;
-	}
-	
-	public boolean getBagEval() {
-		return bagEval;
 	}
 
 	public void add(String n, Table t) throws Exception {

@@ -93,9 +93,9 @@ public class GetDataHelper {
 		
 		Schema sch = new Schema(fileName, attributes, attributeTypes, ordered);
 		
-		db = new Database(sch, bags);
+		db = new Database(sch);
 		for (String name : fileName) {
-			Table table = new Table(sch.getSignature(name));
+			Table table = new Table(sch.getSignature(name), bags);
 			table.addAll(tables.get(name));
 			try {
 				db.add(name, table);

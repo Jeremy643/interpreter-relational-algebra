@@ -1,12 +1,10 @@
 package uk.ac.ed.inf.s1654170.mrai.instance;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,9 +14,9 @@ import org.apache.commons.csv.CSVRecord;
 
 import uk.ac.ed.inf.s1654170.mrai.schema.BaseSignature;
 import uk.ac.ed.inf.s1654170.mrai.schema.Column;
-import uk.ac.ed.inf.s1654170.mrai.schema.Signature;
 import uk.ac.ed.inf.s1654170.mrai.schema.Column.Type;
 import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
+import uk.ac.ed.inf.s1654170.mrai.schema.Signature;
 
 public class Table extends ArrayList<Record> {
 	
@@ -28,19 +26,25 @@ public class Table extends ArrayList<Record> {
 	private static final long serialVersionUID = 2180789515268198297L;
 	
 	private Signature signature;
+	private boolean bags;
 	
-	public Table(Signature signature) {
+	public Table(Signature signature, boolean bags) {
 		this.signature = signature;
+		this.bags = bags;
 	}
 	
 	public Signature getSignature() {
 		return signature;
 	}
 	
+	public boolean getBags() {
+		return bags;
+	}
+	
 	@Override
 	public boolean equals(Object o) {
 		if (o instanceof Table) {
-			Table oTable = new Table(((Table) o).getSignature());
+			Table oTable = new Table(((Table) o).getSignature(), ((Table) o).getBags());
 			oTable.addAll((Table) o);
 			if (signature.isOrdered() && oTable.getSignature().isOrdered()) {
 				//columns are ordered
@@ -94,8 +98,9 @@ public class Table extends ArrayList<Record> {
 	
 	public static Table fromCSV(File f, boolean ord, boolean bags) throws SchemaException, IOException {
 		List<String> attributes = new ArrayList<>();
-		List<String> attributeTypes = new ArrayList<>();
-		Collection<Record> records = bags ? new ArrayList<>() : new HashSet<>();
+		//List<String> attributeTypes = new ArrayList<>();
+		//Collection<Record> records = bags ? new ArrayList<>() : new HashSet<>();
+		List<Record> records = new ArrayList<>();
 		List<Type> types = new ArrayList<>();
 		List<String> dupAttr = new ArrayList<>();
 
@@ -124,16 +129,16 @@ public class Table extends ArrayList<Record> {
 				attributes.add(attr.trim().replaceAll("\\s+", " "));
 				break;
 			case 1:
-				String type = "";
+				//String type = "";
 				for (int i = 0; i < size; i++) {
-					if (i == size - 1) {
+					/*if (i == size - 1) {
 						type += record.get(i).trim();
 					} else {
 						type += record.get(i).trim() + ",";
-					}
+					}*/
 					types.add(Type.valueOf(record.get(i).trim()));
 				}
-				attributeTypes.add(type);
+				//attributeTypes.add(type);
 				break;
 			default:
 				String[] values = new String[size];
@@ -141,12 +146,20 @@ public class Table extends ArrayList<Record> {
 					values[i] = record.get(i);
 				}
 				Record r = Record.valueOf(types, values);
+				if (!bags) {
+					if (!records.contains(r)) {
+						records.add(r);
+						break;
+					} else {
+						break;
+					}
+				}
 				records.add(r);
 				break;
 			}
 			index++;
 		}
-		Table t = new Table(new BaseSignature(attributes,types,ord));
+		Table t = new Table(new BaseSignature(dupAttr,types,ord), bags);
 		t.addAll(records);
 		return t;
 	}

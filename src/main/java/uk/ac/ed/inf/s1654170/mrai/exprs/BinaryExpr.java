@@ -87,38 +87,19 @@ public abstract class BinaryExpr extends RAExpr {
 
 	@Override
 	public Table executeValid(Database db) {
-		if (db.getBagEval()) {
-			//bag evaluation
-			switch (type) {
-			case UNION:
-				return TableOperations.Union(left.executeValid(db), right.executeValid(db));
-			case UNION_MAX:
-				return TableOperations.UnionMax(left.executeValid(db), right.executeValid(db));
-			case PRODUCT:
-				return TableOperations.Product(left.executeValid(db), right.executeValid(db));
-			case INTERSECT:
-				return TableOperations.Intersect(left.executeValid(db), right.executeValid(db));
-			case DIFFERENCE:
-				return TableOperations.Difference(left.executeValid(db), right.executeValid(db));
-			default:
-				throw new RuntimeException("Unknown binary operation");
-			}
-		} else {
-			//set evaluation
-			switch (type) {
-			case UNION:
-				return TableOperations.Eliminate(TableOperations.Union(left.executeValid(db), right.executeValid(db)));
-			case UNION_MAX:
-				return TableOperations.Eliminate(TableOperations.UnionMax(left.executeValid(db), right.executeValid(db)));
-			case PRODUCT:
-				return TableOperations.Eliminate(TableOperations.Product(left.executeValid(db), right.executeValid(db)));
-			case INTERSECT:
-				return TableOperations.Eliminate(TableOperations.Intersect(left.executeValid(db), right.executeValid(db)));
-			case DIFFERENCE:
-				return TableOperations.Eliminate(TableOperations.Difference(left.executeValid(db), right.executeValid(db)));
-			default:
-				throw new RuntimeException("Unknown binary operation");
-			}
+		switch (type) {
+		case UNION:
+			return TableOperations.Union(left.executeValid(db), right.executeValid(db));
+		case UNION_MAX:
+			return TableOperations.UnionMax(left.executeValid(db), right.executeValid(db));
+		case PRODUCT:
+			return TableOperations.Product(left.executeValid(db), right.executeValid(db));
+		case INTERSECT:
+			return TableOperations.Intersect(left.executeValid(db), right.executeValid(db));
+		case DIFFERENCE:
+			return TableOperations.Difference(left.executeValid(db), right.executeValid(db));
+		default:
+			throw new RuntimeException("Unknown binary operation");
 		}
 	}
 }

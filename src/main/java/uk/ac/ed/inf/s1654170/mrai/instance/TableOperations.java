@@ -2,9 +2,11 @@ package uk.ac.ed.inf.s1654170.mrai.instance;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 
 import uk.ac.ed.inf.s1654170.mrai.conditions.*;
 import uk.ac.ed.inf.s1654170.mrai.schema.BaseSignature;
@@ -52,7 +54,7 @@ public class TableOperations {
 	}
 
 	public static Table Union(Table tA, Table tB) {
-		Table newB = new Table(tB.getSignature());
+		Table newB = new Table(tB.getSignature(), tB.getBags());
 		for (Record r : tB) {
 			newB.add((Record) r.clone());
 		}
@@ -60,16 +62,23 @@ public class TableOperations {
 			//unordered - swap columns in tB to match tA
 			newB = matchOrder(tA, newB);
 		}
-		Table table = new Table(tA.getSignature());
+		Table table = new Table(tA.getSignature(), tA.getBags());
 		table.addAll(tA);
 		table.addAll(newB);
-		return table;
+		if (tA.getBags()) {
+			return table;
+		} else {
+			Set<Record> recordSet = new HashSet<>(table);
+			table.clear();
+			table.addAll(recordSet);
+			return table;
+		}
 	}
 
 	public static Table UnionMax(Table tA, Table tB) {
-		Table tempA = new Table(tA.getSignature());
+		Table tempA = new Table(tA.getSignature(), tA.getBags());
 		tempA.addAll(tA);
-		Table tempB = new Table(tB.getSignature());
+		Table tempB = new Table(tB.getSignature(), tB.getBags());
 		for (Record r : tB) {
 			tempB.add((Record) r.clone());
 		}
@@ -83,7 +92,7 @@ public class TableOperations {
 		ListIterator<Record> itA = sortedA.listIterator();
 		ListIterator<Record> itB = sortedB.listIterator();
 
-		Table table = new Table(tA.getSignature());
+		Table table = new Table(tA.getSignature(), tA.getBags());
 
 		// contA = false, when itA has no more values
 		boolean contA = itA.hasNext();
@@ -170,13 +179,20 @@ public class TableOperations {
 			}
 			first = false;
 		}
-		return table;
+		if (tA.getBags()) {
+			return table;
+		} else {
+			Set<Record> recordSet = new HashSet<>(table);
+			table.clear();
+			table.addAll(recordSet);
+			return table;
+		}
 	}
 
 	public static Table Difference(Table tA, Table tB) {
-		Table tempA = new Table(tA.getSignature());
+		Table tempA = new Table(tA.getSignature(), tA.getBags());
 		tempA.addAll(tA);
-		Table tempB = new Table(tB.getSignature());
+		Table tempB = new Table(tB.getSignature(), tB.getBags());
 		for (Record r : tB) {
 			tempB.add((Record) r.clone());
 		}
@@ -190,7 +206,7 @@ public class TableOperations {
 		ListIterator<Record> itA = sortedA.listIterator();
 		ListIterator<Record> itB = sortedB.listIterator();
 
-		Table table = new Table(tA.getSignature());
+		Table table = new Table(tA.getSignature(), tA.getBags());
 
 		// contA = false, when itA has no more values
 		boolean contA = itA.hasNext();
@@ -262,13 +278,20 @@ public class TableOperations {
 			}
 			first = false;
 		}
-		return table;
+		if (tA.getBags()) {
+			return table;
+		} else {
+			Set<Record> recordSet = new HashSet<>(table);
+			table.clear();
+			table.addAll(recordSet);
+			return table;
+		}
 	}
 
 	public static Table Intersect(Table tA, Table tB) {
-		Table tempA = new Table(tA.getSignature());
+		Table tempA = new Table(tA.getSignature(), tA.getBags());
 		tempA.addAll(tA);
-		Table tempB = new Table(tB.getSignature());
+		Table tempB = new Table(tB.getSignature(), tB.getBags());
 		for (Record r : tB) {
 			tempB.add((Record) r.clone());
 		}
@@ -278,7 +301,7 @@ public class TableOperations {
 		}
 		Table sortedA = sortRecords(tempA);
 		Table sortedB = sortRecords(tempB);
-		Table table = new Table(tA.getSignature());
+		Table table = new Table(tA.getSignature(), tA.getBags());
 
 		ListIterator<Record> itA = sortedA.listIterator();
 		ListIterator<Record> itB = sortedB.listIterator();
@@ -329,8 +352,14 @@ public class TableOperations {
 				contB = itB.hasNext();
 			}
 		}
-
-		return table;
+		if (tA.getBags()) {
+			return table;
+		} else {
+			Set<Record> recordSet = new HashSet<>(table);
+			table.clear();
+			table.addAll(recordSet);
+			return table;
+		}
 	}
 
 	public static Table Product(Table tA, Table tB) {
@@ -340,7 +369,7 @@ public class TableOperations {
 		attributeTypes.addAll(tB.getSignature().getTypes());
 
 		Signature sig = new BaseSignature(attributes, attributeTypes, tA.getSignature().isOrdered());
-		Table table = new Table(sig);
+		Table table = new Table(sig, tA.getBags());
 
 		for (Record rA : tA) {
 			for (Record rB : tB) {
@@ -361,15 +390,21 @@ public class TableOperations {
 				table.add(rNew);
 			}
 		}
-
-		return table;
+		if (tA.getBags()) {
+			return table;
+		} else {
+			Set<Record> recordSet = new HashSet<>(table);
+			table.clear();
+			table.addAll(recordSet);
+			return table;
+		}
 	}
 
 	public static Table Eliminate(Table tA) {
-		Table tempA = new Table(tA.getSignature());
+		Table tempA = new Table(tA.getSignature(), tA.getBags());
 		tempA.addAll(tA);
 		Table sortedA = sortRecords(tempA);
-		Table table = new Table(tA.getSignature());
+		Table table = new Table(tA.getSignature(), tA.getBags());
 		Record prev = null;
 		for (Record curr : sortedA) {
 			if (curr.equals(prev)) {
@@ -395,7 +430,7 @@ public class TableOperations {
 		}
 
 		Signature signature = new BaseSignature(attributesTable, typesA, A.getSignature().isOrdered());
-		Table table = new Table(signature);
+		Table table = new Table(signature, A.getBags());
 
 		table.addAll(A);
 		A = table;
@@ -418,7 +453,7 @@ public class TableOperations {
 		// create a signature for the resulting relation
 		Signature signature = new BaseSignature(columns, types, A.getSignature().isOrdered());
 
-		Table table = new Table(signature);
+		Table table = new Table(signature, A.getBags());
 
 		// get the values associated with the relevant attributes
 		for (Record r : A) {
@@ -436,10 +471,10 @@ public class TableOperations {
 	}
 
 	public static Table Select(Condition condition, Table A) {
-		Table tempA = new Table(A.getSignature());
+		Table tempA = new Table(A.getSignature(), A.getBags());
 		tempA.addAll(A);
 		Table sortedA = sortRecords(tempA);
-		Table table = new Table(A.getSignature());
+		Table table = new Table(A.getSignature(), A.getBags());
 
 		// gets comparisons, for example: [Age='16', ID='s001', Name!='Jane']
 		List<Comparison> comparisons = condition.getComparisons();
@@ -663,7 +698,13 @@ public class TableOperations {
 				}
 			}
 		}
-
-		return table;
+		if (A.getBags()) {
+			return table;
+		} else {
+			Set<Record> recordSet = new HashSet<>(table);
+			table.clear();
+			table.addAll(recordSet);
+			return table;
+		}
 	}
 }

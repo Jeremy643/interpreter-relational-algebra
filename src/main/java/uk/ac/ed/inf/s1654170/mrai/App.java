@@ -77,22 +77,22 @@ public class App {
 				formatter.printHelp("java -jar target/mrai-0.1-SNAPSHOT.jar", options);
 				System.exit(0);
 			}
-			if (cmd.hasOption("help")) {
+			if (cmd.hasOption("h")) {
 				formatter.printHelp("java -jar target/mrai-0.1-SNAPSHOT.jar", options);
 				System.exit(0);
 			}
-			if (cmd.hasOption("config") && cmd.getOptions().length > 1) {
+			if (cmd.hasOption("c") && cmd.getOptions().length > 1) {
 				//if config and other options are used - display message
 				System.out.println("WARNING: By including other options with the configuration file this will cause the relevant values"
 						+ " being held in the file to be ignored.");
 			}
-			if (!cmd.hasOption("config") && cmd.hasOption("db") && cmd.getOptions().length < 3) {
+			if (!cmd.hasOption("c") && cmd.hasOption("d") && cmd.getOptions().length < 3) {
 				// display warning message about defualt setting
 				System.out.println("WARNING: The defualt setting is; columns=unordered, evaluation=sets.");
 			}
 			// user must provide a config file or else use other relevant options
-			if (cmd.hasOption("config")) {
-				String configPath = cmd.getOptionValue("config");
+			if (cmd.hasOption("c")) {
+				String configPath = cmd.getOptionValue("c");
 
 				InputStream configStream = new FileInputStream(configPath);
 				Properties prop = new Properties();
@@ -125,27 +125,27 @@ public class App {
 				bagEvaluation = bagConfig.equals("yes") ? true : false;
 				setEvaluation = bagEvaluation ? false : true;
 			}
-			if (cmd.hasOption("db")) {
-				folder = new File(cmd.getOptionValue("db"));
+			if (cmd.hasOption("d")) {
+				folder = new File(cmd.getOptionValue("d"));
 				if (!folder.isDirectory()) {
 					//path entered is not a valid directory
 					System.out.println(String.format("ERROR: The following is not a valid directory path:\n\"%s\"", folder));
 					System.exit(1);
 				}
 			} else {
-				if (!cmd.hasOption("config")) {
+				if (!cmd.hasOption("c")) {
 					// No database given - print error and exit
 					System.out.println("ERROR: You must use specify a database either by a configuration file or by using the"
-							+ " option \"-db\".");
+							+ " option \"-d\".");
 					System.exit(1);
 				}
 			}
-			if (cmd.hasOption("ord")) {
+			if (cmd.hasOption("o")) {
 				// columns are ordered - default
 				orderedColumns = true;
 				unorderedColumns = false;
 			}
-			if (cmd.hasOption("unord") && !cmd.hasOption("ord")) {
+			if (cmd.hasOption("u") && !cmd.hasOption("o")) {
 				// columns are unordered
 				unorderedColumns = true;
 			}
@@ -154,12 +154,12 @@ public class App {
 				unorderedColumns = true;
 				orderedColumns = false;
 			}
-			if (cmd.hasOption("bag")) {
+			if (cmd.hasOption("b")) {
 				// bag evaluation - default
 				bagEvaluation = true;
 				setEvaluation = false;
 			}
-			if (cmd.hasOption("set") && !cmd.hasOption("bag")) {
+			if (cmd.hasOption("s") && !cmd.hasOption("b")) {
 				// set evaluation
 				setEvaluation = true;
 			}
@@ -205,11 +205,12 @@ public class App {
 			}
 			String name = file.getName().replace(".csv", "");  //.trim().replaceAll("\\s+", " ")
 			fileName.add(name);
-
+			
 			Reader in = new FileReader(file);
 			Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
 
 			int index = 0;
+			//Collection<Record> tableRecords = bagEvaluation ? new ArrayList<>() : new HashSet<>();
 			List<Record> tableRecords = new ArrayList<>();
 			List<Type> types = new ArrayList<>();
 			List<String> dupAttr = new ArrayList<>();
@@ -256,19 +257,27 @@ public class App {
 						values[i] = record.get(i);
 					}
 					Record r = Record.valueOf(types, values);
+					if (!bagEvaluation) {
+						if (!tableRecords.contains(r)) {
+							tableRecords.add(r);
+							break;
+						} else {
+							break;
+						}
+					}
 					tableRecords.add(r);
 					break;
 				}
-				tables.put(name, tableRecords);
 				index++;
 			}
+			tables.put(name, tableRecords);
 		}
 
 		Schema sch = new Schema(fileName, attributes, attributeTypes, orderedColumns);
 
-		Database db = new Database(sch, bagEvaluation);
+		Database db = new Database(sch);
 		for (String name : fileName) {
-			Table table = new Table(sch.getSignature(name));
+			Table table = new Table(sch.getSignature(name), bagEvaluation);
 			table.addAll(tables.get(name));
 			try {
 				db.add(name, table);
@@ -322,9 +331,9 @@ public class App {
 						unorderedColumns = true;
 						orderedColumns = false;
 						sch = new Schema(fileName, attributes, attributeTypes, orderedColumns);
-						db = new Database(sch, bagEvaluation);
+						db = new Database(sch);
 						for (String name : fileName) {
-							Table table = new Table(sch.getSignature(name));
+							Table table = new Table(sch.getSignature(name), bagEvaluation);
 							table.addAll(tables.get(name));
 							try {
 								db.add(name, table);
@@ -341,9 +350,9 @@ public class App {
 						orderedColumns = true;
 						unorderedColumns = false;
 						sch = new Schema(fileName, attributes, attributeTypes, orderedColumns);
-						db = new Database(sch, bagEvaluation);
+						db = new Database(sch);
 						for (String name : fileName) {
-							Table table = new Table(sch.getSignature(name));
+							Table table = new Table(sch.getSignature(name), bagEvaluation);
 							table.addAll(tables.get(name));
 							try {
 								db.add(name, table);
@@ -360,9 +369,9 @@ public class App {
 						// change evaluation to sets
 						setEvaluation = true;
 						bagEvaluation = false;
-						db = new Database(sch, bagEvaluation);
+						db = new Database(sch);
 						for (String name : fileName) {
-							Table table = new Table(sch.getSignature(name));
+							Table table = new Table(sch.getSignature(name), bagEvaluation);
 							table.addAll(tables.get(name));
 							try {
 								db.add(name, table);
@@ -378,9 +387,9 @@ public class App {
 						// change evaluation to bags
 						setEvaluation = false;
 						bagEvaluation = true;
-						db = new Database(sch, bagEvaluation);
+						db = new Database(sch);
 						for (String name : fileName) {
-							Table table = new Table(sch.getSignature(name));
+							Table table = new Table(sch.getSignature(name), bagEvaluation);
 							table.addAll(tables.get(name));
 							try {
 								db.add(name, table);

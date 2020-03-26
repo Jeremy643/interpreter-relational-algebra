@@ -56,12 +56,6 @@ public class Project extends RAExpr {
 
 	@Override
 	public Table executeValid(Database db) {
-		if (db.getBagEval()) {
-			//bag evaluation
-			return TableOperations.Project(attributes, expr.executeValid(db));
-		} else {
-			//set evaluation
-			return TableOperations.Eliminate(TableOperations.Project(attributes, expr.executeValid(db)));
-		}
+		return TableOperations.Project(attributes, expr.executeValid(db));
 	}
 }
