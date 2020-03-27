@@ -19,7 +19,7 @@ Union Max - expression <U> expression
 Intersection - expression <I> expression
 Difference - expression <D> expression
 Duplicate Elimination - <E>(expression)
-Selection - <S>[condition](expression) - Example: <S>[attr1='Red' & attr2>'15'](relation)
+Selection - <S>[condition](expression) - Example: <S>[attr1='Red' & attr2>'15'](expression)
 	        condition - and : &
 		            or : |
 		            not : ~

@@ -90,6 +90,11 @@ public class App {
 				// display warning message about defualt setting
 				System.out.println("WARNING: The defualt setting is; columns=unordered, evaluation=sets.");
 			}
+			if ((cmd.hasOption("b") && cmd.hasOption("s")) || (cmd.hasOption("u") && cmd.hasOption("o"))) {
+				//bags/sets and ordered/unordered are mutually exclusive - exit with error message
+				System.out.println("ERROR: You have used mutually exclusive options.");
+				System.exit(1);
+			}
 			// user must provide a config file or else use other relevant options
 			if (cmd.hasOption("c")) {
 				String configPath = cmd.getOptionValue("c");
