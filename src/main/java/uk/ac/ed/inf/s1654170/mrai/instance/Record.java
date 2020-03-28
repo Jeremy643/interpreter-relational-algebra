@@ -47,6 +47,15 @@ public class Record extends ArrayList<DataValue> implements Comparable<Record> {
 	}
 	
 	@Override
+	public int hashCode() {
+		int hash = 1;
+		for (DataValue v : this) {
+			hash *= v.toString().hashCode();
+		}
+		return hash;
+	}
+	
+	@Override
 	public boolean equals(Object o) {
 		if (o instanceof Record && this.size() == ((Record) o).size()) {
 			Record r = (Record) o;

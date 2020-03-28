@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -99,8 +100,8 @@ public class Table extends ArrayList<Record> {
 	public static Table fromCSV(File f, boolean ord, boolean bags) throws SchemaException, IOException {
 		List<String> attributes = new ArrayList<>();
 		//List<String> attributeTypes = new ArrayList<>();
-		//Collection<Record> records = bags ? new ArrayList<>() : new HashSet<>();
-		List<Record> records = new ArrayList<>();
+		Collection<Record> records = bags ? new ArrayList<>() : new HashSet<>();
+		//List<Record> records = new ArrayList<>();
 		List<Type> types = new ArrayList<>();
 		List<String> dupAttr = new ArrayList<>();
 
@@ -146,14 +147,14 @@ public class Table extends ArrayList<Record> {
 					values[i] = record.get(i);
 				}
 				Record r = Record.valueOf(types, values);
-				if (!bags) {
+				/*if (!bags) {
 					if (!records.contains(r)) {
 						records.add(r);
 						break;
 					} else {
 						break;
 					}
-				}
+				}*/
 				records.add(r);
 				break;
 			}

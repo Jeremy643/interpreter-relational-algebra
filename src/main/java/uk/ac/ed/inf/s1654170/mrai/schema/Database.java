@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -90,7 +91,7 @@ public class Database {
 		List<String> attributes = new ArrayList<>();
 		List<String> attributeTypes = new ArrayList<>();
 
-		Map<String, List<Record>> tables = new HashMap<>();
+		Map<String, Collection<Record>> tables = new HashMap<>();
 		for (File file : listOfFiles) {
 			if (!file.getName().endsWith(".csv")) {
 				//if file not csv then ignore
@@ -100,13 +101,13 @@ public class Database {
 			fileName.add(name);
 			
 			Reader in = new FileReader(file);
-			Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
+			Iterable<CSVRecord> csvRecords = CSVFormat.EXCEL.parse(in);
 
 			int index = 0;
-			List<Record> tableRecords = new ArrayList<>();
+			Collection<Record> records = bags ? new ArrayList<>() : new HashSet<>();
 			List<Type> types = new ArrayList<>();
 			List<String> dupAttr = new ArrayList<>();
-			recordLoop: for (CSVRecord record : records) {
+			recordLoop: for (CSVRecord record : csvRecords) {
 				int size = record.size();
 				switch (index) {
 				case 0:
@@ -149,20 +150,12 @@ public class Database {
 						values[i] = record.get(i);
 					}
 					Record r = Record.valueOf(types, values);
-					if (!bags) {
-						if (!tableRecords.contains(r)) {
-							tableRecords.add(r);
-							break;
-						} else {
-							break;
-						}
-					}
-					tableRecords.add(r);
+					records.add(r);
 					break;
 				}
 				index++;
 			}
-			tables.put(name, tableRecords);
+			tables.put(name, records);
 		}
 
 		Schema sch = new Schema(fileName, attributes, attributeTypes, ordered);
