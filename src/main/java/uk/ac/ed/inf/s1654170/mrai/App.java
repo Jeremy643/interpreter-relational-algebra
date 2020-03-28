@@ -181,9 +181,7 @@ public class App {
 
 		// ========================DATABASE DEFINE - IMPORTANT========================
 
-		Scanner sc = new Scanner(System.in);
-
-		File[] listOfFiles = folder.listFiles();
+		/*File[] listOfFiles = folder.listFiles();
 
 		//make sure that there is at least one csv file
 		int counter = 0;
@@ -289,9 +287,13 @@ public class App {
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
-		}
+		}*/
+		
+		Database db = Database.fromCSV(folder, orderedColumns, bagEvaluation);
 
 		// ========================PARSING AND EXECUTION - IMPORTANT========================
+		
+		Scanner sc = new Scanner(System.in);
 
 		System.out.println("A multimodal interpreter for relational algebra by Jeremy Scott.\n"
 				+ "Type \"\\help\" for more information.");
@@ -335,9 +337,10 @@ public class App {
 						// set columns to unordered
 						unorderedColumns = true;
 						orderedColumns = false;
-						sch = new Schema(fileName, attributes, attributeTypes, orderedColumns);
-						db = new Database(sch);
-						for (String name : fileName) {
+						//sch = new Schema(fileName, attributes, attributeTypes, orderedColumns);
+						//db = new Database(sch);
+						db = Database.fromCSV(folder, orderedColumns, bagEvaluation);
+						/*for (String name : fileName) {
 							Table table = new Table(sch.getSignature(name), bagEvaluation);
 							table.addAll(tables.get(name));
 							try {
@@ -345,7 +348,7 @@ public class App {
 							} catch (Exception e1) {
 								e1.printStackTrace();
 							}
-						}
+						}*/
 					}
 				} else {
 					System.out.println("Set columns... ordered?[y/n]");
@@ -354,9 +357,10 @@ public class App {
 						// set columns to ordered
 						orderedColumns = true;
 						unorderedColumns = false;
-						sch = new Schema(fileName, attributes, attributeTypes, orderedColumns);
-						db = new Database(sch);
-						for (String name : fileName) {
+						//sch = new Schema(fileName, attributes, attributeTypes, orderedColumns);
+						//db = new Database(sch);
+						db = Database.fromCSV(folder, orderedColumns, bagEvaluation);
+						/*for (String name : fileName) {
 							Table table = new Table(sch.getSignature(name), bagEvaluation);
 							table.addAll(tables.get(name));
 							try {
@@ -364,7 +368,7 @@ public class App {
 							} catch (Exception e1) {
 								e1.printStackTrace();
 							}
-						}
+						}*/
 					}
 				}
 				if (bagEvaluation) {
@@ -374,8 +378,9 @@ public class App {
 						// change evaluation to sets
 						setEvaluation = true;
 						bagEvaluation = false;
-						db = new Database(sch);
-						for (String name : fileName) {
+						//db = new Database(sch);
+						db = Database.fromCSV(folder, orderedColumns, bagEvaluation);
+						/*for (String name : fileName) {
 							Table table = new Table(sch.getSignature(name), bagEvaluation);
 							table.addAll(tables.get(name));
 							try {
@@ -383,7 +388,7 @@ public class App {
 							} catch (Exception e1) {
 								e1.printStackTrace();
 							}
-						}
+						}*/
 					}
 				} else {
 					System.out.println("Set evaluation... bags?[y/n]");
@@ -392,8 +397,9 @@ public class App {
 						// change evaluation to bags
 						setEvaluation = false;
 						bagEvaluation = true;
-						db = new Database(sch);
-						for (String name : fileName) {
+						//db = new Database(sch);
+						db = Database.fromCSV(folder, orderedColumns, bagEvaluation);
+						/*for (String name : fileName) {
 							Table table = new Table(sch.getSignature(name), bagEvaluation);
 							table.addAll(tables.get(name));
 							try {
@@ -401,7 +407,7 @@ public class App {
 							} catch (Exception e1) {
 								e1.printStackTrace();
 							}
-						}
+						}*/
 					}
 				}
 				continue;
