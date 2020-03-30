@@ -83,6 +83,14 @@ public class GetDataHelper {
 							values[i] = record.get(i);
 						}
 						Record r = Record.valueOf(types, values);
+						if (!bags) {
+							if (!tableRecords.contains(r)) {
+								tableRecords.add(r);
+								break;
+							} else {
+								break;
+							}
+						}
 						tableRecords.add(r);
 						break;
 				}

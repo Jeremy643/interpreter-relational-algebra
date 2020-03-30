@@ -1,6 +1,7 @@
 //package uk.ac.ed.inf.s1654170.mrai.evaluation.ordered;
 //
 //import static org.junit.jupiter.api.Assertions.assertEquals;
+//import static org.junit.jupiter.api.Assertions.assertTrue;
 //
 //import java.io.File;
 //import java.io.FileInputStream;
@@ -46,61 +47,64 @@
 //	
 //	private static Map<RAExpr,Table> resultMap = new HashMap<>();
 //	
-//	private Table getExpectedTable(String expr) throws IOException {
-//		String expectedPath = System.getProperty("user.dir") + "/src/test/java/uk/ac/ed/inf/s1654170/mrai/evaluation/ordered/";
-//		InputStream configStream = new FileInputStream(expectedPath + "expected.properties");
-//		Properties prop = new Properties();
-//		try {
-//			prop.load(configStream);
-//		} catch (Exception e) {
-//			System.out.println("ERROR: " + e.getMessage());
-//			System.exit(1);
-//		}
-//		
-//		String file = expectedPath + String.valueOf(prop.getProperty(expr.replaceAll("\\s+", "")));
-//		File resultFile = new File(file);
-//		Reader in = new FileReader(resultFile);
-//		Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
-//		
-//		int index = 0;
-//		List<Record> tableRecords = new ArrayList<>();
-//		List<String> attributes = new ArrayList<>();
-//		List<Type> types = new ArrayList<>();
-//		for (CSVRecord record : records) {
-//			int size = record.size();
-//			switch (index) {
-//				case 0:
-//					for (int i = 0; i < size; i++) {
-//						attributes.add(record.get(i).trim().replaceAll("\\s+", " "));
-//					}
-//					break;
-//				case 1:
-//					for (int i = 0; i < size; i++) {
-//						types.add(Type.valueOf(record.get(i).trim()));
-//					}
-//					break;
-//				default:
-//					String[] values = new String[size];
-//					for (int i = 0; i < size; i++) {
-//						values[i] = record.get(i);
-//					}
-//					Record r = Record.valueOf(types, values);
-//					tableRecords.add(r);
-//					break;
-//			}
-//			index++;
-//		}
-//		Signature sig = new BaseSignature(attributes, types, ordered);
-//		Table table = new Table(sig);
-//		table.addAll(tableRecords);
-//			
-//		return table;
-//	}
+////	private Table getExpectedTable(String expr) throws IOException {
+////		String expectedPath = System.getProperty("user.dir") + "/src/test/java/uk/ac/ed/inf/s1654170/mrai/evaluation/ordered/";
+////		InputStream configStream = new FileInputStream(expectedPath + "expected.properties");
+////		Properties prop = new Properties();
+////		try {
+////			prop.load(configStream);
+////		} catch (Exception e) {
+////			System.out.println("ERROR: " + e.getMessage());
+////			System.exit(1);
+////		}
+////		
+////		String file = expectedPath + String.valueOf(prop.getProperty(expr.replaceAll("\\s+", "")));
+////		File resultFile = new File(file);
+////		Reader in = new FileReader(resultFile);
+////		Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
+////		
+////		int index = 0;
+////		List<Record> tableRecords = new ArrayList<>();
+////		List<String> attributes = new ArrayList<>();
+////		List<Type> types = new ArrayList<>();
+////		for (CSVRecord record : records) {
+////			int size = record.size();
+////			switch (index) {
+////				case 0:
+////					for (int i = 0; i < size; i++) {
+////						attributes.add(record.get(i).trim().replaceAll("\\s+", " "));
+////					}
+////					break;
+////				case 1:
+////					for (int i = 0; i < size; i++) {
+////						types.add(Type.valueOf(record.get(i).trim()));
+////					}
+////					break;
+////				default:
+////					String[] values = new String[size];
+////					for (int i = 0; i < size; i++) {
+////						values[i] = record.get(i);
+////					}
+////					Record r = Record.valueOf(types, values);
+////					tableRecords.add(r);
+////					break;
+////			}
+////			index++;
+////		}
+////		Signature sig = new BaseSignature(attributes, types, ordered);
+////		Table table = new Table(sig);
+////		table.addAll(tableRecords);
+////			
+////		return table;
+////	}
 //
 //	@BeforeAll
 //	static void readData() throws IOException, SchemaException {
-//		dbBags = GetDataHelper.readData(ordered, bags);
-//		dbSets = GetDataHelper.readData(ordered, !bags);
+//		//dbBags = GetDataHelper.readData(ordered, bags);
+//		//dbSets = GetDataHelper.readData(ordered, !bags);
+//		File folder = new File(System.getProperty("user.dir") + "/src/test/java/uk/ac/ed/inf/s1654170/mrai/evaluation/ordered/");
+//		dbBags = Database.fromCSV(folder, ordered, bags);
+//		dbSets = Database.fromCSV(folder, ordered, !bags);
 //		
 //		String path = System.getProperty("user.dir") + "/src/test/java/uk/ac/ed/inf/s1654170/mrai/evaluation/ordered/";
 //		InputStream configStream = new FileInputStream(path + "expected.properties");
@@ -119,15 +123,25 @@
 //		}
 //	}
 //	
-//	/*@Test
+//	@Test
 //	void test1() throws SchemaException {
+//		System.out.println("\n==================== Test 1 ====================\n");
+//		boolean allPassed = true;
 //		for (RAExpr e : resultMap.keySet()) {
 //			Table t = e.execute(dbSets);
-//			assertEquals(resultMap.get(e), t);
+//			//assertEquals(resultMap.get(e), t);
+//			if (resultMap.get(e).equals(t)) {
+//				System.out.println("PASSED! - " + e.toString());
+//			} else {
+//				allPassed = false;
+//				//System.out.println("FAILED! - " + e.toString() + " Exp);
+//				System.out.println(String.format("FAILED! - %s | Expected: %s Actual: %s", e.toString(), resultMap.get(e), t));
+//			}
 //		}
-//	}*/
+//		assertTrue(allPassed);
+//	}
 //
-//	@Test
+//	/*@Test
 //	void testBaseBags() throws SchemaException {
 //		RAExpr e = new Base("Students");
 //		Signature studentSig = dbBags.getSchema().getSignature("Students");
@@ -280,5 +294,5 @@
 ////		expected.add(Record.valueOf(sig.getTypes(), "Hugo", "3/09/88", "2", "Glasgow"));
 ////		expected.add(Record.valueOf(sig.getTypes(), "Hugo", "3/09/88", "2", "London"));
 ////		assertEquals(expected, e.execute(dbSets));
-////	}
+////	}*/
 //}
