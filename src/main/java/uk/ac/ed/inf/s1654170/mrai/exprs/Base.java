@@ -23,6 +23,14 @@ public class Base extends RAExpr {
 	public String toString() {
 		return name;
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Base && this.name.equals(((Base) o).name)) {
+			return true;
+		}
+		return false;
+	}
 
 	@Override
 	public Signature signature(Schema s) throws SchemaException {

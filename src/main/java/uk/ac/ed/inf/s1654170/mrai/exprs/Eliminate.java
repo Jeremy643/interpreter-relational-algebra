@@ -20,6 +20,18 @@ public class Eliminate extends RAExpr {
 	public String toString() {
 		return String.format("%s(%s)", Type.ELIMINATE.getConnective(), expr);
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof Eliminate) {
+			if (this.expr.equals(((Eliminate) o).expr)) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		return false;
+	}
 
 	@Override
 	public Signature signature(Schema s) throws SchemaException {
