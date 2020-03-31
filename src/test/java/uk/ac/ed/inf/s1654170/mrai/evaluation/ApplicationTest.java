@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -11,7 +12,10 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import uk.ac.ed.inf.s1654170.mrai.conditions.And;
 import uk.ac.ed.inf.s1654170.mrai.conditions.Condition;
@@ -30,6 +34,7 @@ import uk.ac.ed.inf.s1654170.mrai.instance.Table;
 import uk.ac.ed.inf.s1654170.mrai.schema.Database;
 import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ApplicationTest {
 
 	private static Database dbOrderedBags;
@@ -43,11 +48,12 @@ class ApplicationTest {
 	private static final String ORDERED_PATH = PATH + "ordered/";
 	private static final String UNORDERED_PATH = PATH + "unordered/";
 	
-	private static Map<RAExpr,Table> resultMap = new HashMap<>();
+	private static Map<RAExpr, Table> operationMap = new HashMap<>();
 	private static Map<String, String> parsingMap = new HashMap<>();
+	private static Map<RAExpr, Boolean> validationMap = new HashMap<>();
 	
-	private static Map<RAExpr, Table> getResultMap(String propName, boolean ordered, boolean bags) throws SchemaException, IOException {
-		resultMap.clear();
+	private static Map<RAExpr, Table> getOperationMap(String propName, boolean ordered, boolean bags) throws SchemaException, IOException {
+		operationMap.clear();
 		String path = "";
 		if (ordered) {
 			path = ORDERED_PATH;
@@ -66,9 +72,42 @@ class ApplicationTest {
 			String k = (String) o;
 			RAExpr e = RAExpr.parse(k);
 			Table t = Table.fromCSV(new File(path + "/" + prop.getProperty(k)), ordered, bags);
-			resultMap.put(e, t);
+			operationMap.put(e, t);
 		}
-		return resultMap;
+		return operationMap;
+	}
+	
+	private static Map<String, String> getParsingMap(String propName) throws FileNotFoundException {
+		InputStream configStream = new FileInputStream(PATH + propName);
+		Properties prop = new Properties();
+		try {
+			prop.load(configStream);
+		} catch (Exception e) {
+			System.out.println("ERROR: " + e.getMessage());
+			System.exit(1);
+		}
+		for (Object o : prop.keySet()) {
+			String k = (String) o;
+			parsingMap.put(k, prop.get(o).toString());
+		}
+		return parsingMap;
+	}
+	
+	private static Map<RAExpr, Boolean> getValidationMap(String propName) throws FileNotFoundException {
+		InputStream configStream = new FileInputStream(ORDERED_PATH + propName);
+		Properties prop = new Properties();
+		try {
+			prop.load(configStream);
+		} catch (Exception e) {
+			System.out.println("ERROR: " + e.getMessage());
+			System.exit(1);
+		}
+		for (Object o : prop.keySet()) {
+			String k = (String) o;
+			RAExpr e = RAExpr.parse(k);
+			validationMap.put(e, Boolean.valueOf(prop.get(o).toString()));
+		}
+		return validationMap;
 	}
 
 	@BeforeAll
@@ -79,34 +118,17 @@ class ApplicationTest {
 		dbOrderedSets = Database.fromCSV(orderedFolder, ordered, !bags);
 		dbUnorderedBags = Database.fromCSV(unorderedFolder, !ordered, bags);
 		dbUnorderedSets = Database.fromCSV(unorderedFolder, !ordered, !bags);
-		
-		//String path = System.getProperty("user.dir") + "/src/test/java/uk/ac/ed/inf/s1654170/mrai/evaluation/ordered/";
-		//InputStream configStream = new FileInputStream(path + "expected.properties");
-		InputStream configStream = new FileInputStream(PATH + "expectedParsing.properties");
-		Properties prop = new Properties();
-		try {
-			prop.load(configStream);
-		} catch (Exception e) {
-			System.out.println("ERROR: " + e.getMessage());
-			System.exit(1);
-		}
-		for (Object o : prop.keySet()) {
-			String k = (String) o;
-			//RAExpr e = RAExpr.parse(k);
-			parsingMap.put(k, prop.get(o).toString());
-			//Table t = Table.fromCSV(new File(path + "/" + prop.getProperty(k)));
-			//resultMap.put(e, t);
-		}
 	}
 	
 	@Test
+	@Order(1)
 	void testParsing() throws SchemaException, IOException {
-		System.out.println("\n==================== Test 1 - testParsing() ====================\n");
-		//String propName = "expectedParsing.properties";
-		//resultMap = getResultMap(propName, ordered, bags);
+		System.out.println("\n==================== Test 1 - testParsing() ====================");
+		System.out.println("Testing the parsing of input.\n");
+		String propName = "expectedParsing.properties";
+		parsingMap = getParsingMap(propName);
 		boolean allPassed = true;
 		for (String s : parsingMap.keySet()) {
-			//Table t = e.execute(dbOrderedBags);
 			RAExpr e = RAExpr.parse(s);
 			if (parsingMap.get(s).equals(e.toString())) {
 				System.out.println("PASSED! - " + s);
@@ -119,18 +141,41 @@ class ApplicationTest {
 	}
 	
 	@Test
-	void testOrdBagsTableOp() throws SchemaException, IOException {
-		System.out.println("\n==================== Test 2 - testOrdBagsTableOp() ====================\n");
-		String propName = "expectedOrdBagsTableOp.properties";
-		resultMap = getResultMap(propName, ordered, bags);
+	@Order(2)
+	void testValidation() throws SchemaException, IOException {
+		System.out.println("\n==================== Test 2 - testValidation() ====================");
+		System.out.println("Testing validation for ordered columns under bags.\n");
+		String propName = "expectedValidationBags.properties";
+		validationMap = getValidationMap(propName);
 		boolean allPassed = true;
-		for (RAExpr e : resultMap.keySet()) {
-			Table t = e.execute(dbOrderedBags);
-			if (resultMap.get(e).equals(t)) {
+		for (RAExpr e : validationMap.keySet()) {
+			boolean expected = validationMap.get(e);
+			boolean actual = e.validate(dbOrderedBags.getSchema());
+			if (expected == actual) {
 				System.out.println("PASSED! - " + e.toString());
 			} else {
 				allPassed = false;
-				System.out.println(String.format("FAILED! - %s | Expected: %s Actual: %s", e.toString(), resultMap.get(e), t));
+				System.out.println(String.format("FAILED! - %s | Expected: %s Actual: %s", e.toString(), expected, actual));
+			}
+		}
+		assertTrue(allPassed);
+	}
+	
+	@Test
+	@Order(3)
+	void testOrdBagsTableOp() throws SchemaException, IOException {
+		System.out.println("\n==================== Test 3 - testOrdBagsTableOp() ====================");
+		System.out.println("Testing the execution of table operations on ordered columns under bags.\n");
+		String propName = "expectedOrdBagsTableOp.properties";
+		operationMap = getOperationMap(propName, ordered, bags);
+		boolean allPassed = true;
+		for (RAExpr e : operationMap.keySet()) {
+			Table t = e.execute(dbOrderedBags);
+			if (operationMap.get(e).equals(t)) {
+				System.out.println("PASSED! - " + e.toString());
+			} else {
+				allPassed = false;
+				System.out.println(String.format("FAILED! - %s | Expected: %s Actual: %s", e.toString(), operationMap.get(e), t));
 			}
 		}
 		assertTrue(allPassed);
