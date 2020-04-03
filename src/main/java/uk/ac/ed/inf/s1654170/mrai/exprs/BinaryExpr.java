@@ -69,12 +69,17 @@ public abstract class BinaryExpr extends RAExpr {
 		} else {
 			//if type is union max/plus, intersect, difference
 			if (l.isOrdered()) {
+				List<String> lAttr = new ArrayList<>(l.getAttributes());
+				List<String> rAttr = new ArrayList<>(r.getAttributes());
+				if (!lAttr.equals(rAttr)) {
+					throw new SchemaException(SchemaException.ErrorMessage.ORDERED_SIGNATURE_ATTRIBUTE_ERROR.getErrorMessage());
+				}
 				List<Column.Type> lTypes = new ArrayList<>(l.getTypes());
 				List<Column.Type> rTypes = new ArrayList<>(r.getTypes());
 				if (lTypes.equals(rTypes)) {
 					return new BaseSignature(l.getAttributes(), lTypes, true);
 				} else {
-					throw new SchemaException(SchemaException.ErrorMessage.ORDERED_SIGNATURE_ERROR.getErrorMessage());
+					throw new SchemaException(SchemaException.ErrorMessage.ORDERED_SIGNATURE_TYPE_ERROR.getErrorMessage());
 				}
 			} else {
 				Set<String> lNames = new HashSet<>(l.getAttributes());
