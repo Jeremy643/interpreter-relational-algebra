@@ -25,32 +25,48 @@ public class TableOperations {
 		// swap the columns of B to match the order of columns in A
 		List<String> attrA = new ArrayList<>(A.getSignature().getAttributes());
 		List<String> attrB = new ArrayList<>(B.getSignature().getAttributes());
-		int[] indices = new int[attrA.size()];
+		List<Integer> indices = new ArrayList<>();
+		List<Integer> indicesBU = new ArrayList<>();
 		for (int i = 0; i < attrB.size(); i++) {
 			// get the relevant position in B for each position 1 to A.size()
-			int tBIndex = attrB.indexOf(attrA.get(i));
-			if (tBIndex == i) {
-				indices[i] = -1;
+			int index = attrA.indexOf(attrB.get(i));
+			if (index == i) {
+				indices.add(-1);
+				indicesBU.add(-1);
 			} else {
-				indices[i] = tBIndex;
+				indices.add(index);
+				indicesBU.add(index);
 			}
 		}
 		for (int i = 0; i < B.size(); i++) {
 			int counter = 0;
+			indices.clear();
+			for (int x : indicesBU) {
+				indices.add(x);
+			}
 			for (int index : indices) {
-				if (index == -1 || index < counter) {
-					/*
-					 * index = -1 - the column in B is already in the right position
-					 * index < counter - stops double swapping 
-					 */
-					continue;
+				if (indices.contains(-1)) {
+					if (index == -1 || index < counter) {
+						/*
+						 * index = -1 - the column in B is already in the right position
+						 * index < counter - stops double swapping
+						 */
+						counter++;
+						continue;
+					} else {
+						Collections.swap(B.get(i), counter, index);
+					}
 				} else {
 					Collections.swap(B.get(i), counter, index);
+					Collections.swap(indices, counter, index);
 				}
 				counter++;
 			}
 		}
-		return B;
+		Signature sig = new BaseSignature(attrA, A.getSignature().getTypes(), A.getSignature().isOrdered());
+		Table newB = new Table(sig, A.getBags());
+		newB.addAll(B);
+		return newB;
 	}
 
 	public static Table Union(Table tA, Table tB) {
