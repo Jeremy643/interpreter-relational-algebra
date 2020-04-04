@@ -418,17 +418,12 @@ public class TableOperations {
 
 	public static Table Eliminate(Table tA) {
 		Table tempA = new Table(tA.getSignature(), tA.getBags());
-		tempA.addAll(tA);
-		Table sortedA = sortRecords(tempA);
-		Table table = new Table(tA.getSignature(), tA.getBags());
-		Record prev = null;
-		for (Record curr : sortedA) {
-			if (curr.equals(prev)) {
-				continue;
-			}
-			table.add(curr);
-			prev = curr;
+		for (Record r : tA) {
+			tempA.add((Record) r.clone());
 		}
+		Set<Record> tempASet = new HashSet<>(tempA);
+		Table table = new Table(tA.getSignature(), tA.getBags());
+		table.addAll(tempASet);
 		return table;
 	}
 
