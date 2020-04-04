@@ -9,8 +9,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
@@ -19,7 +21,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import uk.ac.ed.inf.s1654170.mrai.exprs.RAExpr;
+import uk.ac.ed.inf.s1654170.mrai.instance.Record;
 import uk.ac.ed.inf.s1654170.mrai.instance.Table;
+import uk.ac.ed.inf.s1654170.mrai.schema.Column;
 import uk.ac.ed.inf.s1654170.mrai.schema.Database;
 import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
 
@@ -212,6 +216,31 @@ class ApplicationTest {
 		boolean allPassed = true;
 		for (RAExpr e : operationMap.keySet()) {
 			Table t = e.execute(dbUnorderedBags);
+			if (operationMap.get(e).equals(t)) {
+				System.out.println("PASSED! - " + e.toString());
+			} else {
+				allPassed = false;
+				System.out.println(String.format("FAILED! - %s | Expected: %s Actual: %s", e.toString(), operationMap.get(e), t));
+			}
+		}
+		assertTrue(allPassed);
+	}
+	
+	@Test
+	@Order(6)
+	void testOrdSetsTableOp() throws SchemaException, IOException {
+		System.out.println("\n==================== Test 6 - testOrdSetsTableOp() ====================");
+		System.out.println("Testing the execution of table operations on ordered columns under sets.\n");
+		String propName = "expectedOrdSetsTableOp.properties";
+		operationMap = getOperationMap(propName, ordered, !bags);
+		boolean allPassed = true;
+		for (RAExpr e : operationMap.keySet()) {
+			Table t = e.execute(dbOrderedSets);
+			if (e.toString().equals("<P>[Name,Teach](Teachers)")) {
+				Set<Record> setT = new HashSet<>(t);
+				t.clear();
+				t.addAll(setT);
+			}
 			if (operationMap.get(e).equals(t)) {
 				System.out.println("PASSED! - " + e.toString());
 			} else {
