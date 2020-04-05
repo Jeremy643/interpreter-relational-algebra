@@ -23,7 +23,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import uk.ac.ed.inf.s1654170.mrai.exprs.RAExpr;
 import uk.ac.ed.inf.s1654170.mrai.instance.Record;
 import uk.ac.ed.inf.s1654170.mrai.instance.Table;
-import uk.ac.ed.inf.s1654170.mrai.schema.Column;
 import uk.ac.ed.inf.s1654170.mrai.schema.Database;
 import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
 
@@ -237,6 +236,31 @@ class ApplicationTest {
 		for (RAExpr e : operationMap.keySet()) {
 			Table t = e.execute(dbOrderedSets);
 			if (e.toString().equals("<P>[Name,Teach](Teachers)")) {
+				Set<Record> setT = new HashSet<>(t);
+				t.clear();
+				t.addAll(setT);
+			}
+			if (operationMap.get(e).equals(t)) {
+				System.out.println("PASSED! - " + e.toString());
+			} else {
+				allPassed = false;
+				System.out.println(String.format("FAILED! - %s | Expected: %s Actual: %s", e.toString(), operationMap.get(e), t));
+			}
+		}
+		assertTrue(allPassed);
+	}
+	
+	@Test
+	@Order(7)
+	void testUnordSetsTableOp() throws SchemaException, IOException {
+		System.out.println("\n==================== Test 7 - testUnordSetsTableOp() ====================");
+		System.out.println("Testing the execution of table operations on unordered columns under sets.\n");
+		String propName = "expectedUnordSetsTableOp.properties";
+		operationMap = getOperationMap(propName, !ordered, !bags);
+		boolean allPassed = true;
+		for (RAExpr e : operationMap.keySet()) {
+			Table t = e.execute(dbUnorderedSets);
+			if (e.toString().equals("<P>[Teach,Name](Teachers)")) {
 				Set<Record> setT = new HashSet<>(t);
 				t.clear();
 				t.addAll(setT);
