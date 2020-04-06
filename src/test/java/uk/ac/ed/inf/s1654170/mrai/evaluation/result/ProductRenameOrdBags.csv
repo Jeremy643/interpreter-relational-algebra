@@ -1,0 +1,4 @@
+Name,Age,Class,ParentName,Birthday,Number of Children
+STRING,NUMBER,STRING,STRING,STRING,NUMBER
+Hamish,18,s6,Hugo,3/09/88,2
+Jane,18,s6,Hugo,3/09/88,2
