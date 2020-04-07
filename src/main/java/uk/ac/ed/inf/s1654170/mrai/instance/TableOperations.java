@@ -532,22 +532,22 @@ public class TableOperations {
 					case LESS:
 						rVal = Float.valueOf(r.get(index).toString());
 						termVal = Float.valueOf(left.getValue());
-						valueComparisons[i] = rVal < termVal;
+						valueComparisons[i] = rVal > termVal;
 						break;
 					case LESS_EQUAL:
 						rVal = Float.valueOf(r.get(index).toString());
 						termVal = Float.valueOf(left.getValue());
-						valueComparisons[i] = rVal <= termVal;
+						valueComparisons[i] = rVal >= termVal;
 						break;
 					case GREATER:
 						rVal = Float.valueOf(r.get(index).toString());
 						termVal = Float.valueOf(left.getValue());
-						valueComparisons[i] = rVal > termVal;
+						valueComparisons[i] = rVal < termVal;
 						break;
 					case GREATER_EQUAL:
 						rVal = Float.valueOf(r.get(index).toString());
 						termVal = Float.valueOf(left.getValue());
-						valueComparisons[i] = rVal >= termVal;
+						valueComparisons[i] = rVal <= termVal;
 						break;
 					default:
 						throw new RuntimeException("This is not a comparison operator");
