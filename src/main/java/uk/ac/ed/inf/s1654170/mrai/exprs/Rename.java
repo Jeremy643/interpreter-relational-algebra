@@ -37,18 +37,6 @@ public class Rename extends RAExpr {
 		}
  		return String.format("%s[%s](%s)", Type.RENAME.getConnective(), String.join(",",subst), relation);
 	}
-	
-	@Override
-	public boolean equals(Object o) {
-		if (o instanceof Rename) {
-			if (this.attributes.equals(((Rename) o).attributes) && this.relation.equals(((Rename) o).relation)) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-		return false;
-	}
 
 	@Override
 	public Signature signature(Schema s) throws SchemaException {

@@ -19,14 +19,6 @@ public class Not extends Condition {
 	public String toString() {
 		return String.format("[%s %s]", NOT, main);
 	}
-	
-	@Override
-	public boolean equals(Object o) {
-		if (o instanceof Not && this.main.equals(((Not) o).main)) {
-			return true;
-		}
-		return false;
-	}
 
 	@Override
 	public boolean validate(Signature sig) {

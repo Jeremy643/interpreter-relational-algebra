@@ -27,18 +27,6 @@ public class Select extends RAExpr {
 	public String toString() {
 		return String.format("%s[%s](%s)", Type.SELECT.getConnective(), condition, expr);
 	}
-	
-	@Override
-	public boolean equals(Object o) {
-		if (o instanceof Select) {
-			if (this.condition.equals(((Select) o).condition) && this.expr.equals(((Select) o).expr)) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-		return false;
-	}
 
 	@Override
 	public Signature signature(Schema s) throws SchemaException {

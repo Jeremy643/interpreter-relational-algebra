@@ -26,19 +26,6 @@ public abstract class BinaryCondition extends Condition {
 	}
 	
 	@Override
-	public boolean equals(Object o) {
-		if (o instanceof BinaryCondition) {
-			if (this.left.equals(((BinaryCondition) o).left) && this.right.equals(((BinaryCondition) o).right) &&
-					this.type.equals(((BinaryCondition) o).type)) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-		return false;
-	}
-	
-	@Override
 	public boolean validate(Signature sig) {
 		if (left.validate(sig) && right.validate(sig)) {
 			return true;

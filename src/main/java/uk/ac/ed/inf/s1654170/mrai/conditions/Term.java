@@ -26,16 +26,4 @@ public class Term {
 			return value;
 		}
 	}
-	
-	@Override
-	public boolean equals(Object o) {
-		if (o instanceof Term) {
-			if (this.constant == ((Term) o).constant && this.value.equals(((Term) o).value)) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-		return false;
-	}
 }

@@ -34,19 +34,6 @@ public abstract class BinaryExpr extends RAExpr {
 	public String toString() {
 		return String.format("(%s %s %s)", left.toString(), getConnective(), right.toString());
 	}
-	
-	@Override
-	public boolean equals(Object o) {
-		if (o instanceof BinaryExpr) {
-			if (this.left.equals(((BinaryExpr) o).left) && this.right.equals(((BinaryExpr) o).right) &&
-					this.type.equals(((BinaryExpr) o).type)) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-		return false;
-	}
 
 	@Override
 	public Signature signature(Schema s) throws SchemaException {

@@ -34,19 +34,6 @@ public abstract class Comparison extends Condition {
 	}
 	
 	@Override
-	public boolean equals(Object o) {
-		if (o instanceof Comparison) {
-			if (this.left.equals(((Comparison) o).left) && this.right.equals(((Comparison) o).right) &&
-					this.type.equals(((Comparison) o).type)) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-		return false;
-	}
-	
-	@Override
 	public boolean validate(Signature sig) {
 		List<String> attr = new ArrayList<>(sig.getAttributes());
 		List<Column.Type> types = new ArrayList<>(sig.getTypes());

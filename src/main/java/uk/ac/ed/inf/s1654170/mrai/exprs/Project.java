@@ -35,18 +35,6 @@ public class Project extends RAExpr {
 		String attrList = String.join(",", attributes);
 		return String.format("%s[%s](%s)", Type.PROJECT.getConnective(), attrList, expr.toString());
 	}
-	
-	@Override
-	public boolean equals(Object o) {
-		if (o instanceof Project) {
-			if (this.attributes.equals(((Project) o).attributes) && this.expr.equals(((Project) o).expr)) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-		return false;
-	}
 
 	@Override
 	public Signature signature(Schema s) throws SchemaException {
