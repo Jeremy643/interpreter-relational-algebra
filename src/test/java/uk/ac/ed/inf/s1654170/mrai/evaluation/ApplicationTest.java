@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -43,6 +44,7 @@ class ApplicationTest {
 	private static Map<String, String> parsingMap = new HashMap<>();
 	private static Map<RAExpr, Boolean> validationMap = new HashMap<>();
 	private static Map<RAExpr, String> validationSchemaExceptionMap = new HashMap<>();
+	private static Map<String, String> parsingExceptionMap = new HashMap<>();
 	private static Map<RAExpr, Table> operationMap = new HashMap<>();
 	
 	private static Map<String, String> getParsingMap(String propName) throws FileNotFoundException {
@@ -93,6 +95,22 @@ class ApplicationTest {
 			validationSchemaExceptionMap.put(e, prop.get(o).toString());
 		}
 		return validationSchemaExceptionMap;
+	}
+	
+	private static Map<String, String> getParsingSchemaExceptionMap(String propName) throws FileNotFoundException {
+		InputStream configStream = new FileInputStream(RESULT_PATH + propName);
+		Properties prop = new Properties();
+		try {
+			prop.load(configStream);
+		} catch (Exception e) {
+			System.out.println("ERROR: " + e.getMessage());
+			System.exit(1);
+		}
+		for (Object o : prop.keySet()) {
+			String k = (String) o;
+			parsingExceptionMap.put(k, prop.get(o).toString());
+		}
+		return parsingExceptionMap;
 	}
 	
 	private static Map<RAExpr, Table> getOperationMap(String propName, boolean ordered, boolean bags) throws SchemaException, IOException {
@@ -185,10 +203,31 @@ class ApplicationTest {
 		assertTrue(allPassed);
 	}
 	
-	@Test
+	@Test()
 	@Order(4)
+	void testParsingException() throws SchemaException, IOException {
+		System.out.println("\n==================== Test 4 - testParsingException() ====================");
+		System.out.println("Testing that parsing throws a parse exception for bad input.\n");
+		String propName = "expectedParsingSchemaException.properties";
+		parsingExceptionMap = getParsingSchemaExceptionMap(propName);
+		boolean allPassed = true;
+		for (String e : parsingExceptionMap.keySet()) {
+			String expected = parsingExceptionMap.get(e);
+			ParseCancellationException exception = assertThrows(ParseCancellationException.class, () -> RAExpr.parse(e));
+			if (expected.equals(exception.getMessage())) {
+				System.out.println(String.format("PASSED! - %s \"%s\"", e.toString(), exception.getMessage()));
+			} else {
+				allPassed = false;
+				System.out.println(String.format("FAILED! - %s | Expected: \"%s\" Actual: \"%s\"", e.toString(), expected, exception.getMessage()));
+			}
+		}
+		assertTrue(allPassed);
+	}
+	
+	@Test
+	@Order(5)
 	void testOrdBagsTableOp() throws SchemaException, IOException {
-		System.out.println("\n==================== Test 4 - testOrdBagsTableOp() ====================");
+		System.out.println("\n==================== Test 5 - testOrdBagsTableOp() ====================");
 		System.out.println("Testing the execution of table operations on ordered columns under bags.\n");
 		String propName = "expectedOrdBagsTableOp.properties";
 		operationMap = getOperationMap(propName, ordered, bags);
@@ -206,9 +245,9 @@ class ApplicationTest {
 	}
 	
 	@Test
-	@Order(5)
+	@Order(6)
 	void testUnordBagsTableOp() throws SchemaException, IOException {
-		System.out.println("\n==================== Test 5 - testUnordBagsTableOp() ====================");
+		System.out.println("\n==================== Test 6 - testUnordBagsTableOp() ====================");
 		System.out.println("Testing the execution of table operations on unordered columns under bags.\n");
 		String propName = "expectedUnordBagsTableOp.properties";
 		operationMap = getOperationMap(propName, !ordered, bags);
@@ -226,9 +265,9 @@ class ApplicationTest {
 	}
 	
 	@Test
-	@Order(6)
+	@Order(7)
 	void testOrdSetsTableOp() throws SchemaException, IOException {
-		System.out.println("\n==================== Test 6 - testOrdSetsTableOp() ====================");
+		System.out.println("\n==================== Test 7 - testOrdSetsTableOp() ====================");
 		System.out.println("Testing the execution of table operations on ordered columns under sets.\n");
 		String propName = "expectedOrdSetsTableOp.properties";
 		operationMap = getOperationMap(propName, ordered, !bags);
@@ -251,9 +290,9 @@ class ApplicationTest {
 	}
 	
 	@Test
-	@Order(7)
+	@Order(8)
 	void testUnordSetsTableOp() throws SchemaException, IOException {
-		System.out.println("\n==================== Test 7 - testUnordSetsTableOp() ====================");
+		System.out.println("\n==================== Test 8 - testUnordSetsTableOp() ====================");
 		System.out.println("Testing the execution of table operations on unordered columns under sets.\n");
 		String propName = "expectedUnordSetsTableOp.properties";
 		operationMap = getOperationMap(propName, !ordered, !bags);
