@@ -1,6 +1,5 @@
 package uk.ac.ed.inf.s1654170.mrai.exprs;
 
-import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -9,6 +8,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import uk.ac.ed.inf.s1654170.mrai.instance.Table;
 import uk.ac.ed.inf.s1654170.mrai.parser.BuildExpr;
+import uk.ac.ed.inf.s1654170.mrai.parser.ParsingExceptionListener;
 import uk.ac.ed.inf.s1654170.mrai.parser.RelationalAlgebraLexer;
 import uk.ac.ed.inf.s1654170.mrai.parser.RelationalAlgebraParser;
 import uk.ac.ed.inf.s1654170.mrai.schema.Database;
@@ -85,7 +85,8 @@ public abstract class RAExpr {
 
 		CommonTokenStream commonTokenStream = new CommonTokenStream(tl);
 		RelationalAlgebraParser tp = new RelationalAlgebraParser(commonTokenStream);
-		tp.setErrorHandler(new BailErrorStrategy());
+		tp.removeErrorListeners();
+		tp.addErrorListener(ParsingExceptionListener.INSTANCE);
 
 		ParseTree parseTree = tp.start();
 		BuildExpr buildExpr = new BuildExpr();

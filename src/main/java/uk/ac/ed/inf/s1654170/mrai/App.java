@@ -3,19 +3,12 @@ package uk.ac.ed.inf.s1654170.mrai;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
-import java.util.Set;
 
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -23,8 +16,6 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVRecord;
 
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.asciitable.CWC_LongestLine;
@@ -32,9 +23,7 @@ import de.vandermeer.skb.interfaces.transformers.textformat.TextAlignment;
 import uk.ac.ed.inf.s1654170.mrai.exprs.RAExpr;
 import uk.ac.ed.inf.s1654170.mrai.instance.Record;
 import uk.ac.ed.inf.s1654170.mrai.instance.Table;
-import uk.ac.ed.inf.s1654170.mrai.schema.Column.Type;
 import uk.ac.ed.inf.s1654170.mrai.schema.Database;
-import uk.ac.ed.inf.s1654170.mrai.schema.Schema;
 import uk.ac.ed.inf.s1654170.mrai.schema.SchemaException;
 
 public class App {
@@ -180,114 +169,6 @@ public class App {
 		}
 
 		// ========================DATABASE DEFINE - IMPORTANT========================
-
-		/*File[] listOfFiles = folder.listFiles();
-
-		//make sure that there is at least one csv file
-		int counter = 0;
-		for (File f : listOfFiles) {
-			String name = f.getName();
-			if (name.endsWith(".csv")) {
-				counter++;
-			}
-		}
-		if (counter == 0) {
-			System.out.println("ERROR: Your chosen directory does not contain enough csv files.");
-			System.exit(1);
-		}
-
-		List<String> fileName = new ArrayList<>();
-		List<String> attributes = new ArrayList<>();
-		List<String> attributeTypes = new ArrayList<>();
-
-		Map<String, List<Record>> tables = new HashMap<>();
-		for (File file : listOfFiles) {
-			if (!file.getName().endsWith(".csv")) {
-				//if file not csv then ignore
-				continue;
-			}
-			String name = file.getName().replace(".csv", "");  //.trim().replaceAll("\\s+", " ")
-			fileName.add(name);
-			
-			Reader in = new FileReader(file);
-			Iterable<CSVRecord> records = CSVFormat.EXCEL.parse(in);
-
-			int index = 0;
-			//Collection<Record> tableRecords = bagEvaluation ? new ArrayList<>() : new HashSet<>();
-			List<Record> tableRecords = new ArrayList<>();
-			List<Type> types = new ArrayList<>();
-			List<String> dupAttr = new ArrayList<>();
-			recordLoop: for (CSVRecord record : records) {
-				int size = record.size();
-				switch (index) {
-				case 0:
-					String attr = "";
-					for (int i = 0; i < size; i++) {
-						dupAttr.add(record.get(i));
-						if (i == size - 1) {
-							attr += record.get(i);
-						} else {
-							attr += record.get(i) + ",";
-						}
-					}
-					// check for duplicate attributes
-					Set<String> dupSetAttr = new HashSet<>(dupAttr);
-					if (dupAttr.size() != dupSetAttr.size()) {
-						// display error and don't include in database
-						fileName.remove(name);
-						System.out.println(
-								String.format("WARNING: The relation \"%s\" contains duplicate attributes and will"
-										+ " therefore not be included in the database.", name));
-						break recordLoop;
-					}
-					attributes.add(attr.trim().replaceAll("\\s+", " "));
-					break;
-				case 1:
-					String type = "";
-					for (int i = 0; i < size; i++) {
-						if (i == size - 1) {
-							type += record.get(i).trim();
-						} else {
-							type += record.get(i).trim() + ",";
-						}
-						types.add(Type.valueOf(record.get(i).trim()));
-					}
-					attributeTypes.add(type);
-					break;
-				default:
-					String[] values = new String[size];
-					for (int i = 0; i < size; i++) {
-						values[i] = record.get(i);
-					}
-					Record r = Record.valueOf(types, values);
-					if (!bagEvaluation) {
-						if (!tableRecords.contains(r)) {
-							tableRecords.add(r);
-							break;
-						} else {
-							break;
-						}
-					}
-					tableRecords.add(r);
-					break;
-				}
-				index++;
-			}
-			tables.put(name, tableRecords);
-		}
-
-		Schema sch = new Schema(fileName, attributes, attributeTypes, orderedColumns);
-
-		Database db = new Database(sch);
-		for (String name : fileName) {
-			Table table = new Table(sch.getSignature(name), bagEvaluation);
-			table.addAll(tables.get(name));
-			try {
-				db.add(name, table);
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-		}*/
 		
 		Database db = Database.fromCSV(folder, orderedColumns, bagEvaluation);
 
@@ -337,18 +218,7 @@ public class App {
 						// set columns to unordered
 						unorderedColumns = true;
 						orderedColumns = false;
-						//sch = new Schema(fileName, attributes, attributeTypes, orderedColumns);
-						//db = new Database(sch);
 						db = Database.fromCSV(folder, orderedColumns, bagEvaluation);
-						/*for (String name : fileName) {
-							Table table = new Table(sch.getSignature(name), bagEvaluation);
-							table.addAll(tables.get(name));
-							try {
-								db.add(name, table);
-							} catch (Exception e1) {
-								e1.printStackTrace();
-							}
-						}*/
 					}
 				} else {
 					System.out.println("Set columns... ordered?[y/n]");
@@ -357,18 +227,7 @@ public class App {
 						// set columns to ordered
 						orderedColumns = true;
 						unorderedColumns = false;
-						//sch = new Schema(fileName, attributes, attributeTypes, orderedColumns);
-						//db = new Database(sch);
 						db = Database.fromCSV(folder, orderedColumns, bagEvaluation);
-						/*for (String name : fileName) {
-							Table table = new Table(sch.getSignature(name), bagEvaluation);
-							table.addAll(tables.get(name));
-							try {
-								db.add(name, table);
-							} catch (Exception e1) {
-								e1.printStackTrace();
-							}
-						}*/
 					}
 				}
 				if (bagEvaluation) {
@@ -378,17 +237,7 @@ public class App {
 						// change evaluation to sets
 						setEvaluation = true;
 						bagEvaluation = false;
-						//db = new Database(sch);
 						db = Database.fromCSV(folder, orderedColumns, bagEvaluation);
-						/*for (String name : fileName) {
-							Table table = new Table(sch.getSignature(name), bagEvaluation);
-							table.addAll(tables.get(name));
-							try {
-								db.add(name, table);
-							} catch (Exception e1) {
-								e1.printStackTrace();
-							}
-						}*/
 					}
 				} else {
 					System.out.println("Set evaluation... bags?[y/n]");
@@ -397,17 +246,7 @@ public class App {
 						// change evaluation to bags
 						setEvaluation = false;
 						bagEvaluation = true;
-						//db = new Database(sch);
 						db = Database.fromCSV(folder, orderedColumns, bagEvaluation);
-						/*for (String name : fileName) {
-							Table table = new Table(sch.getSignature(name), bagEvaluation);
-							table.addAll(tables.get(name));
-							try {
-								db.add(name, table);
-							} catch (Exception e1) {
-								e1.printStackTrace();
-							}
-						}*/
 					}
 				}
 				continue;
@@ -426,12 +265,12 @@ public class App {
 				}
 				continue;
 			}
-
+			
 			RAExpr e;
 			try {
 				e = RAExpr.parse(input);
-			} catch (Exception error) {
-				System.out.println("ERROR: You entered something that isn't recognized.");
+			} catch (ParseCancellationException error) {
+				System.out.println(error.getMessage());
 				continue;
 			}
 
