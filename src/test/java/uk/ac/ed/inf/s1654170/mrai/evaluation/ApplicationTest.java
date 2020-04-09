@@ -161,10 +161,31 @@ class ApplicationTest {
 		assertTrue(allPassed);
 	}
 	
-	@Test
+	@Test()
 	@Order(2)
+	void testParsingException() throws SchemaException, IOException {
+		System.out.println("\n==================== Test 2 - testParsingException() ====================");
+		System.out.println("Testing that parsing throws a parse exception for bad input.\n");
+		String propName = "expectedParsingSchemaException.properties";
+		parsingExceptionMap = getParsingSchemaExceptionMap(propName);
+		boolean allPassed = true;
+		for (String e : parsingExceptionMap.keySet()) {
+			String expected = parsingExceptionMap.get(e);
+			ParseCancellationException exception = assertThrows(ParseCancellationException.class, () -> RAExpr.parse(e));
+			if (expected.equals(exception.getMessage())) {
+				System.out.println(String.format("PASSED! - %s \"%s\"", e.toString(), exception.getMessage()));
+			} else {
+				allPassed = false;
+				System.out.println(String.format("FAILED! - %s | Expected: \"%s\" Actual: \"%s\"", e.toString(), expected, exception.getMessage()));
+			}
+		}
+		assertTrue(allPassed);
+	}
+	
+	@Test
+	@Order(3)
 	void testValidation() throws SchemaException, IOException {
-		System.out.println("\n==================== Test 2 - testValidation() ====================");
+		System.out.println("\n==================== Test 3 - testValidation() ====================");
 		System.out.println("Testing validation for ordered columns under bags.\n");
 		String propName = "expectedValidationBags.properties";
 		validationMap = getValidationMap(propName);
@@ -183,9 +204,9 @@ class ApplicationTest {
 	}
 	
 	@Test()
-	@Order(3)
+	@Order(4)
 	void testValidationSchemaException() throws SchemaException, IOException {
-		System.out.println("\n==================== Test 3 - testValidationSchemaException() ====================");
+		System.out.println("\n==================== Test 4 - testValidationSchemaException() ====================");
 		System.out.println("Testing that validation throws a schema exception for bad input.\n");
 		String propName = "expectedValidationSchemaException.properties";
 		validationSchemaExceptionMap = getValidationSchemaExceptionMap(propName);
@@ -193,27 +214,6 @@ class ApplicationTest {
 		for (RAExpr e : validationSchemaExceptionMap.keySet()) {
 			String expected = validationSchemaExceptionMap.get(e);
 			SchemaException exception = assertThrows(SchemaException.class, () -> e.validate(dbOrderedBags.getSchema()));
-			if (expected.equals(exception.getMessage())) {
-				System.out.println(String.format("PASSED! - %s \"%s\"", e.toString(), exception.getMessage()));
-			} else {
-				allPassed = false;
-				System.out.println(String.format("FAILED! - %s | Expected: \"%s\" Actual: \"%s\"", e.toString(), expected, exception.getMessage()));
-			}
-		}
-		assertTrue(allPassed);
-	}
-	
-	@Test()
-	@Order(4)
-	void testParsingException() throws SchemaException, IOException {
-		System.out.println("\n==================== Test 4 - testParsingException() ====================");
-		System.out.println("Testing that parsing throws a parse exception for bad input.\n");
-		String propName = "expectedParsingSchemaException.properties";
-		parsingExceptionMap = getParsingSchemaExceptionMap(propName);
-		boolean allPassed = true;
-		for (String e : parsingExceptionMap.keySet()) {
-			String expected = parsingExceptionMap.get(e);
-			ParseCancellationException exception = assertThrows(ParseCancellationException.class, () -> RAExpr.parse(e));
 			if (expected.equals(exception.getMessage())) {
 				System.out.println(String.format("PASSED! - %s \"%s\"", e.toString(), exception.getMessage()));
 			} else {
