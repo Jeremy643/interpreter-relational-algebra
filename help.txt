@@ -3,11 +3,11 @@
 
 The following are commands that you can run while in the interpreter;
 
-\help - displays this information
-\exit - stops the interpreter
-\schema - displays the schema of the current database
-\settings - displays the configuration of the columns and how the database is being evaluated
-\configure - allows you to change the columns being ordered or unordered and if the database is being evaluated under bags or sets
+.help - displays this information
+.exit - stops the interpreter
+.schema - displays the schema of the current database
+.settings - displays the configuration of the columns and how the database is being evaluated
+.configure - allows you to change the columns being ordered or unordered and if the database is being evaluated under bags or sets
 
 The following is a list of the available table operations and how to use them;
 

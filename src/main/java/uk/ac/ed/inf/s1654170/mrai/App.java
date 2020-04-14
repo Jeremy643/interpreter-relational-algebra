@@ -16,6 +16,10 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.jline.reader.LineReader;
+import org.jline.reader.LineReaderBuilder;
+import org.jline.terminal.Terminal;
+import org.jline.terminal.TerminalBuilder;
 
 import de.vandermeer.asciitable.AsciiTable;
 import de.vandermeer.asciitable.CWC_LongestLine;
@@ -174,28 +178,29 @@ public class App {
 
 		// ========================PARSING AND EXECUTION - IMPORTANT========================
 		
-		Scanner sc = new Scanner(System.in);
+		Terminal terminal = TerminalBuilder.terminal();
+		LineReader lineReader = LineReaderBuilder.builder().terminal(terminal).build();
 
 		System.out.println("A multimodal interpreter for relational algebra by Jeremy Scott.\n"
-				+ "Type \"\\help\" for more information.");
+				+ "Type \".help\" for more information.");
 		while (true) {
-			System.out.print("(mrai)=> ");
-			String input = sc.nextLine();
+			String input = lineReader.readLine("(mrai)=> ");
+			System.out.println(input);
 
 			if (input.toLowerCase().trim().equals("")) {
 				continue;
 			}
-			if (input.toLowerCase().trim().equals("\\exit")) {
+			if (input.toLowerCase().trim().equals(".exit")) {
 				break;
 			}
-			if (input.toLowerCase().trim().equals("\\schema")) {
+			if (input.toLowerCase().trim().equals(".schema")) {
 				for (String name : db.getSchema().getRelations()) {
 					String fmt = "%s: %s";
 					System.out.println(String.format(fmt, name, db.getSchema().getSignature(name)));
 				}
 				continue;
 			}
-			if (input.toLowerCase().trim().equals("\\settings")) {
+			if (input.toLowerCase().trim().equals(".settings")) {
 				// display configuration
 				if (orderedColumns) {
 					System.out.println("Columns = ordered");
@@ -209,11 +214,10 @@ public class App {
 				}
 				continue;
 			}
-			if (input.toLowerCase().trim().equals("\\configure")) {
+			if (input.toLowerCase().trim().equals(".configure")) {
 				// change the configuration of ordered/unordered or bags/sets
 				if (orderedColumns) {
-					System.out.println("Set columns... unordered?[y/n]");
-					String ans = sc.nextLine();
+					String ans = lineReader.readLine("Set columns... unordered?[y/n]");
 					if (ans.toLowerCase().trim().equals("y")) {
 						// set columns to unordered
 						unorderedColumns = true;
@@ -221,8 +225,7 @@ public class App {
 						db = Database.fromCSV(folder, orderedColumns, bagEvaluation);
 					}
 				} else {
-					System.out.println("Set columns... ordered?[y/n]");
-					String ans = sc.nextLine();
+					String ans = lineReader.readLine("Set columns... ordered?[y/n]");
 					if (ans.toLowerCase().trim().equals("y")) {
 						// set columns to ordered
 						orderedColumns = true;
@@ -231,8 +234,7 @@ public class App {
 					}
 				}
 				if (bagEvaluation) {
-					System.out.println("Set evaluation... sets?[y/n]");
-					String ans = sc.nextLine();
+					String ans = lineReader.readLine("Set evaluation... sets?[y/n]");
 					if (ans.toLowerCase().trim().equals("y")) {
 						// change evaluation to sets
 						setEvaluation = true;
@@ -240,8 +242,7 @@ public class App {
 						db = Database.fromCSV(folder, orderedColumns, bagEvaluation);
 					}
 				} else {
-					System.out.println("Set evaluation... bags?[y/n]");
-					String ans = sc.nextLine();
+					String ans = lineReader.readLine("Set evaluation... bags?[y/n]");
 					if (ans.toLowerCase().trim().equals("y")) {
 						// change evaluation to bags
 						setEvaluation = false;
@@ -251,7 +252,7 @@ public class App {
 				}
 				continue;
 			}
-			if (input.toLowerCase().trim().equals("\\help")) {
+			if (input.toLowerCase().trim().equals(".help")) {
 				try {
 					File helpFile = new File("help.txt");
 					Scanner helpScanner = new Scanner(helpFile);
@@ -295,6 +296,6 @@ public class App {
 				continue;
 			}
 		}
-		sc.close();
+		terminal.close();
 	}
 }
