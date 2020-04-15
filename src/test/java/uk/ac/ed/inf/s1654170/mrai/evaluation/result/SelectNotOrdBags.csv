@@ -1,0 +1,4 @@
+Item,Weight,Cost
+STRING,NUMBER,NUMBER
+Apple,10,5
+Banana,4,9
