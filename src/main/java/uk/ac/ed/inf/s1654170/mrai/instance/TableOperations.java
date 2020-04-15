@@ -2,11 +2,13 @@ package uk.ac.ed.inf.s1654170.mrai.instance;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 import uk.ac.ed.inf.s1654170.mrai.conditions.*;
 import uk.ac.ed.inf.s1654170.mrai.schema.BaseSignature;
@@ -481,7 +483,7 @@ public class TableOperations {
 		return table;
 	}
 
-	public static Table Select(Condition condition, Table A) {
+	public static Table Select(Condition condition, Table A, Stack<Condition> binaryCondTypes) {
 		Table tempA = new Table(A.getSignature(), A.getBags());
 		tempA.addAll(A);
 		Table sortedA = sortRecords(tempA);
@@ -491,16 +493,23 @@ public class TableOperations {
 		List<Comparison> comparisons = condition.getComparisons();
 		// gets condition types, for example: [EQUALITY, AND, NOT, EQUALITY, OR, INEQUALITY]
 		List<Condition.Type> cond = condition.getConditionTypes();
+		
+		int counter = binaryCondTypes.size();
+		Condition[] condTypes = new Condition[counter];
+		for (int i = counter-1; i >= 0; i--) {
+			condTypes[i] = binaryCondTypes.pop();
+		}
 
 		for (Record r : sortedA) {
 			// valueComparisons holds the comparisons outcomes for record r
-			boolean[] valueComparisons = new boolean[comparisons.size()];
+			Map<String,Boolean> conditionComp = new HashMap<>();
 			for (int i = 0; i < comparisons.size(); i++) {
 				Comparison c = comparisons.get(i);
 				Condition.Type type = c.getType();
 				List<Term> terms = c.getTerms();
 				Term left = terms.get(0);
 				Term right = terms.get(1);
+				boolean comp = false;
 
 				// perform comparison between left and right terms
 				if (left.isConstant()) { // right must be attribute
@@ -512,42 +521,50 @@ public class TableOperations {
 					case EQUALITY:
 						if (sortedA.getSignature().getTypes().get(index).equals(Type.STRING)) { 
 							// right has type String
-							valueComparisons[i] = r.get(index).toString().equals(left.getValue());
+							comp = r.get(index).toString().equals(left.getValue());
+							conditionComp.put(c.toString(), comp);
 						} else {
 							// right is a float
 							rVal = Float.valueOf(r.get(index).toString());
 							termVal = Float.valueOf(left.getValue());
-							valueComparisons[i] = rVal.equals(termVal);
+							comp = rVal.equals(termVal);
+							conditionComp.put(c.toString(), comp);
 						}
 						break;
 					case INEQUALITY:
 						if (sortedA.getSignature().getTypes().get(index).equals(Type.STRING)) {
-							valueComparisons[i] = !(r.get(index).toString().equals(left.getValue()));
+							comp = !(r.get(index).toString().equals(left.getValue()));
+							conditionComp.put(c.toString(), comp);
 						} else {
 							rVal = Float.valueOf(r.get(index).toString());
 							termVal = Float.valueOf(left.getValue());
-							valueComparisons[i] = !(rVal.equals(termVal));
+							comp = !(rVal.equals(termVal));
+							conditionComp.put(c.toString(), comp);
 						}
 						break;
 					case LESS:
 						rVal = Float.valueOf(r.get(index).toString());
 						termVal = Float.valueOf(left.getValue());
-						valueComparisons[i] = rVal > termVal;
+						comp = rVal > termVal;
+						conditionComp.put(c.toString(), comp);
 						break;
 					case LESS_EQUAL:
 						rVal = Float.valueOf(r.get(index).toString());
 						termVal = Float.valueOf(left.getValue());
-						valueComparisons[i] = rVal >= termVal;
+						comp = rVal >= termVal;
+						conditionComp.put(c.toString(), comp);
 						break;
 					case GREATER:
 						rVal = Float.valueOf(r.get(index).toString());
 						termVal = Float.valueOf(left.getValue());
-						valueComparisons[i] = rVal < termVal;
+						comp = rVal < termVal;
+						conditionComp.put(c.toString(), comp);
 						break;
 					case GREATER_EQUAL:
 						rVal = Float.valueOf(r.get(index).toString());
 						termVal = Float.valueOf(left.getValue());
-						valueComparisons[i] = rVal <= termVal;
+						comp = rVal <= termVal;
+						conditionComp.put(c.toString(), comp);
 						break;
 					default:
 						throw new RuntimeException("This is not a comparison operator");
@@ -559,41 +576,49 @@ public class TableOperations {
 					switch (type) {
 					case EQUALITY:
 						if (sortedA.getSignature().getTypes().get(index).equals(Type.STRING)) {
-							valueComparisons[i] = r.get(index).toString().equals(right.getValue());
+							comp = r.get(index).toString().equals(right.getValue());
+							conditionComp.put(c.toString(), comp);
 						} else {
 							rVal = Float.valueOf(r.get(index).toString());
 							termVal = Float.valueOf(right.getValue());
-							valueComparisons[i] = rVal.equals(termVal);
+							comp = rVal.equals(termVal);
+							conditionComp.put(c.toString(), comp);
 						}
 						break;
 					case INEQUALITY:
 						if (sortedA.getSignature().getTypes().get(index).equals(Type.STRING)) {
-							valueComparisons[i] = !(r.get(index).toString().equals(right.getValue()));
+							comp = !(r.get(index).toString().equals(right.getValue()));
+							conditionComp.put(c.toString(), comp);
 						} else {
 							rVal = Float.valueOf(r.get(index).toString());
 							termVal = Float.valueOf(right.getValue());
-							valueComparisons[i] = !(rVal.equals(termVal));
+							comp = !(rVal.equals(termVal));
+							conditionComp.put(c.toString(), comp);
 						}
 						break;
 					case LESS:
 						rVal = Float.valueOf(r.get(index).toString());
 						termVal = Float.valueOf(right.getValue());
-						valueComparisons[i] = rVal < termVal;
+						comp = rVal < termVal;
+						conditionComp.put(c.toString(), comp);
 						break;
 					case LESS_EQUAL:
 						rVal = Float.valueOf(r.get(index).toString());
 						termVal = Float.valueOf(right.getValue());
-						valueComparisons[i] = rVal <= termVal;
+						comp = rVal <= termVal;
+						conditionComp.put(c.toString(), comp);
 						break;
 					case GREATER:
 						rVal = Float.valueOf(r.get(index).toString());
 						termVal = Float.valueOf(right.getValue());
-						valueComparisons[i] = rVal > termVal;
+						comp = rVal > termVal;
+						conditionComp.put(c.toString(), comp);
 						break;
 					case GREATER_EQUAL:
 						rVal = Float.valueOf(r.get(index).toString());
 						termVal = Float.valueOf(right.getValue());
-						valueComparisons[i] = rVal >= termVal;
+						comp = rVal >= termVal;
+						conditionComp.put(c.toString(), comp);
 						break;
 					default:
 						throw new RuntimeException("This is not a comparison operator");
@@ -606,108 +631,96 @@ public class TableOperations {
 					switch (type) {
 					case EQUALITY:
 						if (sortedA.getSignature().getTypes().get(indexL).equals(Type.STRING)) {
-							valueComparisons[i] = r.get(indexL).toString().equals(r.get(indexR).toString());
+							comp = r.get(indexL).toString().equals(r.get(indexR).toString());
+							conditionComp.put(c.toString(), comp);
 						} else {
 							rVal = Float.valueOf(r.get(indexL).toString());
 							termVal = Float.valueOf(r.get(indexR).toString());
-							valueComparisons[i] = rVal.equals(termVal);
+							comp = rVal.equals(termVal);
+							conditionComp.put(c.toString(), comp);
 						}
 						break;
 					case INEQUALITY:
 						if (sortedA.getSignature().getTypes().get(indexL).equals(Type.STRING)) {
-							valueComparisons[i] = !(r.get(indexL).toString().equals(r.get(indexR).toString()));
+							comp = !(r.get(indexL).toString().equals(r.get(indexR).toString()));
+							conditionComp.put(c.toString(), comp);
 						} else {
 							rVal = Float.valueOf(r.get(indexL).toString());
 							termVal = Float.valueOf(r.get(indexR).toString());
-							valueComparisons[i] = !(rVal.equals(termVal));
+							comp = !(rVal.equals(termVal));
+							conditionComp.put(c.toString(), comp);
 						}
 						break;
 					case LESS:
 						rVal = Float.valueOf(r.get(indexL).toString());
 						termVal = Float.valueOf(r.get(indexR).toString());
-						valueComparisons[i] = rVal < termVal;
+						comp = rVal < termVal;
+						conditionComp.put(c.toString(), comp);
 						break;
 					case LESS_EQUAL:
 						rVal = Float.valueOf(r.get(indexL).toString());
 						termVal = Float.valueOf(r.get(indexR).toString());
-						valueComparisons[i] = rVal <= termVal;
+						comp = rVal <= termVal;
+						conditionComp.put(c.toString(), comp);
 						break;
 					case GREATER:
 						rVal = Float.valueOf(r.get(indexL).toString());
 						termVal = Float.valueOf(r.get(indexR).toString());
-						valueComparisons[i] = rVal > termVal;
+						comp = rVal > termVal;
+						conditionComp.put(c.toString(), comp);
 						break;
 					case GREATER_EQUAL:
 						rVal = Float.valueOf(r.get(indexL).toString());
 						termVal = Float.valueOf(r.get(indexR).toString());
-						valueComparisons[i] = rVal >= termVal;
+						comp = rVal >= termVal;
+						conditionComp.put(c.toString(), comp);
 						break;
 					default:
 						throw new RuntimeException("This is not a comparison operator");
 					}
 				}
 			}
-
-			if (comparisons.size() > 1) {
-				List<String> values = new ArrayList<>();
-				int index = 0;
-				for (Condition.Type c : cond) {
-					if (c.equals(Condition.Type.AND) || c.equals(Condition.Type.OR) || c.equals(Condition.Type.NOT)) {
-						values.add(c.toString());
-					} else {
-						values.add(String.valueOf(valueComparisons[index]));
-						index++;
+			
+			if (cond.size() > 1) {
+				Condition finalCond = null;
+				for (Condition t : condTypes) {
+					boolean left;
+					boolean right;
+					boolean result;
+					finalCond = t;
+					switch (t.getType()) {
+					case AND:
+						left = conditionComp.get(t.getCondition().get(0).toString());
+						right = conditionComp.get(t.getCondition().get(1).toString());
+						result = left && right;
+						conditionComp.put(t.toString(), result);
+						break;
+					case OR:
+						left = conditionComp.get(t.getCondition().get(0).toString());
+						right = conditionComp.get(t.getCondition().get(1).toString());
+						result = left || right;
+						conditionComp.put(t.toString(), result);
+						break;
+					case NOT:
+						right = conditionComp.get(t.getCondition().get(0).toString());
+						result = !right;
+						conditionComp.put(t.toString(), result);
+						break;
+					default:
+						break;
 					}
 				}
-
-				int notCounter = 0;
-				index = 0;
-				List<String> newValues = new ArrayList<>();
-				// deal with NOT before AND and OR
-				for (String s : values) {
-					// if s is NOT increase notCounter
-					if (!(s.equals("true") || s.equals("false")) && Condition.Type.valueOf(s).equals(Condition.Type.NOT)) {
-						notCounter++;
-					} else {
-						if (s.equals("true") || s.equals("false")) {
-							boolean b = Boolean.valueOf(s);
-							if (notCounter % 2 == 1) { // if NOT applied an odd number of times, flip value
-								b = !b;
-								newValues.add(String.valueOf(b));
-								notCounter = 0;
-								continue;
-							} else { // NOT was applied either an even number of times or not at all
-								notCounter = 0;
-							}
-						}
-						newValues.add(s);
-					}
-					index++;
-				}
-
-				boolean add = Boolean.valueOf(newValues.get(0));
-				for (int i = 0; i < newValues.size(); i++) {
-					String current = newValues.get(i);
-					if (!(current.equals("true") || current.equals("false"))) {
-						Condition.Type c = Condition.Type.valueOf(current);
-						// take values either side of current and do AND or OR
-						if (c.equals(Condition.Type.AND)) {
-							add = add && Boolean.valueOf(newValues.get(i+1));
-						} else {
-							add = add || Boolean.valueOf(newValues.get(i+1));
-						}
-					}
-				}
-
-				if (add) {
+				if (conditionComp.get(finalCond.toString())) {
 					table.add(r);
 				}
-			} else { // only one comparison made
-				if (valueComparisons[0]) {
+			} else {
+				if (conditionComp.get(comparisons.get(0).toString())) {
 					// add record to table if comparison true
 					table.add(r);
 				}
 			}
+			
+			conditionComp.clear();
 		}
 		if (A.getBags()) {
 			return table;
