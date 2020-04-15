@@ -19,6 +19,13 @@ public abstract class BinaryCondition extends Condition {
 	}
 
 	public abstract String getConnective();
+	
+	public List<Condition> getCondition() {
+		List<Condition> ans = new ArrayList<>();
+		ans.add(left);
+		ans.add(right);
+		return ans;
+	}
 
 	@Override
 	public String toString() {

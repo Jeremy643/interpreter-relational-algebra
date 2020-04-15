@@ -43,6 +43,8 @@ public abstract class Condition {
 		return type;
 	}
 	
+	public abstract List<Condition> getCondition();
+	
 	public abstract boolean validate(Signature sig);
 	
 	public abstract List<Comparison> getComparisons();

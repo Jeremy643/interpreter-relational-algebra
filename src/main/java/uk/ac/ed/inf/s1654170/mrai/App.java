@@ -178,14 +178,13 @@ public class App {
 
 		// ========================PARSING AND EXECUTION - IMPORTANT========================
 		
-		Terminal terminal = TerminalBuilder.terminal();
+		Terminal terminal = TerminalBuilder.builder().dumb(true).build();
 		LineReader lineReader = LineReaderBuilder.builder().terminal(terminal).build();
 
 		System.out.println("A multimodal interpreter for relational algebra by Jeremy Scott.\n"
 				+ "Type \".help\" for more information.");
 		while (true) {
 			String input = lineReader.readLine("(mrai)=> ");
-			System.out.println(input);
 
 			if (input.toLowerCase().trim().equals("")) {
 				continue;
@@ -290,6 +289,7 @@ public class App {
 				at.addRule();
 				CWC_LongestLine cwc = new CWC_LongestLine();
 				at.getRenderer().setCWC(cwc);
+				System.out.println();
 				System.out.println(at.render());
 			} catch (SchemaException e1) {
 				System.out.println("ERROR: " + e1.getMessage());

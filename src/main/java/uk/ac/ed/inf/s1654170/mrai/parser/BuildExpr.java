@@ -14,6 +14,7 @@ public class BuildExpr extends RelationalAlgebraBaseListener {
 	private RAExpr expr;
 	private Stack<RAExpr> exprPart = new Stack<>();
 	private Stack<Condition> conditions = new Stack<>();
+	private Stack<Condition> tableOpConditions = new Stack<>();
 	private Stack<Term> terms = new Stack<>();
 	private List<String> attributes = new ArrayList<>();
 	private Map<String,String> subst = new HashMap<>();
@@ -144,7 +145,7 @@ public class BuildExpr extends RelationalAlgebraBaseListener {
 		RAExpr main = getSubExprs();
 		Condition condition = getCond();
 		
-		RAExpr select = new Select(condition, main);
+		RAExpr select = new Select(condition, main, tableOpConditions);
 		exprPart.push(select);
 	}
 	
@@ -209,6 +210,7 @@ public class BuildExpr extends RelationalAlgebraBaseListener {
 		
 		Condition cond = new And(left, right);
 		conditions.push(cond);
+		tableOpConditions.push(cond);
 	}
 	
 	@Override
@@ -218,6 +220,7 @@ public class BuildExpr extends RelationalAlgebraBaseListener {
 		
 		Condition cond = new Or(left, right);
 		conditions.push(cond);
+		tableOpConditions.push(cond);
 	}
 	
 	@Override
@@ -226,6 +229,7 @@ public class BuildExpr extends RelationalAlgebraBaseListener {
 		
 		Condition cond = new Not(main);
 		conditions.push(cond);
+		tableOpConditions.push(cond);
 	}
 	
 	private Term getTerms() {
@@ -244,5 +248,4 @@ public class BuildExpr extends RelationalAlgebraBaseListener {
 		expr = exprPart.pop();
 		return expr;
 	}
-
 }

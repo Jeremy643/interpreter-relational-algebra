@@ -1,5 +1,7 @@
 package uk.ac.ed.inf.s1654170.mrai.exprs;
 
+import java.util.Stack;
+
 import uk.ac.ed.inf.s1654170.mrai.conditions.Condition;
 import uk.ac.ed.inf.s1654170.mrai.instance.Table;
 import uk.ac.ed.inf.s1654170.mrai.instance.TableOperations;
@@ -12,11 +14,13 @@ public class Select extends RAExpr {
 	
 	private Condition condition;
 	private RAExpr expr;
+	private Stack<Condition> binaryCondTypes;
 	
-	public Select(Condition condition, RAExpr expr) {
+	public Select(Condition condition, RAExpr expr, Stack<Condition> binaryCondTypes) {
 		super(Type.SELECT);
 		this.condition = condition;
 		this.expr = expr;
+		this.binaryCondTypes = binaryCondTypes;
 	}
 
 	public Condition getCondition() {
@@ -41,6 +45,6 @@ public class Select extends RAExpr {
 
 	@Override
 	public Table executeValid(Database db) {
-		return TableOperations.Select(condition, expr.executeValid(db));
+		return TableOperations.Select(condition, expr.executeValid(db), binaryCondTypes);
 	}
 }

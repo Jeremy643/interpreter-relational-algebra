@@ -27,6 +27,12 @@ public abstract class Comparison extends Condition {
 	}
 
 	public abstract String getComparisonOperator();
+	
+	public List<Condition> getCondition() {
+		List<Condition> ans = new ArrayList<>();
+		ans.add(this);
+		return ans;
+	}
 
 	@Override
 	public String toString() {

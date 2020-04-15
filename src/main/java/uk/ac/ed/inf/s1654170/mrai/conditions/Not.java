@@ -15,6 +15,12 @@ public class Not extends Condition {
 		this.main = main;
 	}
 	
+	public List<Condition> getCondition() {
+		List<Condition> ans = new ArrayList<>();
+		ans.add(main);
+		return ans;
+	}
+	
 	@Override
 	public String toString() {
 		return String.format("[%s %s]", NOT, main);
