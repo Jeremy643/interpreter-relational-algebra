@@ -1,3 +1,6 @@
 To run tool:
 - Navigate to the start of the directory
 - Then type: java -jar target/mrai-0.1-SNAPSHOT.jar
+- Paths to data files:
+	src\main\java\uk\ac\ed\inf\s1654170\mrai\data
+	src\test\java\uk\ac\ed\inf\s1654170\mrai\evaluation\data
