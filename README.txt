@@ -1,0 +1,6 @@
+# interpreter-relational-algebra
+A multimodal interpreter for relational algebra.
+
+To run tool:
+- Navigate to the start of the directory
+- Then type: java -jar target/mrai-0.1-SNAPSHOT.jar
